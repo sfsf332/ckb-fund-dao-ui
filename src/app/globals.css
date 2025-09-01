@@ -351,7 +351,11 @@ body {
   }
 }
 
-
+/* 容器样式 */
+.container {
+  margin: 0 auto;
+  padding: 20px;
+}
 
 /* DAO信息统计 */
 .dao_info {

@@ -1,0 +1,21 @@
+{
+  "common": {
+    "getStarted": "开始编辑",
+    "saveAndSee": "保存并立即查看您的更改。",
+    "deployNow": "立即部署",
+    "readDocs": "阅读文档",
+    "learn": "学习",
+    "examples": "示例",
+    "goToNextjs": "前往 nextjs.org →"
+  },
+  "navigation": {
+    "home": "首页",
+    "about": "关于",
+    "contact": "联系"
+  },
+  "footer": {
+    "learn": "学习",
+    "examples": "示例",
+    "goToNextjs": "前往 nextjs.org →"
+  }
+}

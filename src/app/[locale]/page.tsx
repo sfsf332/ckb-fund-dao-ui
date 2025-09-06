@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import { useTranslation } from "../../utils/i18n";
+import 'react-tooltip/dist/react-tooltip.css'
+import { IoMdInformationCircleOutline } from "react-icons/io";
 
-export default function Home() {
+export default function Treasury() {
   const { t } = useTranslation();
 
   return (
@@ -31,7 +33,7 @@ export default function Home() {
         <section className="proposal_list">
           <nav>
             <h3>提案列表</h3>
-            <div className="nav-controls">
+            {/* <div className="nav-controls">
               <input type="search" placeholder="搜索提案" />
               <select name="" id="" defaultValue={'筛选状态'}>
                 <option value="">全部</option>
@@ -39,15 +41,15 @@ export default function Home() {
                 <option value="">提案通过</option>
                 <option value="">提案拒绝</option>
               </select>
-            </div>
+            </div> */}
           </nav>
           
           <ul className="proposal_list_content">
             {/* 提案1: Web5 DID 身份协议栈开发 */}
             <li>
-              <h4>Web5 DID 身份协议栈开发 <span>里程碑交付中</span></h4>
+              <h4>Web5 DID 身份协议栈开发 <span className="status-tag milestone">里程碑交付中</span></h4>
               <div className="proposal_person">
-                <Image src="/avatar.png" alt="avatar" width={40} height={40} />
+                <Image src="/avatar.jpg" alt="avatar" width={40} height={40} />
                 <div className="name">
                   <h3>John</h3>
                   <p>did:ckb:ckt1qvqr...7q2h</p>
@@ -68,9 +70,9 @@ export default function Home() {
 
             {/* 提案2: DAO 治理元规则修改提案 #5 */}
             <li>
-              <h4>DAO 治理元规则修改提案 #5 <span>社区审议中</span></h4>
+              <h4>DAO 治理元规则修改提案 #5 <span className="status-tag review">社区审议中</span></h4>
               <div className="proposal_person">
-                <Image src="/avatar.png" alt="avatar" width={40} height={40} />
+                <Image src="/avatar.jpg" alt="avatar" width={40} height={40} />
                 <div className="name">
                   <h3>Krrrrr</h3>
                   <p>did:ckb:ckt1qyqr...7q2h</p>
@@ -91,9 +93,9 @@ export default function Home() {
 
             {/* 提案3: CKB-UTXO 全链游戏引擎 */}
             <li>
-              <h4>CKB-UTXO 全链游戏引擎 <span>投票中</span></h4>
+              <h4>CKB-UTXO 全链游戏引擎 <span className="status-tag vote">投票中</span></h4>
               <div className="proposal_person">
-                <Image src="/avatar.png" alt="avatar" width={40} height={40} />
+                <Image src="/avatar.jpg" alt="avatar" width={40} height={40} />
                 <div className="name">
                   <h3>ckbtc</h3>
                   <p>did:ckb:ckt1qyqr...7q2h</p>
@@ -123,9 +125,9 @@ export default function Home() {
 
             {/* 提案4: JoyID 生态集成激励计划 */}
             <li>
-              <h4>JoyID 生态集成激励计划 <span>结束</span></h4>
+              <h4>JoyID 生态集成激励计划 <span className="status-tag ended">结束</span></h4>
               <div className="proposal_person">
-                <Image src="/avatar.png" alt="avatar" width={40} height={40} />
+                <Image src="/avatar.jpg" alt="avatar" width={40} height={40} />
                 <div className="name">
                   <h3>moe</h3>
                   <p>did:ckb:ckt1qyqr...7q2h</p>
@@ -150,31 +152,24 @@ export default function Home() {
           <section className="my_governance">
             <h3>我的治理</h3>
             <div className="wallet_info">
-              <label>钱包地址/DID</label>
+              <h4>钱包地址/DID</h4>
               <p className="did_address">did:ckb:ckt1q9gry5zgxmpjnm26ztnq3w0y3j9f6j28q5y7q2</p>
             </div>
             <div className="voting_rights">
-              <div className="rights_header">
-                <span className="rights_label">我的投票权</span>
-                <span className="info_icon">i</span>
-              </div>
-              <p className="rights_amount">2,000,000 CKB</p>
+              <h4>
+                我的投票权 <IoMdInformationCircleOutline data-tooltip-id="my-tooltip" data-tooltip-content="投票权的解释" />
+              </h4>
+              <h5 className="rights_amount">2,000,000 CKB</h5>
             </div>
             <button className="stake_button">
-              <span className="n_icon">N</span>
-              <span>质押CKB</span>
+              <Image src="/nervos-logo-s.svg" alt="nervos" width={14} height={14} />
+               质押CKB
             </button>
             <div className="pending_section">
               <h4>待处理</h4>
               <div className="pending_item">
                 <p className="pending_title">CKB-UTXO 全链游戏引擎</p>
-                <div className="pending_status">
-                  <div className="project_icons">
-                    <span className="icon boat">舟</span>
-                    <span className="icon w">W</span>
-                  </div>
-                  <span className="status_tag">投票中</span>
-                </div>
+                <span className="status-tag vote">投票中</span>
               </div>
             </div>
           </section>
@@ -193,7 +188,7 @@ export default function Home() {
         </div>
         </div>
       </main>
-     
+      
     </div>
   );
 }

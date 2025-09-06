@@ -48,6 +48,7 @@ body {
   height: 36px;
   border-radius: 5px;
 }
+
 .header-container .logo span{
   font-size: 16px;
 }
@@ -300,6 +301,10 @@ body {
   width: 1104px;
   height: 100px;
 }
+.banner svg{
+  width: 1104px;
+  height: 100px;
+}
 .container{
   max-width: 1440px;
   margin: 0 auto;
@@ -515,21 +520,30 @@ body {
   color: #fff;
 }
 
-/* 状态标签样式 */
-.proposal_list_content li h4 span:last-child {
-  background: #00B287; /* 里程碑交付中 - 绿色 */
+/* 统一的状态标签样式 */
+.status-tag{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  color: #fff;
+  background: #4C525C;
 }
-
-.proposal_list_content li:nth-child(2) h4 span:last-child {
-  background: #3B82F6; /* 社区审议中 - 蓝色 */
+.status-tag.vote{ /* 投票中 */
+  background: #F59E0B;
 }
-
-.proposal_list_content li:nth-child(3) h4 span:last-child {
-  background: #F59E0B; /* 投票中 - 橙色 */
+.status-tag.review{ /* 社区审议中 */
+  background: #3B82F6;
 }
-
-.proposal_list_content li:nth-child(4) h4 span:last-child {
-  background: #6B7280; /* 结束 - 灰色 */
+.status-tag.milestone{ /* 里程碑交付中 */
+  background: #00B287;
+}
+.status-tag.ended{ /* 结束 */
+  background: #6B7280;
 }
 
 /* 提案人信息 */
@@ -704,17 +718,16 @@ body {
 
 /* 我的治理部分 */
 .my_governance {
-  background: #1C2027;
-  border: 1px solid #2A2E35;
-  border-radius: 8px;
-  padding: 24px;
+  background: #262A33;
+  border-radius: 10px;
+  padding: 20px;
 }
 
 .my_governance h3 {
   color: #fff;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
-  margin: 0 0 24px 0;
+  margin: 0 0 20px 0;
 }
 
 /* 钱包信息 */
@@ -722,18 +735,20 @@ body {
   margin-bottom: 24px;
 }
 
-.wallet_info label {
+.my_governance h4 {
   display: block;
-  color: #6A727B;
-  font-size: 14px;
+  color: #00CC9B;
+  font-size: 12px;
   font-weight: 500;
-  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  height: 18px;
+  line-height: 18px;
 }
 
 .wallet_info .did_address {
-  color: #fff;
-  font-size: 14px;
-  font-family: monospace;
+  color: #ADADAD;
+  font-size: 12px;
   margin: 0;
   word-break: break-all;
 }
@@ -743,36 +758,11 @@ body {
   margin-bottom: 24px;
 }
 
-.rights_header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-}
 
-.rights_label {
-  color: #00B287;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.info_icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  background: #00B287;
-  color: #000;
-  border-radius: 50%;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: help;
-}
 
 .rights_amount {
   color: #fff;
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 700;
   margin: 0;
 }
@@ -781,41 +771,29 @@ body {
 .stake_button {
   display: flex;
   align-items: center;
-  gap: 8px;
   background: #1C2027;
-  border: 2px solid #00B287;
-  border-radius: 8px;
+  border: 1px solid #00B287;
+  border-radius: 5px;
+  width: 100%;
   color: #00B287;
-  padding: 12px 20px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  height: 32px;
+  line-height: 32px;
   margin-bottom: 24px;
+  text-align: center;
+  justify-content: center;
 }
-
+.stake_button img{
+  margin-right: 8px;
+}
 .stake_button:hover {
   background: #00B287;
   color: #000;
 }
 
-.stake_button .n_icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  background: #00B287;
-  color: #000;
-  border-radius: 50%;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.stake_button:hover .n_icon {
-  background: #000;
-  color: #00B287;
-}
 
 /* 待处理部分 */
 .pending_section {
@@ -888,15 +866,15 @@ body {
 
 /* 金库概览部分 */
 .treasury_overview {
-  background: #1C2027;
-  border: 1px solid #2A2E35;
-  border-radius: 8px;
-  padding: 24px;
+  background: #262A33;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 28px;
 }
 
 .treasury_overview h3 {
   color: #fff;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
   margin: 0 0 24px 0;
 }
@@ -908,14 +886,14 @@ body {
 .treasury_balance label {
   display: block;
   color: #00B287;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 600;
   margin-bottom: 12px;
 }
 
 .treasury_balance .balance_amount {
   color: #fff;
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 700;
   margin: 0;
 }
@@ -928,7 +906,8 @@ body {
   border: 1px solid #4C525C;
   border-radius: 8px;
   color: #fff;
-  padding: 12px 20px;
+  height: 32px;
+  line-height: 32px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
@@ -940,7 +919,308 @@ body {
   background: #2A2E35;
   border-color: #6A727B;
 }
+.block_container{
+  padding:40px 100px;
+  background: #252a33;
+  border-radius: 10px;
+  margin-bottom: 40px;
+}
+/* 总资产统计 图表容器 */
+.assets_chart{
+  width: 100%;
+  height: 320px;
+}
+/* ECharts tooltip 深色主题微调 */
+.chart-tooltip-dark{
+  background: #1f242c !important;
+  border: 1px solid #2f3540 !important;
+  color: #e5e7eb !important;
+}
+.block_container h3{
+  color: #00CC9B;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 40px;
+  margin: 20px 0;
+}
+.block_container p{
+  color: #fff;
+  font-size: 16px;
+  line-height: 30px;
+}
+.block_container .team_list{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.block_container .team_item{
+  background: #262A33;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 40px 0;
+}
+.block_container .team_item img{
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+.block_container .team_item .name{
+  flex:1;
+  font-size: 12px;
+}
+.block_container .team_item .name h3{
+  font-size: 16px;
+  margin: 0;padding: 0;
+  line-height: 20px;
+  color: #fff;
+}
+.block_container .team_item .name h4{
+  font-size: 12px;
+  margin: 0;padding: 0;
+  line-height: 20px;
+  color: #00CC9BBF;
+}
+.block_container .team_item .name p{
+  color: #8A949E;
+  font-size: 12px;
+  margin: 0;padding: 0;
+  line-height: 20px;
+}
+.block_container ul{
+  list-style: disc;
+}
+.block_container ul li{
+  margin:20px 40px;
 
+}
+.block_container .dash_line{
+  width: 100%;
+  height: 1px;
+  border-top: 1px dotted #4C525C;
+  margin: 20px 0;
+}
+.block_container dl{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top:20px;
+
+}
+.block_container dl dt{
+  color: #00CC9B;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  display: list-item;
+  list-style: disc;
+  list-style-position: outside;
+  margin-left: 20px;
+}
+.block_container dl dd{
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+}
+.block_container dl dd ul{
+  margin-left: 40px;
+}
+.block_container dl dd ul li{
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  display: list-item;
+  list-style: disc;
+  list-style-position: outside;
+  margin-left: 20px;
+}
+.block_container strong{
+  color: #00CC9B;
+  font-weight: 700;
+}
+.block_container h4{
+  color: #00CC9B;
+  font-size: 14px;
+  line-height: 20px;
+  margin: 20px 0;
+}
+.button-copy{
+  cursor: pointer;
+}
+.treasury_wallet{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.treasury_wallet_address{
+ border: 1px solid #00CC9B;
+ border-radius: 2px;
+ height: 40px;
+ line-height: 40px;
+ display: flex;
+ width: 1000px;
+ align-items: center;
+}
+.treasury_wallet_address label{
+  font-size: 14px;
+  background: #00CC9B;
+  color: #000;
+  width: 165px;
+  text-align: center;
+
+}
+.treasury_wallet_address p{
+  flex: 1;
+  padding: 0 20px;
+  font-size: 14px;
+  color: #fff;
+  word-break: break-all;
+}
+.treasury_list{
+  list-style: none;
+}
+.treasury_list li{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 14px;
+  line-height: 32px;
+  color: #8A949E;
+}
+
+.treasury_list li span.treasury_list_did{
+  width: 160px;
+  color: #fff;
+}
+.treasury_assets{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.treasury_assets .small_block{
+  background: #1E2229;
+  border-radius: 5px;
+  padding: 20px;
+
+  border:1px solid #1E2229;
+}
+.treasury_assets .small_block:hover{
+  border-color: #00CC9B;
+}
+.treasury_assets .small_block p{
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 36px;
+  margin: 0;
+  padding: 0;
+}
+.treasury_assets .small_block h4{
+  color: #00CC9B;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  margin: 0;
+  padding: 0;
+}
+/* 项目执行钱包 表格 */
+.wallets_table_container{
+}
+.wallets_table_container h4{
+  color: #00CC9B;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 20px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+
+}
+.wallets_table_toolbar{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.wallets_table_toolbar input[type="search"]{
+  background: #11151b;
+  border: 1px solid #2a2f38;
+  color: #E5E7EB;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 6px;
+  padding: 0 10px;
+  width: 220px;
+}
+.wallets_table{
+  width: 100%;
+}
+.wallets_table_head,
+.wallets_row{
+  display: grid;
+  grid-template-columns: 2fr 1fr 2fr 2fr;
+  gap: 12px;
+  align-items: center;
+}
+.wallets_table_head{
+  color: #9AA3AF;
+  font-size: 12px;
+  padding: 10px 8px;
+  border-bottom: 1px solid #2a2f38;
+  
+}
+.wallets_table_body .wallets_row{
+  color: #E5E7EB;
+  font-size: 14px;
+  padding: 14px 8px;
+  border-bottom: 1px dashed #2a2f38;
+}
+.wallets_row .cell.address{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.icon_button{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: #9AA3AF;
+  border: 1px solid #2a2f38;
+  background: #11151b;
+}
+.icon_button:hover{
+  color: #00CC9B;
+  border-color: #00CC9B33;
+}
+.wallets_table_pagination{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding-top: 12px;
+}
+.pager_button{
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: #11151b;
+  border: 1px solid #2a2f38;
+  color: #E5E7EB;
+}
+.pager_button:disabled{
+  opacity: .4;
+  cursor: not-allowed;
+}
+.page_info{
+  color: #9AA3AF;
+  font-size: 12px;
+}
 /* 响应式设计 */
 @media (max-width: 1024px) {
   .my_info {

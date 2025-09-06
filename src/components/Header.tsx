@@ -6,9 +6,26 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import Link from "next/link";
 import { CiCirclePlus } from "react-icons/ci";
 import { ccc } from "@ckb-ccc/connector-react";
+import { usePathname } from "next/navigation";
+import { useI18n } from "@/contexts/I18nContext";
 
 export default function Header() {
     const { open } = ccc.useCcc();
+    const pathname = usePathname();
+    const { locale } = useI18n();
+
+    const homeHref = `/${locale}`;
+    const treasuryHref = `/${locale}/treasury`;
+    const managementHref = `/${locale}/management`;
+
+    const isActive = (href: string) => {
+      if (!pathname) return false;
+      // 主页需要精确匹配 locale 根
+      if (href === homeHref) {
+        return pathname === homeHref || pathname === `${homeHref}/`;
+      }
+      return pathname.startsWith(href);
+    };
 
   return (
     <div className="flex items-center justify-between p-4 header-container">
@@ -19,16 +36,16 @@ export default function Header() {
       </div>
       <ul className="navs flex items-center flex-start gap-2">
         <li>
-          <Link href="/" className="active">治理主页</Link>
+          <Link href={homeHref} className={isActive(homeHref) ? "active" : ""}>治理主页</Link>
         </li>
         <li>
-          <Link href="/">金库</Link>
+          <Link href={treasuryHref} className={isActive(treasuryHref) ? "active" : ""}>金库</Link>
         </li>
         <li>
-          <Link href="/">物业信息</Link>
+          <Link href={managementHref} className={isActive(managementHref) ? "active" : ""}>物业信息</Link>
         </li>
         <li>
-          <Link href="/">治理规则</Link>
+          <Link href={homeHref}>治理规则</Link>
         </li>
       </ul>
       <div className="flex items-center gap-2">

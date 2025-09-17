@@ -3,10 +3,9 @@
 import { useTranslation } from "../../../utils/i18n";
 import "react-tooltip/dist/react-tooltip.css";
 import Link from "next/link";
-import copy from "copy-to-clipboard";
 import { FaCopy } from "react-icons/fa";
 import { AiOutlineExport } from "react-icons/ai";
-import { toast } from "react-hot-toast";
+import { handleCopy } from "@/utils/common";
 import dynamic from "next/dynamic";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import ProjectWalletsTable from "@/components/ProjectWalletsTable";
@@ -20,10 +19,6 @@ export default function Treasury() {
     ssr: false,
   });
 
-  const handleCopy = (address: string) => {
-    copy(address);
-    toast.success("已复制到剪贴板");
-  };
 
   return (
     <div className="container">

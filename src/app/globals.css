@@ -20,6 +20,40 @@ body {
   color: var(--foreground);
   font-family: 'Nunito Sans', Arial, Helvetica, sans-serif;
 }
+
+/* 自定义滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(106, 115, 125, 0.6);
+  border-radius: 10px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(106, 115, 125, 0.8);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: rgba(106, 115, 125, 0.9);
+}
+
+/* Firefox 滚动条样式 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(106, 115, 125, 0.6) transparent;
+}
 .header-container {
   display: flex;
   justify-content: space-between;
@@ -308,6 +342,7 @@ body {
 .container{
   max-width: 1440px;
   margin: 0 auto;
+  color: #fff;
 }
 .dao_info{
   display: grid;
@@ -1128,8 +1163,7 @@ body {
   padding: 0;
 }
 /* 项目执行钱包 表格 */
-.wallets_table_container{
-}
+.wallets_table_container{ display: block; }
 .wallets_table_container h4{
   color: #00CC9B;
   font-size: 24px;
@@ -1249,4 +1283,135 @@ body {
   .pending_status {
     align-self: flex-end;
   }
+}
+
+/* 规则页布局 */
+.rule_layout{
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 24px;
+}
+.rule_sidebar{
+  position: sticky;
+  top: 80px;
+  height: calc(100vh - 100px);
+  overflow: auto;
+}
+.rule_sidebar nav ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.rule_nav_item{
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: #9AA3AF;
+  border: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.rule_nav_item.active,
+.rule_nav_item:hover{
+  color: #00CC9B;
+  background: #1C2027;
+}
+.rule_subnav{
+  list-style: none;
+  margin: 4px 0 8px 0;
+  padding: 0 0 0 12px;
+  border-left: 1px dashed #2a2f38;
+}
+.rule_subnav li{ margin: 2px 0; }
+.rule_sub_item{
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: #6B7280;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.rule_sub_item.active,
+.rule_sub_item:hover{
+  color: #00CC9B;
+  background: #161A20;
+}
+.rule_content{
+  background: #1C2027;
+  border: 1px solid #2a2f38;
+  border-radius: 10px;
+  padding: 24px;
+}
+.rule_block + .rule_block{
+  border-top: 1px dashed #2a2f38;
+  margin-top: 24px;
+  padding-top: 24px;
+}
+.rule_block h2{
+  color: #fff;
+  font-size: 22px;
+  margin: 0 0 10px 0;
+}
+.rule_block h3{
+  color: #00CC9B;
+  font-size: 18px;
+  margin: 6px 0 10px 0;
+}
+.rule_block p, .rule_block li{
+  color: #E5E7EB;
+  line-height: 28px;
+}
+.rule_figure{
+  display: flex;
+  justify-content: center;
+  padding: 10px 0;
+}
+.rule_next{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+.rule_next a{ color: #00CC9B; }
+ .user_info{
+  display: flex;
+  align-items: center;
+  padding:10px 0;
+}
+.user_info img{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+.user_info .name{
+  flex:1;
+  font-size: 12px;
+}
+.user_info .name h3{
+  font-size: 16px;
+  margin: 0;padding: 0;
+  line-height: 20px;
+  color: #fff;
+}
+.user_info .name h4{
+  font-size: 12px;
+  margin: 0;padding: 0;
+  line-height: 20px;
+  color: #00CC9BBF;
+}
+.user_info .name p{
+  color: #8A949E;
+  font-size: 12px;
+  margin: 0;padding: 0;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+}
+.user_info .name p button,.user_info .name p a{
+  margin:0 5px;
+
 }

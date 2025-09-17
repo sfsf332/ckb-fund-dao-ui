@@ -3,8 +3,7 @@
 import { useMemo, useState } from "react";
 import { FaCopy } from "react-icons/fa";
 import { AiOutlineExport } from "react-icons/ai";
-import copy from "copy-to-clipboard";
-import { toast } from "react-hot-toast";
+import { handleCopy } from "@/utils/common";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 
 export type ProjectWallet = {
@@ -124,10 +123,6 @@ export default function ProjectWalletsTable({
   const start = (currentPage - 1) * pageSize;
   const visible = filtered.slice(start, start + pageSize);
 
-  const handleCopy = (text: string) => {
-    copy(text);
-    toast.success("已复制到剪贴板");
-  };
 
   return (
     <div className="wallets_table_container">

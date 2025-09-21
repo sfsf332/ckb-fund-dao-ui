@@ -51,9 +51,9 @@ export default function Header() {
       </ul>
       <div className="flex items-center gap-2">
         <LanguageSwitcher />
-        <button className="button-secondary">
+        <Link href={`${homeHref}/proposal/create`} className="button-secondary">
           <CiCirclePlus /> 发起提案
-        </button>
+        </Link>
         <button
           onClick={open}
           className="button-normal"

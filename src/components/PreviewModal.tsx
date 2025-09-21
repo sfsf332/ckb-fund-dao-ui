@@ -34,7 +34,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
   formData,
 }) => {
   if (!isOpen) return null;
-
+console.log(formData)
   return (
     <div className="preview-modal-overlay" onClick={onClose}>
       <div className="preview-modal" onClick={(e) => e.stopPropagation()}>

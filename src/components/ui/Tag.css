@@ -1,0 +1,110 @@
+/* Tag组件样式 */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+/* Tag尺寸 */
+.tag-sm {
+  padding: 0 8px;
+  font-size: 11px;
+  height: 20px;
+  line-height: 20px;
+}
+
+.tag-md {
+  padding: 0 12px;
+  font-size: 12px;
+  height: 24px;
+  line-height: 24px;
+}
+
+.tag-lg {
+  padding: 0 16px;
+  font-size: 14px;
+  height: 32px;
+  line-height: 32px;
+}
+
+/* Tag类型样式 */
+.tag-default {
+  color: #8A949E;
+  border-color: #8A949E;
+  background-color: transparent;
+}
+
+.tag-status {
+  color: #3B82F6;
+  border-color: #3B82F6;
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.tag-budget {
+  color: #00CC9B;
+  border-color: #00CC9B;
+  background-color: rgba(0, 204, 155, 0.1);
+}
+
+.tag-category {
+  color: #8B5CF6;
+  border-color: #8B5CF6;
+  background-color: rgba(139, 92, 246, 0.1);
+}
+
+.tag-priority {
+  color: #F59E0B;
+  border-color: #F59E0B;
+  background-color: rgba(245, 158, 11, 0.1);
+}
+
+.tag-success {
+  color: #10B981;
+  border-color: #10B981;
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.tag-warning {
+  color: #F59E0B;
+  border-color: #F59E0B;
+  background-color: rgba(245, 158, 11, 0.1);
+}
+
+.tag-error {
+  color: #EF4444;
+  border-color: #EF4444;
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+/* 可点击的Tag */
+.tag-clickable {
+  cursor: pointer;
+}
+
+.tag-clickable:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 兼容旧的meta-tag样式 */
+.meta-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid #8A949E;
+  color: #8A949E;
+  background-color: transparent;
+  padding: 0 12px;
+  font-size: 12px;
+  height: 24px;
+  line-height: 24px;
+  white-space: nowrap;
+}

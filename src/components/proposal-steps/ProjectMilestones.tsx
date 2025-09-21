@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactQuill from 'react-quill-new';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 interface Milestone {
   id: string;
@@ -17,6 +19,7 @@ interface ProjectMilestonesProps {
   addMilestone: () => void;
   removeMilestone: (id: string) => void;
   updateMilestone: (id: string, field: string, value: string) => void;
+  onMilestoneDateChange: (milestoneId: string, date: Date | null) => void;
   isClient: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   quillModules: any;
@@ -30,6 +33,7 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
   addMilestone,
   removeMilestone,
   updateMilestone,
+  onMilestoneDateChange,
   isClient,
   quillModules,
   quillFormats,
@@ -133,31 +137,23 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
                           预计完成日期:
                         </label>
                         <div className="input-container">
-                          <input
-                            type="date"
-                            value={milestone.date}
-                            onChange={(e) =>
-                              updateMilestone(
-                                milestone.id,
-                                "date",
-                                e.target.value
-                              )
-                            }
+                          <DatePicker
+                            selected={milestone.date ? new Date(milestone.date) : null}
+                            onChange={(date) => onMilestoneDateChange(milestone.id, date)}
+                            dateFormat="yyyy-MM-dd"
+                            placeholderText="请选择预计完成日期"
+                            minDate={new Date()}
                             className="form-input"
-                            required
+                            showPopperArrow={false}
+                            popperClassName="react-datepicker-popper"
+                            calendarClassName="react-datepicker-calendar"
+                            locale="zh-CN"
+                            autoComplete="off"
                           />
                           <div className="select-arrow">
-                            <svg
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                              />
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M8 2V5M16 2V5M3.5 9.09H20.5M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M8 13H8.01M12 13H12.01M16 13H16.01M8 17H8.01M12 17H12.01M16 17H16.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                           </div>
                         </div>

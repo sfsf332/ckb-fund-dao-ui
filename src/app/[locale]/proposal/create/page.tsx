@@ -230,6 +230,17 @@ export default function CreateProposal() {
     }));
   };
 
+  const handleMilestoneDateChange = (milestoneId: string, date: Date | null) => {
+    setFormData((prev) => ({
+      ...prev,
+      milestones: prev.milestones.map((milestone) =>
+        milestone.id === milestoneId 
+          ? { ...milestone, date: date ? date.toISOString().split('T')[0] : '' }
+          : milestone
+      ),
+    }));
+  };
+
   const nextStep = () => {
     if (currentStep < steps.length) {
       setCurrentStep(currentStep + 1);
@@ -261,7 +272,7 @@ export default function CreateProposal() {
         });
 
         // 删除草稿
-        clearDraft();
+        // clearDraft();
 
         alert("提案提交成功！");
     } catch (err) {
@@ -340,6 +351,7 @@ export default function CreateProposal() {
             addMilestone={addMilestone}
             removeMilestone={removeMilestone}
             updateMilestone={updateMilestone}
+            onMilestoneDateChange={handleMilestoneDateChange}
             isClient={isClient}
             quillModules={quillModules}
             quillFormats={quillFormats}

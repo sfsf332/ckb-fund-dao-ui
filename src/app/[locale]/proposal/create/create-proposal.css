@@ -53,8 +53,6 @@
 .step-title-container {
   display: flex;
   align-items: center;
-  margin-bottom: 24px;
-  border-bottom: 1px solid #4C525C;
 }
 
 .step-title {
@@ -1183,8 +1181,10 @@ cursor: pointer;
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 0 32px;
+  border-radius: 5px;
+  height: 40px;
+  line-height: 40px;
   border: none;
   font-size: 14px;
   font-weight: 500;
@@ -1193,18 +1193,18 @@ cursor: pointer;
 }
 
 .primary-btn {
-  background-color: #00CC9B;
-  color: #fff;
+  background-color: #00CC9B33;
+  color: #00CC9B;
 }
 
 .primary-btn:hover {
   background-color: #00b894;
+  color: #fff;
 }
 
 .secondary-btn {
   background-color: transparent;
   color: #8A949E;
-  border: 1px solid #4C525C;
 }
 
 .secondary-btn:hover {
@@ -1252,11 +1252,6 @@ cursor: pointer;
 }
 
 
-.proposal-step-content .step-title-container {
-  padding: 20px 24px;
-  border-bottom: 1px solid #4C525C;
-  background-color: #2A2F3A;
-}
 
 .proposal-step-content .step-title {
   display: flex;
@@ -1325,100 +1320,49 @@ cursor: pointer;
   top: 20px;
 }
 
-.timeline-card {
-  background-color: #262A33;
-  border-radius: 12px;
-  padding: 20px;
-  border: 1px solid #4C525C;
-}
 
-.timeline-title {
-  color: #fff;
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0 0 20px 0;
-}
 
-.timeline {
+/* 锚点跳转平滑滚动 */
+html {
+  scroll-behavior: smooth;
+}
+#proposal-detail{
   position: relative;
 }
-
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 8px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background-color: #4C525C;
+/* 锚点目标样式 */
+#proposal-detail,
+#comment-section {
+  scroll-margin-top: 20px;
 }
 
-.timeline-item {
-  position: relative;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 20px;
-  padding-left: 8px;
-}
-
-.timeline-item:last-child {
-  margin-bottom: 0;
-}
-
-.timeline-dot {
-  width: 16px;
-  height: 16px;
-  background-color: #00CC9B;
-  border-radius: 50%;
-  border: 3px solid #262A33;
-  position: relative;
-  z-index: 1;
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.timeline-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.timeline-event {
-  color: #fff;
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 4px;
-  line-height: 1.4;
-}
-
-.timeline-date {
-  color: #8A949E;
-  font-size: 12px;
-  line-height: 1.3;
-}
-
-.timeline-link {
-  display: flex;
+/* 锚点按钮样式 */
+.proposal-actions a {
+  text-decoration: none;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  color: #8A949E;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: all 0.2s;
-  flex-shrink: 0;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
 }
 
-.timeline-link:hover {
-  color: #00CC9B;
-  background-color: rgba(0, 204, 155, 0.1);
+.proposal-actions a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.timeline-icon {
-  font-size: 14px;
+.proposal-actions a:focus {
+  outline: 2px solid #00CC9B;
+  outline-offset: 2px;
 }
 
+.proposal-header-card{
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px #4C525C dashed;
+}
 /* 响应式设计 */
 @media (max-width: 1024px) {
   .proposal-content-wrapper {
@@ -1494,24 +1438,4 @@ cursor: pointer;
     min-width: auto;
   }
   
-  .timeline-card {
-    padding: 16px;
-  }
-  
-  .timeline-title {
-    font-size: 16px;
-    margin-bottom: 16px;
-  }
-  
-  .timeline-item {
-    margin-bottom: 16px;
-  }
-  
-  .timeline-event {
-    font-size: 13px;
-  }
-  
-  .timeline-date {
-    font-size: 11px;
-  }
 }

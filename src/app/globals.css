@@ -535,6 +535,22 @@ body {
   box-shadow: 0 4px 12px rgba(0, 178, 135, 0.1);
 }
 
+/* 可点击的提案项样式 */
+.proposal-item-clickable {
+  transition: all 0.3s ease;
+}
+
+.proposal-item-clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 178, 135, 0.15);
+  border-color: #00B287;
+}
+
+.proposal-item-clickable:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0, 178, 135, 0.1);
+}
+
 /* 提案标题和状态 */
 .proposal_list_content li h4 {
   color: #fff;
@@ -579,6 +595,12 @@ body {
 }
 .status-tag.ended{ /* 结束 */
   background: #6B7280;
+}
+.status-tag.approved{ /* 已通过 */
+  background: #10B981;
+}
+.status-tag.rejected{ /* 已拒绝 */
+  background: #EF4444;
 }
 
 /* 提案人信息 */
@@ -1284,6 +1306,8 @@ body {
     align-self: flex-end;
   }
 }
+
+
 
 /* 规则页布局 */
 .rule_layout{

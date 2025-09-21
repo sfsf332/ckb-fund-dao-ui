@@ -1,0 +1,673 @@
+/* 提案相关通用样式 */
+
+/* 提案页面容器 */
+.proposal-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.proposal-main-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 0;
+}
+
+/* 提案步骤导航 */
+.proposal-steps-nav {
+  margin-bottom: 32px;
+}
+
+.proposal-steps-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.proposal-step-item {
+  width: 120px;
+  height: 40px;
+  background: #262A3380;
+  border-radius: 5px;
+  color: #8A949E;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  line-height: 40px;
+  transition: all 0.3s ease;
+}
+
+.proposal-step-item.active,
+.proposal-step-item:hover:not(.active) {
+  background-color: #00CC9B33;
+  color: #00CC9B;
+}
+
+.proposal-step-container {
+  padding: 80px;
+  background-color: #262A33;
+  border-radius: 10px;
+}
+
+/* 提案步骤标题 */
+.proposal-step-title-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #4C525C;
+}
+
+.proposal-step-title {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: #00CC9B;
+  margin: 0;
+  height: 60px;
+  line-height: 60px;
+}
+
+/* 提案表单样式 */
+.proposal-form-container {
+  padding: 12px;
+}
+
+.proposal-form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.proposal-form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.proposal-input-container {
+  position: relative;
+}
+
+.proposal-form-input,
+.proposal-form-select,
+.proposal-form-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #4C525C;
+  border-radius: 6px;
+  outline: none;
+  background-color: transparent;
+  font-size: 14px;
+  transition: all 0.2s;
+  color: #fff;
+}
+
+.proposal-form-input:focus,
+.proposal-form-select:focus,
+.proposal-form-textarea:focus {
+  border-color: #00cc9b;
+  box-shadow: 0 0 0 2px rgba(0, 204, 155, 0.2);
+}
+
+.proposal-form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.proposal-form-select {
+  appearance: none;
+  padding-right: 32px;
+}
+
+.proposal-select-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #8A949E;
+}
+
+/* 提案按钮样式 */
+.proposal-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.proposal-button-group {
+  display: flex;
+  gap: 16px;
+}
+
+.proposal-btn {
+  padding: 8px 24px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.proposal-btn-secondary {
+  background-color: #ffffff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.proposal-btn-secondary:hover {
+  background-color: #f9fafb;
+}
+
+.proposal-btn-primary {
+  background-color: #0d9488;
+  color: #ffffff;
+  padding: 8px 32px;
+}
+
+.proposal-btn-primary:hover:not(:disabled) {
+  background-color: #0f766e;
+}
+
+.proposal-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.proposal-btn-outline {
+  background-color: transparent;
+  color: #00CC9B;
+  border: 1px solid #00CC9B;
+}
+
+.proposal-btn-outline:hover {
+  background-color: #00CC9B;
+  color: #fff;
+}
+
+/* 提案详情页面样式 */
+.proposal-detail-layout {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.proposal-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  color: #8A949E;
+  font-size: 14px;
+}
+
+.proposal-breadcrumb-separator {
+  color: #4C525C;
+}
+
+.proposal-content-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 24px;
+  align-items: start;
+}
+
+.proposal-main-content-area {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background-color: #262A33;
+  border-radius: 15px;
+  padding: 36px;
+}
+
+.proposal-header-card {
+  padding: 24px;
+}
+
+.proposal-title-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.proposal-main-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.proposal-author-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.proposal-author-avatar img {
+  border-radius: 50%;
+  border: 2px solid #4C525C;
+}
+
+.proposal-author-details {
+  flex: 1;
+}
+
+.proposal-author-name {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.proposal-author-did {
+  color: #8A949E;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.proposal-copy-btn {
+  background: none;
+  border: none;
+  color: #8A949E;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+
+.proposal-copy-btn:hover {
+  color: #00CC9B;
+  background-color: rgba(0, 204, 155, 0.1);
+}
+
+.proposal-author-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background-color: #3B82F6;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.proposal-badge-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.proposal-meta-tags {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.proposal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.proposal-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #374151;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.proposal-action-btn:hover {
+  background-color: #4B5563;
+}
+
+/* 提案侧边栏 */
+.proposal-sidebar {
+  position: sticky;
+  top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.proposal-sidebar-card {
+  background-color: #262A33;
+  border-radius: 15px;
+  padding: 24px;
+}
+
+.proposal-sidebar-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+/* 提案内容区域 */
+.proposal-content-section {
+  background-color: #262A33;
+  border-radius: 15px;
+  padding: 24px;
+}
+
+.proposal-section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #4C525C;
+  padding-bottom: 8px;
+}
+
+.proposal-section-content {
+  color: #E5E7EB;
+  line-height: 1.6;
+}
+
+/* 提案时间线 */
+.proposal-timeline-card {
+  background-color: #262A33;
+  border-radius: 15px;
+  padding: 24px;
+}
+
+.proposal-timeline-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.proposal-timeline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.proposal-timeline-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 24px;
+  width: 2px;
+  height: calc(100% + 4px);
+  background-color: #4C525C;
+}
+
+.proposal-timeline-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #00CC9B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.proposal-timeline-content {
+  flex: 1;
+}
+
+.proposal-timeline-event {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.proposal-timeline-date {
+  color: #8A949E;
+  font-size: 12px;
+}
+
+.proposal-timeline-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: #8A949E;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.proposal-timeline-link:hover {
+  color: #00CC9B;
+  background-color: rgba(0, 204, 155, 0.1);
+}
+
+.proposal-timeline-icon {
+  font-size: 14px;
+}
+
+/* 里程碑相关样式 */
+.milestones-tabs-container {
+  margin-bottom: 24px;
+}
+
+.milestones-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.milestone-tab {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #374151;
+  color: #fff;
+  border: 1px solid #4B5563;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  min-width: 100px;
+  justify-content: center;
+}
+
+.milestone-tab:hover {
+  background-color: #4B5563;
+}
+
+.milestone-tab.active {
+  background-color: #00CC9B;
+  border-color: #00CC9B;
+  color: #fff;
+}
+
+.milestone-remove-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: #EF4444;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: 4px;
+}
+
+.milestone-remove-btn:hover {
+  background-color: #DC2626;
+  transform: scale(1.05);
+}
+
+.milestone-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background-color: #00CC9B;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: 8px;
+}
+
+.milestone-add-btn:hover {
+  background-color: #00B287;
+  transform: scale(1.05);
+}
+
+.milestones-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background-color: #374151;
+  border: 2px dashed #6B7280;
+  border-radius: 8px;
+  color: #9CA3AF;
+  font-size: 14px;
+  text-align: center;
+}
+
+.milestones-content {
+  background-color: #374151;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.milestone-panel {
+  display: none;
+}
+
+.milestone-panel.active {
+  display: block;
+}
+
+.milestone-panel-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.milestone-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.milestone-field .proposal-input-container {
+  position: relative;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .proposal-content-wrapper {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .proposal-sidebar {
+    position: static;
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .proposal-detail-layout {
+    padding: 16px;
+  }
+  
+  .proposal-header-card {
+    padding: 20px;
+  }
+  
+  .proposal-main-title {
+    font-size: 24px;
+  }
+  
+  .proposal-meta-tags {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .proposal-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .proposal-action-btn {
+    justify-content: center;
+  }
+  
+  .proposal-steps-container {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  
+  .proposal-step-item {
+    min-width: 80px;
+    font-size: 12px;
+    padding: 0 8px;
+    height: 32px;
+    line-height: 32px;
+  }
+  
+  .proposal-step-container {
+    padding: 20px;
+  }
+  
+  .proposal-step-title {
+    font-size: 18px;
+  }
+  
+  .proposal-timeline-card {
+    padding: 16px;
+  }
+  
+  .proposal-timeline-title {
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .proposal-timeline-item {
+    margin-bottom: 16px;
+  }
+  
+  .proposal-timeline-event {
+    font-size: 13px;
+  }
+  
+  .proposal-timeline-date {
+    font-size: 11px;
+  }
+}

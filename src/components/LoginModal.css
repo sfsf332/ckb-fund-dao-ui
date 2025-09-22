@@ -1,0 +1,746 @@
+/* 登录弹窗样式 */
+.login-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.login-modal {
+  background: #141619;
+  border-radius: 15px;
+  padding: 30px;
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.login-modal-close {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+
+  color: #777;
+  font-size: 24px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+ transform-origin: center center;
+  transition: all 0.3s ease;
+}
+
+.login-modal-close:hover {
+rotate: 90deg;
+}
+
+.login-modal-title {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 0 20px 0;
+}
+
+/* 进度指示器 */
+.login-progress {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 32px;
+  gap: 8px;
+}
+
+.login-step {
+  display: flex;
+  align-items: center;
+  padding-bottom: 12px;
+}
+
+.login-step-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 12px;
+  color: #777;
+  border:1px solid #777;
+  transition: all 0.3s ease;
+  margin: 0 6px;
+}
+
+.login-step.current .login-step-circle {
+  background: #00CC9B;
+  border:1px solid #00CC9B;
+  color: #000;
+}
+.login-step.current .login-step-title {
+  color: #fff;
+ 
+}
+.login-step.pending .login-step-circle {
+  border:1px solid #777;
+  color: #777;
+}
+
+.login-step-title {
+  color: #6A727B;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  padding: 0 10px;
+}
+
+.login-step.current{
+  color: #fff!important;
+  border-bottom:2px solid #00CC9B;
+}
+
+.login-step-separator {
+  display: flex;
+  align-items: center;
+  margin: 0 4px;
+  padding-bottom: 12px;
+}
+
+/* 主要内容区域 */
+.login-content {
+  background: #262A334D;
+  border-radius: 5px;
+  border:1px dashed #262A33;
+  padding: 20px;
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: #fff;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+.login-content-1 {
+  height: 260px;
+}
+.login-info-section {
+  flex: 1;
+  text-align: center;
+}
+
+.login-info-title {
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  line-height: 1.4;
+  width: 100%;
+  color:#fff
+}
+
+.web5-highlight {
+  color: #00CC9B;
+}
+
+.login-benefits {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.login-benefits li {
+  color: #fff;
+
+  line-height: 1.6;
+  margin-bottom: 8px;
+  position: relative;
+  padding-left: 16px;
+}
+
+.login-benefits li::before {
+  content: "•";
+  color: #fff;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+/* 像素艺术图形区域 */
+.login-graphic-section {
+ width: 224px;
+ height: 160px;
+}
+
+.pixel-art-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.pixel-text {
+  font-weight: bold;
+  color: #00CC9B;
+  text-shadow: 2px 2px 0px #000;
+}
+
+.web5-text {
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+
+.ckb-text {
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.pixel-planets {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.pixel-planet {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.yellow-planet {
+  background: #FFD700;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+
+.purple-planet {
+  background: #8A2BE2;
+  box-shadow: 0 0 8px rgba(138, 43, 226, 0.5);
+}
+
+.planet-rings {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+}
+
+.pixel-planet::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+}
+
+
+
+/* 底部区域 */
+.login-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.login-info-link {
+  color: #00CC9B;
+  font-size: 14px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.3s ease;
+}
+
+.login-info-link:hover {
+  color: #00B287;
+}
+
+.info-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #00CC9B;
+  color: #000;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.login-button-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wallet-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #3B82F6;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.login-connect-button {
+  background: #00CC9B;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  height: 32px;
+  line-height: 32px;
+  padding: 0 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 114px;
+}
+
+.login-connect-button:hover {
+  background: #00B287;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 204, 155, 0.3);
+}
+
+.login-connect-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 204, 155, 0.2);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .login-modal {
+    margin: 16px;
+    padding: 24px;
+    max-width: none;
+  }
+  
+  .login-content {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .login-graphic-section {
+    flex: none;
+    width: 100%;
+    min-height: 120px;
+  }
+  
+  .login-footer {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  
+  .login-button-container {
+    justify-content: center;
+  }
+  
+  .login-progress {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  .login-step-separator {
+    display: none;
+  }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.login-modal {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* 像素艺术动画 */
+@keyframes pixelGlow {
+  0%, 100% {
+    text-shadow: 2px 2px 0px #000, 0 0 8px #00CC9B;
+  }
+  50% {
+    text-shadow: 2px 2px 0px #000, 0 0 16px #00CC9B, 0 0 24px #00CC9B;
+  }
+}
+
+.pixel-text {
+  animation: pixelGlow 3s ease-in-out infinite;
+}
+
+/* 星球旋转动画 */
+@keyframes planetRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.planet-rings {
+  animation: planetRotate 10s linear infinite;
+}
+
+/* 第二步：设置名称样式 */
+.name-input-container {
+  position: relative;
+  margin: 20px 0;
+}
+
+.name-input {
+  width: 100%;
+  padding: 16px;
+  background: #1C2027;
+  border: 1px solid #4C525C;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.name-input:focus {
+  outline: none;
+  border-color: #00CC9B;
+  box-shadow: 0 0 0 2px rgba(0, 204, 155, 0.1);
+}
+
+.name-input::placeholder {
+  color: #6A727B;
+}
+
+.input-valid-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background: #00CC9B;
+  border-radius: 50%;
+  color: #000;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.validation-message {
+  margin-top: 8px;
+}
+
+.validation-error {
+  color: #EF4444;
+  font-size: 12px;
+}
+
+/* 第三步：拖拽交互样式 */
+.login-description {
+  color: #E5E7EB;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 16px 0 24px 0;
+}
+
+.drag-drop-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  margin: 32px 0;
+  min-height: 200px;
+}
+
+.drag-source {
+  flex: 0 0 240px;
+  align-items: center;
+}
+
+.planet-account {
+  border: 1px dashed #4C525C;
+  border-radius: 12px;
+  cursor: grab;
+  border:1px dashed #4C525C;
+  transition: all 0.3s ease;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px auto;
+}
+
+.planet-account:hover {
+  border-color: #00CC9B;
+  background: #262A33;
+}
+
+.planet-account.dragging {
+  opacity: 0.7;
+  transform: scale(0.95);
+  cursor: grabbing;
+}
+
+
+.account-info {
+  margin-bottom: 12px;
+}
+
+.account-name {
+  color: #00CC9B;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.account-address {
+  color: #fff;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 4px;
+  justify-content: center;
+}
+
+.wallet-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  background: #3B82F6;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drag-target {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nervos-galaxy {
+  width: 240px;
+  height: 160px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nervos-galaxy:hover {
+  transform: scale(1.05);
+}
+
+.nervos-galaxy.dropped {
+  border: 1px dashed #00CC9B;
+}
+
+.galaxy-core {
+
+}
+
+
+.insufficient-funds-warning {
+  color: #EF4444;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* 第四步：完成页面样式 */
+.success-info {
+  text-align: center;
+}
+
+.success-card {
+  display: flex;
+  align-items: top;
+  justify-content: space-between;
+  margin: 24px 0;
+  padding: 50px 30px 0 30px;
+  background: url('/bg-card.svg') 0 0 no-repeat;
+  width: 350px;
+  height: 182px;
+  margin: 0 auto;
+
+  
+}
+.success-head{
+ width: 60px;
+}
+.success-planet {
+  width: 60px;
+  height: 60px;
+  position: relative;
+}
+
+
+.success-details {
+  text-align: left;
+  padding-left:40px;
+  flex: 1;
+}
+
+.success-name {
+  color: #00CC9B;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.success-address {
+  color: #6A727B;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.success-description {
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 12px 0;
+}
+.card-img{
+  width: 64px;
+  height: 64px;
+  background: #141619;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+.card-name{
+  font-size: 16px;
+  line-height: 40px;
+  font-weight: 600;
+  color: #000;
+  text-align: center;
+}
+/* 步骤导航按钮 */
+.step-navigation {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+.step-navigation a{
+  color: #00CC9B;
+  text-decoration: underline;
+}
+.nav-button {
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  min-width: 100px;
+}
+
+
+.next-button {
+  background: #00CC9B;
+  color: #000;
+}
+
+.next-button:hover:not(:disabled) {
+  background: #00B287;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 204, 155, 0.3);
+}
+
+.next-button:disabled {
+  background: #4C525C;
+  color: #6A727B;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.complete-button {
+  background: #00CC9B;
+  color: #000;
+  padding: 12px 48px;
+  font-size: 16px;
+}
+
+.complete-button:hover {
+  background: #00B287;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 204, 155, 0.3);
+}
+
+/* 拖拽动画 */
+@keyframes dragPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.planet-account.dragging {
+  animation: dragPulse 0.5s ease-in-out infinite;
+}
+
+/* 成功动画 */
+@keyframes successGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(0, 204, 155, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(0, 204, 155, 0.8);
+  }
+}
+
+.success-planet {
+  animation: successGlow 2s ease-in-out infinite;
+}

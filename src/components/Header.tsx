@@ -1,18 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import LanguageSwitcher from "./LanguageSwitcher";
 import Link from "next/link";
 import { CiCirclePlus } from "react-icons/ci";
-import { ccc } from "@ckb-ccc/connector-react";
 import { usePathname } from "next/navigation";
 import { useI18n } from "@/contexts/I18nContext";
+import LoginModal from "./LoginModal";
+import "./LoginModal.css";
 
 export default function Header() {
-    const { open } = ccc.useCcc();
     const pathname = usePathname();
     const { locale } = useI18n();
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
     const homeHref = `/${locale}`;
     const treasuryHref = `/${locale}/treasury`;
@@ -54,13 +55,20 @@ export default function Header() {
         <Link href={`${homeHref}/proposal/create`} className="button-secondary">
           <CiCirclePlus /> 发起提案
         </Link>
-        <button
+        <button onClick={() => setIsLoginModalOpen(true)} className="button-normal">Login</button>
+        {/* <button
           onClick={open}
           className="button-normal"
         >
           Connect Wallet
-        </button>
+        </button> */}
       </div>
+      
+      {/* 登录弹窗 */}
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+      />
     </div>
   );
 }

@@ -15,7 +15,7 @@ export default function Treasury() {
   const address = "ckb1qyqwtz3x2z7g8g7q2hdasmm5m4enr0v40s8k0q8x2v";
 
   // 动态加载图表以避免 SSR 问题
-  const TotalAssetsChart = dynamic(() => import("../../../components/TotalAssetsChart"), {
+  const TotalAssetsChart = dynamic(() => import("../../../components/ui/TotalAssetsChart"), {
     ssr: false,
   });
 

@@ -18,6 +18,7 @@ export default function Header() {
     const homeHref = `/${locale}`;
     const treasuryHref = `/${locale}/treasury`;
     const managementHref = `/${locale}/management`;
+    const userCenterHref = `/${locale}/user-center`;
     const ruleHref = `https://pebble-lumber-0be.notion.site/Community-Fund-DAO-v1-1-Web5-23924205dae080ed9290e95519c57ab1`;
 
     const isActive = (href: string) => {
@@ -45,6 +46,9 @@ export default function Header() {
         </li>
         <li>
           <Link href={managementHref} className={isActive(managementHref) ? "active" : ""}>物业信息</Link>
+        </li>
+        <li>
+          <Link href={userCenterHref} className={isActive(userCenterHref) ? "active" : ""}>用户中心</Link>
         </li>
         <li>
           <Link href={ruleHref}  className={isActive(ruleHref) ? "active" : ""}>治理规则</Link>

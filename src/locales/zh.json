@@ -11,11 +11,58 @@
   "navigation": {
     "home": "首页",
     "about": "关于",
-    "contact": "联系"
+    "contact": "联系",
+    "userCenter": "用户中心"
   },
   "footer": {
     "learn": "学习",
     "examples": "示例",
     "goToNextjs": "前往 nextjs.org →"
+  },
+  "userCenter": {
+    "title": "用户中心",
+    "profile": {
+      "title": "用户资料",
+      "joinDate": "加入于",
+      "editProfile": "编辑资料",
+      "connectSocial": "连接社交账号"
+    },
+    "web5": {
+      "title": "Web5 身份",
+      "did": "去中心化身份(DID)",
+      "pds": "个人数据存储(PDS)",
+      "privacyControl": "隐私控制",
+      "dataEncryption": "数据加密",
+      "anonymousBrowsing": "匿名浏览",
+      "dataBackup": "数据备份",
+      "enabled": "启用",
+      "automatic": "自动"
+    },
+    "wallet": {
+      "title": "钱包及 Nervos DAO",
+      "votingPower": "我的投票权",
+      "currentWallet": "当前连接钱包",
+      "switchWallet": "切换",
+      "walletBalance": "钱包余额",
+      "depositedInDao": "已存入Nervos DAO",
+      "redeeming": "赎回中",
+      "stakeCKB": "质押CKB",
+      "bindNeuron": "绑定 Neuron 钱包地址"
+    },
+    "records": {
+      "proposals": "提案记录",
+      "voting": "投票纪录",
+      "discussion": "讨论记录",
+      "proposal": "提案",
+      "type": "类型",
+      "budget": "申请预算",
+      "status": "提案状态",
+      "publishDate": "发布日期",
+      "actions": "操作",
+      "edit": "编辑",
+      "startVoting": "开启投票",
+      "deliverMilestone": "里程碑交付",
+      "rectificationCompleted": "整改完成"
+    }
   }
 }

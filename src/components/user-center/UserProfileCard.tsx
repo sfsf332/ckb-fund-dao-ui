@@ -1,0 +1,181 @@
+'use client';
+
+import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
+import { MdOutlineModeEdit, MdCheck } from "react-icons/md";
+import { FaDiscord,FaTelegramPlane   } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+
+interface UserProfileCardProps {
+  className?: string;
+}
+
+export default function UserProfileCard({ className = '' }: UserProfileCardProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [userName, setUserName] = useState('Alice');
+  const [joinDate] = useState('2025年1月1日');
+  const [expandedConnection, setExpandedConnection] = useState<string | null>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  
+  const nervosTalk = <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M5 8.64583V5L19 5.03646V8.64583H15.6283V15.3542L11.9634 19V5.14583L8.44503 8.64583H5Z" fill="white"/>
+  </svg>
+  ;
+  
+  const socialConnections = [
+    { 
+      id: 'nervos-talk',
+      name: 'Connect With Nervos Talk', 
+      icon: nervosTalk, 
+      connected: false,
+      username: null
+    },
+    { 
+      id: 'x-twitter',
+      name: 'Connect With X', 
+      icon: <FaXTwitter />, 
+      connected: false,
+      username: null
+    },
+    { 
+      id: 'discord',
+      name: 'Connect With Discord', 
+      icon: <FaDiscord color='#5865F2' />, 
+      connected: true,
+      username: '0xalice'
+    },
+    { 
+      id: 'telegram',
+      name: 'Connect With Telegram', 
+      icon: <FaTelegramPlane color='#0088cc' />, 
+      connected: false,
+      username: null
+    },
+  ];
+
+  const handleConnectionClick = (connectionId: string) => {
+    if (expandedConnection === connectionId) {
+      setExpandedConnection(null);
+    } else {
+      setExpandedConnection(connectionId);
+    }
+  };
+
+  const handleConnect = (connectionId: string) => {
+    console.log(`连接 ${connectionId}`);
+    // 这里可以添加实际的连接逻辑
+    setExpandedConnection(null);
+  };
+
+  const handleUnbind = (connectionId: string) => {
+    console.log(`解绑 ${connectionId}`);
+    // 这里可以添加实际的解绑逻辑
+    setExpandedConnection(null);
+  };
+
+  // 点击外部区域关闭展开菜单
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
+        setExpandedConnection(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  return (
+    <div ref={cardRef} className={`user-profile-card ${className}`}>
+      <div className="user-info">
+      <div className="user-avatar">
+          <Image
+            src="/nervos-planet.png"
+            alt="User Avatar"
+            width={60}
+            height={32}
+            className="avatar-image"
+          />
+          <div className="avatar-edit-icon">
+            <MdOutlineModeEdit />
+          </div>
+        </div>
+        <div className="user-name-section">
+          {isEditing ? (
+            <div className="user-name-edit-container">
+              <input
+                type="text"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                className="user-name-input"
+                onKeyPress={(e) => e.key === 'Enter' && setIsEditing(false)}
+                autoFocus
+              />
+              <button
+                className="user-name-confirm-button"
+                onClick={() => setIsEditing(false)}
+              >
+                <MdCheck />
+              </button>
+            </div>
+          ) : (
+            <h2 className="user-name" onClick={() => setIsEditing(true)}>
+              {userName}
+            </h2>
+          )}
+          <p className="join-date">加入于{joinDate}</p>
+        </div>
+        
+       
+      </div>
+
+      <div className="social-connections">
+        {socialConnections.map((connection) => (
+          <div key={connection.id} className="connection-item">
+            <button
+              className={`connection-button ${connection.connected ? 'connected' : ''}`}
+              onClick={() => handleConnectionClick(connection.id)}
+            >
+              <div className="connection-info">
+                <span className="connection-name">
+                  {connection.connected && connection.username 
+                    ? connection.username 
+                    : connection.name
+                  }
+                </span>
+                <span className="connection-icon">{connection.icon}</span>
+              </div>
+              {expandedConnection === connection.id && (
+                <div className="connection-actions">
+                  {connection.connected ? (
+                    <button
+                      className="unbind-button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleUnbind(connection.id);
+                      }}
+                    >
+                      解绑账号
+                    </button>
+                  ) : (
+                    <button
+                      className="connect-button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleConnect(connection.id);
+                      }}
+                    >
+                      连接
+                    </button>
+                  )}
+                </div>
+              )}
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

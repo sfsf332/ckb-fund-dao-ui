@@ -1,9 +1,10 @@
 import React from "react";
-import { AiOutlineCloseCircle, AiOutlineExport } from "react-icons/ai";
+import { AiOutlineExport } from "react-icons/ai";
 import Image from "next/image";
 import Link from "next/link";
 import { FaCopy } from "react-icons/fa";
 import { handleCopy } from "@/utils/common";
+import { Modal } from "./ui/modal";
 interface Milestone {
   id: string;
   title: string;
@@ -33,38 +34,39 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
   onClose,
   formData,
 }) => {
-  if (!isOpen) return null;
-console.log(formData)
+  console.log(formData)
+  
   return (
-    <div className="preview-modal-overlay" onClick={onClose}>
-      <div className="preview-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="proposal-header">
-          <h2>{formData.title}</h2>
-          <button type="button" onClick={onClose} className="preview-close-btn">
-            <AiOutlineCloseCircle size={20} color="#777" />
-          </button>
-          <div className="proposal-info">
-            <div className="user_info">
-              <Image src="/avatar.jpg" alt="avatar" width={32} height={32} />
-              <div className="name">
-                <h3>John</h3>
-                <p>
-                  did:ckb:ckt1qvqr...7q2h
-                  <button
-                    className="button-copy"
-                    onClick={() => handleCopy("did:ckb:ckt1qvqr...7q2h")}
-                    aria-label="copy-treasury-address"
-                  >
-                    <FaCopy />
-                  </button>
-                  <Link href="#" aria-label="export-treasury-address">
-                    <AiOutlineExport />
-                  </Link>
-                </p>
-              </div>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={formData.title}
+      size="large"
+      className="preview-modal"
+    >
+      <div className="proposal-header">
+        <div className="proposal-info">
+          <div className="user_info">
+            <Image src="/avatar.jpg" alt="avatar" width={32} height={32} />
+            <div className="name">
+              <h3>John</h3>
+              <p>
+                did:ckb:ckt1qvqr...7q2h
+                <button
+                  className="button-copy"
+                  onClick={() => handleCopy("did:ckb:ckt1qvqr...7q2h")}
+                  aria-label="copy-treasury-address"
+                >
+                  <FaCopy />
+                </button>
+                <Link href="#" aria-label="export-treasury-address">
+                  <AiOutlineExport />
+                </Link>
+              </p>
             </div>
           </div>
         </div>
+      </div>
 
         <div className="proposal-content">
           <div className="proposal-section">
@@ -145,13 +147,7 @@ console.log(formData)
           </div>
         </div>
 
-        <div className="preview-modal-footer">
-          <button type="button" onClick={onClose} className="btn btn-secondary">
-            关闭预览
-          </button>
-        </div>
-      </div>
-    </div>
+    </Modal>
   );
 };
 

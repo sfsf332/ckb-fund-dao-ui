@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { ccc } from "@ckb-ccc/connector-react";
-import { RiCloseCircleLine } from "react-icons/ri";
+// import { ccc } from "@ckb-ccc/connector-react";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { FaCopy } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
+import { Modal } from "./ui/modal";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -14,7 +14,7 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
-  const { open } = ccc.useCcc();
+  // const { open } = ccc.useCcc();
   const [currentStep, setCurrentStep] = useState(1);
   const [accountName, setAccountName] = useState("");
   const [isDragging, setIsDragging] = useState(false);
@@ -70,11 +70,11 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     }
   };
 
-  const handlePrevStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
+  // const handlePrevStep = () => {
+  //   if (currentStep > 1) {
+  //     setCurrentStep(currentStep - 1);
+  //   }
+  // };
 
   const validateAccountName = (name: string) => {
     return /^[a-zA-Z0-9-]{4,18}$/.test(name);
@@ -117,18 +117,15 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     setShowInsufficientFunds(false);
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="login-modal-overlay">
-      <div className="login-modal">
-        {/* 关闭按钮 */}
-        <button className="login-modal-close" onClick={onClose}>
-          <RiCloseCircleLine size={20} />
-        </button>
-
-        {/* 标题 */}
-        <h2 className="login-modal-title">创建账号</h2>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="创建账号"
+      size="large"
+      className="login-modal"
+      showCloseButton={true}
+    >
 
         {/* 进度指示器 */}
         <div className="login-progress">
@@ -329,7 +326,6 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             </div>
           )}
         </div>
-      </div>
-    </div>
+    </Modal>
   );
 }

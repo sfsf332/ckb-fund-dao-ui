@@ -13,14 +13,14 @@ type ResponseInterceptor = <T, K>(res: T, params: K, cfg?: RequestPartOptions) =
 const defaultReqInterceptor: RequestInterceptor = (params, options) => [params, options]
 const identity = <T>(t: T) => t;
 
-export default function defineAPIHOC(urlPrefix: string, interceptors?: Interceptors<any>) {
+export default function defineAPIHOC(urlPrefix: string, interceptors?: Interceptors<Record<string, [unknown, unknown]>>) {
   return function defineAPI<Params, Response>(url: string, method: HTTPMethod, helper?: APIHelper) {
     const divider = parameterDividerHOC(url, method, helper?.divider);
     const { requestInterceptor = defaultReqInterceptor, responseInterceptor = identity } = interceptors?.get(`${method} ${url}`) ?? {};
     // the return type is a trick, this can make callAPI get a correct type
     return (iParams: Params, iOptions?: RequestPartOptions) => {
       const [params, options] = requestInterceptor(iParams, iOptions);
-      const { url: queryUrl, opt: dataPartOptions } = divider(params);
+      const { url: queryUrl, opt: dataPartOptions } = divider(params as Record<string, unknown>);
       const reqConfig = {
         method,
         ...dataPartOptions,
@@ -37,7 +37,7 @@ export default function defineAPIHOC(urlPrefix: string, interceptors?: Intercept
 
 
 
-export class Interceptors<Group extends Record<any, [any, any]>> {
+export class Interceptors<Group extends Record<string, [unknown, unknown]>> {
   private requestObserverMap: Map<keyof Group, RequestInterceptor> = new Map();
   private responseObserverMap: Map<keyof Group, ResponseInterceptor> = new Map();
 
@@ -80,7 +80,7 @@ function parameterDividerHOC(url: string, httpMethod: HTTPMethod, divider: APIHe
 
   const defaultParameterStoreKey = httpMethod === 'GET' ? 'query' : 'body';
 
-  return function divider(parameters?: Record<string, any> | Array<any>) {
+  return function divider(parameters?: Record<string, unknown> | Array<unknown>) {
     if (!parameters) {
       return { url };
     }
@@ -88,7 +88,7 @@ function parameterDividerHOC(url: string, httpMethod: HTTPMethod, divider: APIHe
       return { url, opt: { data: parameters } };
     }
     let queryUrl = url;
-    const sortedStore: Record<string, any> = {};
+    const sortedStore: Record<string, unknown> = {};
     for (const key in parameters) {
       if (parameters[key] === undefined || parameters[key] === null) {
         continue;
@@ -106,10 +106,10 @@ function parameterDividerHOC(url: string, httpMethod: HTTPMethod, divider: APIHe
       if (storeKey === 'formData') {
         (sortedStore[storeKey] as FormData).append(key, value as string | Blob);
       } else {
-        sortedStore[storeKey][key] = value;
+        (sortedStore[storeKey] as Record<string, unknown>)[key] = value;
       }
     }
-    const output: Record<string, any> = {};
+    const output: Record<string, unknown> = {};
     if (sortedStore.query) {
       output.params = sortedStore.query;
     }

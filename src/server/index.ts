@@ -4,7 +4,7 @@ import { RequestConfig } from "@/lib/request";
 export default function server<T>(
   url: string,
   method: 'GET' | 'POST' | 'PUT' | 'DELETE',
-  params: Record<string, any> = {},
+  params: Record<string, unknown> = {},
   options?: RequestConfig,
 ): Promise<T> {
   return defineAPI(url, method)(

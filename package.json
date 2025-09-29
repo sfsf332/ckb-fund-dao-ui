@@ -20,7 +20,6 @@
     "@types/react-datepicker": "^7.0.0",
     "@web5/api": "^0.12.0",
     "axios": "^1.12.2",
-    "cid": "github:multiformats/cid",
     "copy-to-clipboard": "^3.3.3",
     "dayjs": "^1.11.18",
     "echarts": "^6.0.0",

@@ -162,7 +162,7 @@ export default function useCreateAccount({ createSuccess }: {
   createSuccess?: () => void
 }) {
   const { createUser, resetUserStore } = useUserInfoStore()
-  const { signer, walletClient, address } = useWallet()
+  const { signer, walletClient } = useWallet()
 
   const [extraIsEnough, setExtraIsEnough] = useState<ExtraIsEnoughState>({
     capacity: initialCapacity.toString(),

@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
   try {
     const token = process.env.NOTION_TOKEN || process.env.NOTION_TOKEN_V2 || "";
     const kyDefaults = { timeout: 12000, retry: 0 } as const;
-    const api = new NotionAPI(token ? { authToken: token, kyOptions: kyDefaults } : { kyOptions: kyDefaults });
+    const api = new NotionAPI(token ? { authToken: token } : {});
     const pageId = (await import("notion-utils")).idToUuid(rawId);
 
     const maxRetries = 3;
@@ -27,7 +27,6 @@ export async function GET(req: NextRequest) {
           fetchCollections: false,
           fetchRelationPages: false,
           signFileUrls: false,
-          kyOptions: kyDefaults,
         });
         console.log(recordMap,'recordMap')
         if (recordMap && recordMap.block && Object.keys(recordMap.block).length > 0) {

@@ -30,7 +30,7 @@ export type SectionItem = {
   name: string
   owner?: { did: string; displayName?: string } // 版主
   description?: string // 描述
-  administrators?: any[]  // 管理员列表
+  administrators?: unknown[]  // 管理员列表
 }
 
 /* 获取版区列表 */
@@ -55,7 +55,7 @@ type PostRecordType = {
   $type: 'app.actor.profile'
   displayName: string;
   handle: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 type CreatePostResponse = {
@@ -82,7 +82,7 @@ export async function writesPDSOperation(params: {
 
   const newRecord = {
     ...params.record,
-    created: dayjs().utc().format()
+    created: dayjs().format() 
   }
 
   const writeRes = await pdsClient.com.atproto.web5.preDirectWrites({
@@ -104,13 +104,13 @@ export async function writesPDSOperation(params: {
     throw '没缓存'
   }
 
-  let keyPair = await crypto.Secp256k1Keypair.import(storageInfo?.signKey?.slice(2))
+  const keyPair = await crypto.Secp256k1Keypair.import(storageInfo?.signKey?.slice(2))
 
-  let uncommit: UnsignedCommit = {
+  const uncommit: UnsignedCommit = {
     did: writerData.did,
     version: 3,
     rev: writerData.rev,
-    prev: writerData.prev ?? null,
+    prev: writerData.prev ? CID.parse(writerData.prev) : null,
     data: CID.parse(writerData.data),
   }
   const preEncoded = cbor.encode(uncommit)
@@ -126,7 +126,7 @@ export async function writesPDSOperation(params: {
     ...uncommit,
     sig,
   }
-  let signingKey = keyPair.did()
+  const signingKey = keyPair.did()
 
   const localStorage = storage.getToken()
 

@@ -3,9 +3,9 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+
 export default function RootPage() {
   const router = useRouter();
-
   useEffect(() => {
     // 检测用户首选语言
     const savedLocale = localStorage.getItem('locale');

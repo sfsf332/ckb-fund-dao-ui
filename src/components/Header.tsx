@@ -7,8 +7,8 @@ import Link from "next/link";
 import { CiCirclePlus } from "react-icons/ci";
 import { usePathname } from "next/navigation";
 import { useI18n } from "@/contexts/I18nContext";
-import LoginModal from "./LoginModal";
-import "./LoginModal.css";
+import { LoginModal } from "./user-login";
+import "./user-login/LoginModal.css";
 
 export default function Header() {
     const pathname = usePathname();

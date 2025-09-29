@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 100;
   backdrop-filter: blur(4px);
 }
 
@@ -18,7 +18,7 @@
   border-radius: 15px;
   padding: 30px;
   width: 100%;
-  max-width: 600px;
+  max-width: 650px;
   position: relative;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
 }
@@ -550,6 +550,67 @@ rotate: 90deg;
   justify-content: center;
 }
 
+/* 钱包状态和控制按钮样式 */
+.wallet-status {
+  margin-top: 16px;
+  padding: 12px;
+  background: #1C2027;
+  border-radius: 8px;
+  border: 1px solid #4C525C;
+}
+
+.wallet-connected {
+  color: #00CC9B;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.wallet-address {
+  color: #E5E7EB;
+  font-size: 12px;
+  margin: 0 0 12px 0;
+}
+
+.wallet-controls {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.wallet-control-btn {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  min-width: 80px;
+}
+
+.disconnect-btn {
+  background: #EF4444;
+  color: #fff;
+}
+
+.disconnect-btn:hover {
+  background: #DC2626;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.switch-btn {
+  background: #3B82F6;
+  color: #fff;
+}
+
+.switch-btn:hover {
+  background: #2563EB;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
 .drag-target {
   flex: 1;
   display: flex;
@@ -576,9 +637,6 @@ rotate: 90deg;
   border: 1px dashed #00CC9B;
 }
 
-.galaxy-core {
-
-}
 
 
 .insufficient-funds-warning {

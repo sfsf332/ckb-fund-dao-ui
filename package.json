@@ -9,12 +9,23 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@atproto/common-web": "^0.4.3",
+    "@atproto/crypto": "^0.4.4",
+    "@atproto/repo": "^0.8.10",
     "@ckb-ccc/ccc": "^1.1.16",
-    "@ckb-ccc/connector-react": "^1.0.24",
+    "@ckb-ccc/connector-react": "^1.0.19",
+    "@ckb-ccc/core": "^1.12.2",
+    "@ipld/dag-cbor": "^9.2.5",
+    "@scure/base": "^2.0.0",
     "@types/react-datepicker": "^7.0.0",
+    "@web5/api": "^0.12.0",
+    "axios": "^1.12.2",
+    "cid": "github:multiformats/cid",
     "copy-to-clipboard": "^3.3.3",
+    "dayjs": "^1.11.18",
     "echarts": "^6.0.0",
     "katex": "^0.16.22",
+    "multiformats": "^13.4.1",
     "next": "15.5.2",
     "notion-client": "^7.4.3",
     "notion-types": "^7.4.3",
@@ -28,7 +39,9 @@
     "react-intl": "^7.1.11",
     "react-notion-x": "^7.4.3",
     "react-quill-new": "^3.6.0",
-    "react-tooltip": "^5.29.1"
+    "react-tooltip": "^5.29.1",
+    "web5-api": "^0.0.25",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -12,7 +12,7 @@ import { LayoutProvider } from "./layoutProvider";
 import Banner from "@/components/Banner";
 
 export const metadata: Metadata = {
-  title: "CKB Community Fund DAO",
+  title: "CKB CFD",
   description: "CKB Community Fund DAO - 治理平台",
   icons: {
     icon: "/nervos-logo.svg",

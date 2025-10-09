@@ -33,7 +33,7 @@ export default function LanguageSwitcher() {
   return (
     <button
       onClick={handleLanguageChange}
-      className="px-3 py-1 rounded-md text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center gap-2"
+      className="language-switcher"
     >
       <PiGlobeLight />
       {displayText}

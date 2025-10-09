@@ -1,12 +1,12 @@
 // 提案状态枚举
 export enum ProposalStatus {
-  DRAFT = 'draft',           // 草稿
-  REVIEW = 'review',         // 社区审议中
-  VOTE = 'vote',            // 投票中
-  MILESTONE = 'milestone',   // 里程碑交付中
-  APPROVED = 'approved',     // 已通过
-  REJECTED = 'rejected',     // 已拒绝
-  ENDED = 'ended'           // 结束
+  DRAFT = 1,           // 草稿
+  REVIEW = 2,         // 社区审议中
+  VOTE = 3,            // 投票中
+  MILESTONE = 1001,   // 里程碑交付中
+  APPROVED = 4,     // 已通过
+  REJECTED = 5,     // 已拒绝
+  ENDED = 0           // 结束
 }
 
 // 提案类型枚举

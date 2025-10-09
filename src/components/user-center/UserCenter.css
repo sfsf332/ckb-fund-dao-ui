@@ -481,6 +481,9 @@
 .switch-wallet-button {
   color: #00D4AA;
   cursor: pointer;
+  display: inline;
+  background: transparent;
+  border: none;
   font-size: 14px;
   text-decoration: underline;
 

@@ -3,19 +3,55 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Proposal } from "../data/mockProposals";
-import { formatNumber, getStatusClass, getStatusText, formatDate } from "../utils/proposalUtils";
+import { ProposalListItem } from "@/server/proposal";
+import { formatNumber, formatDate } from "../utils/proposalUtils";
 
 interface ProposalItemProps {
-  proposal: Proposal;
+  proposal: Proposal | ProposalListItem;
 }
 
 export default function ProposalItem({ proposal }: ProposalItemProps) {
   const router = useRouter();
 
+  // 兼容两种数据结构 (mockProposals 和 API)
+  const isAPIFormat = 'record' in proposal;
+  
+  const title = isAPIFormat ? proposal.record.data.title : (proposal as Proposal).title;
+  
+  let budget: number;
+  if (isAPIFormat) {
+    budget = parseFloat(proposal.record.data.budget || '0');
+  } else {
+    const mockBudget = (proposal as Proposal).budget;
+    budget = typeof mockBudget === 'string' ? parseFloat(mockBudget) : mockBudget;
+  }
+  
+  const createdAt = isAPIFormat ? proposal.record.created : (proposal as Proposal).createdAt;
+  
+  const author = isAPIFormat 
+    ? { name: proposal.author.displayName, did: proposal.author.did, avatar: '/avatar.jpg' }
+    : (proposal as Proposal).proposer;
+  const avatar = author.avatar || '/avatar.jpg'; // 提供默认头像
+  
+  // 处理里程碑数据
+  const milestones = isAPIFormat && proposal.record.data.milestones && proposal.record.data.milestones.length > 0
+    ? {
+        current: 1, // 默认为第一个
+        total: proposal.record.data.milestones.length,
+        progress: 0,
+      }
+    : ('milestones' in proposal ? (proposal as Proposal).milestones : undefined);
+
   // 处理点击跳转到详情页
   const handleClick = () => {
-    router.push(`/zh/proposal/detail?id=${proposal.id}`);
+    // 如果有 uri，使用 uri 跳转，否则使用 id
+    const path = 'uri' in proposal && proposal.uri 
+      ? `/zh/proposal/${encodeURIComponent(proposal.uri)}`
+      : `/zh/proposal/detail?id=${isAPIFormat ? proposal.uri : (proposal as Proposal).id}`;
+    router.push(path);
   };
+
+  const voting = !isAPIFormat && 'voting' in proposal ? (proposal as Proposal).voting : undefined;
 
   return (
     <li 
@@ -24,57 +60,57 @@ export default function ProposalItem({ proposal }: ProposalItemProps) {
       style={{ cursor: 'pointer' }}
     >
       <h4>
-        {proposal.title}
-        <span className={getStatusClass(proposal.status)}>
-          {getStatusText(proposal.status)}
-        </span>
+        {title}
+        {/* <span className={getStatusClass(state)}>
+          {getStatusText(state)}
+        </span> */}
       </h4>
       
       <div className="proposal_person">
-        <Image src={proposal.proposer.avatar} alt="avatar" width={40} height={40} />
+        <Image src={avatar} alt="avatar" width={40} height={40} />
         <div className="name">
-          <h3>{proposal.proposer.name}</h3>
-          <p>{proposal.proposer.did}</p>
+          <h3>{author.name}</h3>
+          <p>{author.did}</p>
         </div>
-        <p>{formatDate(proposal.createdAt)}</p>
+        <p>{formatDate(createdAt)}</p>
       </div>
       
       <div className="proposal_detail">
         <p>申请预算</p>
-        <p>{formatNumber(proposal.budget)} CKB</p>
+        <p>{formatNumber(budget)} CKB</p>
       </div>
       
       {/* 投票状态显示 */}
-      {proposal.voting && (
+      {voting && (
         <div className="proposal_voting">
           <div className="vote-item approve">
             <p>赞成</p>
-            <p>{proposal.voting.approve}%</p>
+            <p>{voting.approve}%</p>
           </div>
           <div className="vote-item oppose">
             <p>反对</p>
-            <p>{proposal.voting.oppose}%</p>
+            <p>{voting.oppose}%</p>
           </div>
         </div>
       )}
       
       {/* 进度显示 */}
       <div className="proposal_progress">
-        {proposal.milestones ? (
+        {milestones ? (
           <>
-            <p>进度: 里程碑 {proposal.milestones.current}/{proposal.milestones.total}</p>
+            <p>进度: 里程碑 {milestones.current}/{milestones.total}</p>
             <div className="progress-bar">
               <div 
                 className="progress-fill" 
-                style={{width: `${proposal.milestones.progress}%`}}
+                style={{width: `${milestones.progress}%`}}
               ></div>
             </div>
           </>
-        ) : proposal.voting ? (
+        ) : voting ? (
           <div className="progress-bar">
             <div 
               className="progress-fill" 
-              style={{width: `${proposal.voting.approve}%`}}
+              style={{width: `${voting.approve}%`}}
             ></div>
           </div>
         ) : (

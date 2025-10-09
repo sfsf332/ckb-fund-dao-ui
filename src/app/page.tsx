@@ -23,10 +23,10 @@ export default function RootPage() {
   }, [router]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold mb-4">正在加载...</h1>
-        <p className="text-gray-600">正在为您选择合适的语言</p>
+    <div className="loading-container">
+      <div className="loading-content">
+        <h1 className="loading-title">正在加载...</h1>
+        <p className="loading-description">正在为您选择合适的语言</p>
       </div>
     </div>
   );

@@ -10,13 +10,16 @@ interface LoginStep4Props {
 }
 
 export default function LoginStep4({ accountName }: LoginStep4Props) {
+  
   const { walletAddress, isLoadingAddress, copyAddress, formatAddress } = useWalletAddress();
 
   // 复制地址到剪贴板
   const handleCopyAddress = async () => {
     const success = await copyAddress();
     if (success) {
-      console.log("地址已复制到剪贴板");
+      console.log("✅ 地址已复制到剪贴板");
+    } else {
+      console.log("❌ 地址复制失败");
     }
   };
   return (

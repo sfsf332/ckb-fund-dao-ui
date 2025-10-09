@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useParams } from 'next/navigation';
 import { useTranslation } from "../../../../utils/i18n";
 import { FaCopy } from "react-icons/fa";
 import { AiOutlineExport } from "react-icons/ai";
@@ -16,38 +16,47 @@ import QuoteButton from "@/components/comment/QuoteButton";
 import { Comment } from "@/types/comment";
 import { TimelineEvent } from "@/types/timeline";
 import { VotingInfo, VoteOption } from "@/types/voting";
-import { mockProposals } from "@/data/mockProposals";
-import { ProposalTimeline, ProposalVoting, MilestoneTracking, MilestoneVoting } from "@/components/proposal-phase";
+import { ProposalTimeline, ProposalVoting, MilestoneTracking } from "@/components/proposal-phase";
 import { generateTimelineEvents } from "@/utils/timelineUtils";
 import { generateVotingInfo, handleVote } from "@/utils/votingUtils";
 import { generateMilestones } from "@/utils/milestoneUtils";
 import { generateMilestoneVotingInfo, handleMilestoneVote } from "@/utils/milestoneVotingUtils";
 import { Milestone } from "@/types/milestone";
 import { MilestoneVotingInfo, MilestoneVoteOption } from "@/types/milestoneVoting";
+import { useProposalDetail } from "@/hooks/useProposalDetail";
+import { ProposalDetailResponse } from "@/server/proposal";
+import { Proposal, ProposalStatus, ProposalType } from "@/data/mockProposals";
 
-
-interface Proposal {
-  id: string;
-  proposalType: string;
-  title: string;
-  releaseDate: string;
-  background: string;
-  goals: string;
-  team: string;
-  budget: string;
-  milestones: {
-    current: number;
-    total: number;
-    progress: number;
+// 适配器函数：将API返回的ProposalDetailResponse转换为工具函数期望的Proposal类型
+const adaptProposalDetail = (detail: ProposalDetailResponse): Proposal => {
+  // 从 record.data 中提取实际的提案数据
+  const proposalData = detail.record.data;
+  
+  // 计算里程碑信息（如果有的话）
+  const milestonesInfo = proposalData.milestones && proposalData.milestones.length > 0 ? {
+    current: 1, // 默认为第一个里程碑
+    total: proposalData.milestones.length,
+    progress: 0, // 默认进度为0
+  } : undefined;
+  
+  return {
+    id: detail.cid, // 使用 cid 作为 id
+    title: proposalData.title,
+    status: ProposalStatus.REVIEW, // 默认状态，可以根据实际情况调整
+    type: proposalData.proposalType as ProposalType,
+    proposer: {
+      name: detail.author.displayName,
+      avatar: '/avatar.jpg', // API 中没有 avatar，使用默认值
+      did: detail.author.did,
+    },
+    budget: parseFloat(proposalData.budget) || 0,
+    createdAt: detail.record.created,
+    description: proposalData.background || '',
+    milestones: milestonesInfo,
+    category: proposalData.proposalType,
+    tags: [],
   };
-  status: string;
-  createdAt: string;
-  author: {
-    name: string;
-    did: string;
-    avatar: string;
-  };
-}
+};
 
 const steps = [
   { id: 2, name: "项目背景", description: "项目背景介绍" },
@@ -59,10 +68,12 @@ const steps = [
 
 export default function ProposalDetail() {
   useTranslation();
-  const searchParams = useSearchParams();
-  const [proposal, setProposal] = useState<Proposal | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const params = useParams();
+  const uri = params?.uri as string;
+
+  // 使用真实API接口获取提案详情
+  const { proposal, loading, error } = useProposalDetail(uri);
+  
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentsLoading] = useState(false);
   const [commentsError] = useState("");
@@ -113,7 +124,7 @@ export default function ProposalDetail() {
   }, []);
 
   useEffect(() => {
-    // Mock评论数据
+    // Mock评论数据（评论数据暂时仍使用mock，待后续接口开发）
     const mockComments: Comment[] = [
       {
         id: "1",
@@ -196,90 +207,42 @@ export default function ProposalDetail() {
       }
     ];
 
-    // 从 URL 参数获取提案 ID，并从 mock 数据中加载对应提案
-    const loadProposal = async () => {
-      try {
-        setLoading(true);
-        const proposalId = searchParams.get('id');
-        
-        if (!proposalId) {
-          setError("未找到提案 ID");
-          return;
-        }
-
-        // 从 mock 数据中查找对应的提案
-        const foundProposal = mockProposals.find(p => p.id === proposalId);
-        
-        if (!foundProposal) {
-          setError("提案不存在");
-          return;
-        }
-
-        // 模拟数据加载延迟
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        
-        // 将 mock 数据转换为详情页需要的格式
-        const proposalData: Proposal = {
-          id: foundProposal.id,
-          proposalType: foundProposal.type === 'development' ? 'technical' : 
-                       foundProposal.type === 'governance' ? 'governance' : 'community',
-          title: foundProposal.title,
-          releaseDate: foundProposal.createdAt,
-          background: `<p>${foundProposal.description}</p>`,
-          goals: `<p>这是一个关于 ${foundProposal.title} 的项目提案。该项目旨在为 Nervos 生态系统做出贡献。</p>`,
-          team: `<p>提案人：${foundProposal.proposer.name}</p><p>DID：${foundProposal.proposer.did}</p>`,
-          budget: foundProposal.budget.toString(),
-          milestones: foundProposal.milestones || {
-            current: 1,
-            total: 3,
-            progress: 0
-          },
-          status: foundProposal.status === 1 ? 'active' : 
-                 foundProposal.status === 0 ? 'completed' : 'pending',
-          createdAt: foundProposal.createdAt,
-          author: {
-            name: foundProposal.proposer.name,
-            did: foundProposal.proposer.did,
-            avatar: foundProposal.proposer.avatar,
-          },
-        };
-        
-        setProposal(proposalData);
-        
-        // 生成时间线事件
-        const events = generateTimelineEvents(foundProposal);
-        setTimelineEvents(events);
-        
-        // 如果是投票阶段，生成投票信息
-        if (foundProposal.status === 1) {
-          const voting = generateVotingInfo(foundProposal);
-          setVotingInfo(voting);
-        }
-        
-        // // 如果是执行阶段，生成里程碑信息
-        // if (foundProposal.status === 'milestone' || foundProposal.status === 4 || foundProposal.status === 0) {
-        //   const milestoneData = generateMilestones(foundProposal);
-        //   setMilestones(milestoneData);
-          
-        //   // 如果是里程碑阶段，生成里程碑投票信息
-        //   if (foundProposal.status === 'milestone' && foundProposal.milestones) {
-        //     const currentMilestoneId = `${foundProposal.id}-milestone-${foundProposal.milestones.current}`;
-        //     const milestoneVoting = generateMilestoneVotingInfo(foundProposal, currentMilestoneId);
-        //     setMilestoneVotingInfo(milestoneVoting);
-        //   }
-        // }
-      } catch (err) {
-        setError("加载提案失败");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadProposal();
     // 初始化评论数据
     setComments(mockComments);
-  }, [searchParams]);
+  }, []);
+
+  // 当提案数据加载完成后，生成相关数据
+  useEffect(() => {
+    if (!proposal) return;
+    
+    // 将API返回的数据转换为工具函数期望的格式
+    const adaptedProposal = adaptProposalDetail(proposal);
+
+    // 生成时间线事件
+    const events = generateTimelineEvents(adaptedProposal);
+    setTimelineEvents(events);
+    
+    // 如果是投票阶段，生成投票信息
+    if (adaptedProposal.status === ProposalStatus.VOTE) {
+      const voting = generateVotingInfo(adaptedProposal);
+      setVotingInfo(voting);
+    }
+    
+    // 如果是执行阶段，生成里程碑信息
+    if (adaptedProposal.status === ProposalStatus.MILESTONE || 
+        adaptedProposal.status === ProposalStatus.APPROVED || 
+        adaptedProposal.status === ProposalStatus.ENDED) {
+      const milestoneData = generateMilestones(adaptedProposal);
+      setMilestones(milestoneData);
+      
+      // 如果是里程碑阶段，生成里程碑投票信息
+      if (adaptedProposal.status === ProposalStatus.MILESTONE && adaptedProposal.milestones) {
+        const currentMilestoneId = `${adaptedProposal.id}-milestone-${adaptedProposal.milestones.current}`;
+        const milestoneVoting = generateMilestoneVotingInfo(adaptedProposal, currentMilestoneId);
+        setMilestoneVotingInfo(milestoneVoting);
+      }
+    }
+  }, [proposal]);
 
   // 评论处理函数
   const handleAddComment = (content: string, parentId?: string) => {
@@ -435,14 +398,7 @@ export default function ProposalDetail() {
     }
   };
 
-  // 处理里程碑投票提交
-  const handleMilestoneVoteSubmit = (milestoneId: string, option: MilestoneVoteOption) => {
-    if (!milestoneVotingInfo) return;
-    
-    const updatedVoting = handleMilestoneVote(milestoneVotingInfo, option);
-    setMilestoneVotingInfo(updatedVoting);
-  };
-
+ 
   const getProposalTypeText = (type: string) => {
     const types: { [key: string]: string } = {
       funding: "资金申请",
@@ -453,7 +409,7 @@ export default function ProposalDetail() {
     return types[type] || "未知类型";
   };
 
-  const getStatusText = (status: string) => {
+  const getStatusText = (status: number) => {
     const statuses: { [key: string]: string } = {
       active: "进行中",
       completed: "已完成",
@@ -520,7 +476,7 @@ export default function ProposalDetail() {
           <div className="breadcrumb">
             <span>治理主页</span>
             <span className="breadcrumb-separator">&gt;</span>
-            <span>{proposal.title}</span>
+            <span>{proposal.record.data.title}</span>
           </div>
 
           <div className="proposal-content-wrapper">
@@ -530,12 +486,12 @@ export default function ProposalDetail() {
                 {/* 提案头部信息 */}
                 <div className="proposal-header-card">
                   <div className="proposal-title-section">
-                    <h1 className="proposal-main-title">{proposal.title}</h1>
+                    <h1 className="proposal-main-title">{proposal.record.data.title}</h1>
 
                     <div className="proposal-author-info">
                       <div className="author-avatar">
                         <Image
-                          src={proposal.author.avatar}
+                          src={'/avatar.jpg'}
                           alt="avatar"
                           width={40}
                           height={40}
@@ -543,7 +499,7 @@ export default function ProposalDetail() {
                       </div>
                       <div className="author-details">
                         <div className="author-name">
-                          {proposal.author.name}
+                          {proposal.author.displayName}
                         </div>
                         <div className="author-did">
                           {proposal.author.did}
@@ -563,7 +519,7 @@ export default function ProposalDetail() {
 
                     <div className="proposal-meta-tags">
                       <span className="meta-tag date-tag">
-                        {new Date(proposal.createdAt).toLocaleDateString(
+                        {new Date(proposal.record.created).toLocaleDateString(
                           "zh-CN",
                           {
                             year: "numeric",
@@ -573,17 +529,17 @@ export default function ProposalDetail() {
                         )}
                       </span>
                       <span className="meta-tag type-tag">
-                        {getProposalTypeText(proposal.proposalType)}
+                        {getProposalTypeText(proposal.record.data.proposalType)}
                       </span>
                       <span className="meta-tag budget-tag">
-                        {proposal.budget
+                        {proposal.record.data.budget
                           ? `${Number(
-                              proposal.budget
+                            proposal.record.data.budget
                             ).toLocaleString()}.000 CKB`
                           : "未设置预算"}
                       </span>
                       <span className="meta-tag status-tag">
-                        {getStatusText(proposal.status)}
+                        {getStatusText(proposal.state)}
                       </span>
                     </div>
 
@@ -623,7 +579,7 @@ export default function ProposalDetail() {
                                 <div
                                   className="proposal-html-content"
                                   dangerouslySetInnerHTML={{
-                                    __html: proposal.background || "未填写",
+                                    __html: proposal.record.data.background || "未填写",
                                   }}
                                 />
                               </div>
@@ -635,7 +591,7 @@ export default function ProposalDetail() {
                                 <div
                                   className="proposal-html-content"
                                   dangerouslySetInnerHTML={{
-                                    __html: proposal.goals || "未填写",
+                                    __html: proposal.record.data.goals || "未填写",
                                   }}
                                 />
                               </div>
@@ -647,7 +603,7 @@ export default function ProposalDetail() {
                                 <div
                                   className="proposal-html-content"
                                   dangerouslySetInnerHTML={{
-                                    __html: proposal.team || "未填写",
+                                    __html: proposal.record.data.team || "未填写",
                                   }}
                                 />
                               </div>
@@ -661,9 +617,9 @@ export default function ProposalDetail() {
                                     预算金额 (CKB):
                                   </label>
                                   <span className="proposal-value">
-                                    {proposal.budget
+                                    {proposal.record.data.budget
                                       ? `${Number(
-                                          proposal.budget
+                                        proposal.record.data.budget
                                         ).toLocaleString()}.000 CKB`
                                       : "未填写"}
                                   </span>
@@ -675,10 +631,14 @@ export default function ProposalDetail() {
                             return (
                               <div className="form-fields">
                                 <div className="proposal-milestones">
-                                  <div className="milestone-summary">
-                                    <p>当前里程碑: {proposal.milestones.current} / {proposal.milestones.total}</p>
-                                    <p>进度: {proposal.milestones.progress}%</p>
-                                  </div>
+                                  {proposal.record.data.milestones ? (
+                                    <div className="milestone-summary">
+                                      <p>当前里程碑: {proposal.state-1000} / {proposal.record.data.milestones.length}</p>
+                                      <p>进度: {(proposal.state-1000)/proposal.record.data.milestones.length*100}%</p>
+                                    </div>
+                                  ) : (
+                                    <p>暂无里程碑信息</p>
+                                  )}
                                 </div>
                               </div>
                             );
@@ -721,8 +681,8 @@ export default function ProposalDetail() {
               {milestones.length > 0 && (
                 <MilestoneTracking 
                   milestones={milestones}
-                  currentMilestone={proposal?.milestones?.current || 1}
-                  totalMilestones={proposal?.milestones?.total || 3}
+                  currentMilestone={proposal?.state-1000 || 1}
+                  totalMilestones={proposal?.record.data.milestones?.length || 3}
                 />
               )}
               

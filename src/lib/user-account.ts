@@ -16,6 +16,8 @@ export async function fetchUserProfile(did: string): Promise<UserProfileType> {
 }
 
 export async function userLogin(localStorage: TokenStorageType): Promise<ComAtprotoWeb5IndexAction.CreateSessionResult | undefined> {
+
+  
   const pdsClient = getPDSClient()
   const { did, signKey, walletAddress } = localStorage
 
@@ -69,7 +71,22 @@ export async function userLogin(localStorage: TokenStorageType): Promise<ComAtpr
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       index: loginIndex as any,
     })
-    return loginInfo.data.result as ComAtprotoWeb5IndexAction.CreateSessionResult
+    
+    const result = loginInfo.data.result as ComAtprotoWeb5IndexAction.CreateSessionResult
+    
+    // 登录成功后，将用户会话信息缓存到 Cookie
+    storage.setUserSession({
+      did: result.did,
+      handle: result.handle,
+      accessJwt: result.accessJwt,
+      refreshJwt: result.refreshJwt,
+      ckbAddr: walletAddress,
+      cachedAt: Date.now(),
+    })
+    
+    console.log('✅ 登录成功，用户会话已缓存到Cookie');
+    
+    return result
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {

@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  z-index: 998;
   animation: fadeIn 0.2s ease-out;
   padding: 20px;
 }
@@ -194,25 +194,6 @@
   flex: 1;
 }
 
-.copy-button {
-  background: transparent;
-  border: none;
-  color: #00D4AA;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  margin-left: 8px;
-  font-size: 16px;
-}
-
-.copy-button:hover {
-  background-color: #00D4AA;
-  color: #000000;
-}
 
 .message-instruction {
   font-size: 12px;

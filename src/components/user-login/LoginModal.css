@@ -316,15 +316,24 @@ rotate: 90deg;
   min-width: 114px;
 }
 
-.login-connect-button:hover {
+.login-connect-button:hover:not(:disabled) {
   background: #00B287;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 204, 155, 0.3);
 }
 
-.login-connect-button:active {
+.login-connect-button:active:not(:disabled) {
   transform: translateY(0);
   box-shadow: 0 2px 6px rgba(0, 204, 155, 0.2);
+}
+
+.login-connect-button:disabled {
+  background: #4C525C;
+  color: #6A727B;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.6;
 }
 
 /* 响应式设计 */
@@ -417,7 +426,7 @@ rotate: 90deg;
 }
 
 .name-input {
-  width: 100%;
+  width: 80%;
   padding: 16px;
   background: #1C2027;
   border: 1px solid #4C525C;
@@ -431,6 +440,14 @@ rotate: 90deg;
   outline: none;
   border-color: #00CC9B;
   box-shadow: 0 0 0 2px rgba(0, 204, 155, 0.1);
+}
+
+.name-input:disabled {
+  background: #0F1114;
+  border-color: #2C3038;
+  color: #6A727B;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .name-input::placeholder {
@@ -589,12 +606,19 @@ rotate: 90deg;
   min-width: 80px;
 }
 
+.wallet-control-btn:disabled {
+  background: #4C525C;
+  color: #6A727B;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 .disconnect-btn {
   background: #EF4444;
   color: #fff;
 }
 
-.disconnect-btn:hover {
+.disconnect-btn:hover:not(:disabled) {
   background: #DC2626;
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
@@ -605,7 +629,7 @@ rotate: 90deg;
   color: #fff;
 }
 
-.switch-btn:hover {
+.switch-btn:hover:not(:disabled) {
   background: #2563EB;
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
@@ -767,12 +791,24 @@ rotate: 90deg;
   color: #000;
   padding: 12px 48px;
   font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.complete-button:hover {
+.complete-button:hover:not(:disabled) {
   background: #00B287;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 204, 155, 0.3);
+}
+
+.complete-button:disabled {
+  background: #4C525C;
+  color: #6A727B;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.6;
 }
 
 /* 拖拽动画 */

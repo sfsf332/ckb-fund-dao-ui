@@ -2,10 +2,13 @@
 
 import { ccc } from "@ckb-ccc/connector-react";
 import { CSSProperties } from "react";
-import React from "react";
+import React, { useEffect } from "react";
 import { WalletProvider } from "@/provider/WalletProvider";
+import useUserInfoStore from "@/store/userInfo";
 
 export function LayoutProvider({ children }: { children: React.ReactNode }) {
+  const { initialize, initialized } = useUserInfoStore();
+  
   const defaultClient = React.useMemo(() => {
     const isMainnet = process.env.NEXT_PUBLIC_IS_MAINNET === "true";
 
@@ -13,6 +16,13 @@ export function LayoutProvider({ children }: { children: React.ReactNode }) {
       ? new ccc.ClientPublicMainnet()
       : new ccc.ClientPublicTestnet();
   }, []);
+
+  // 初始化用户信息store
+  useEffect(() => {
+    if (!initialized) {
+      initialize();
+    }
+  }, [initialize, initialized]);
 
   return (
     <ccc.Provider

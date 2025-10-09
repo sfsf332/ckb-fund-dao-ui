@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
-@import "tailwindcss";
 
 :root {
   --background: #1E2229;
@@ -19,6 +18,34 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Nunito Sans', Arial, Helvetica, sans-serif;
+}
+
+.main-content {
+  min-height: 100vh;
+}
+
+/* 加载页面样式 */
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.loading-content {
+  text-align: center;
+}
+
+.loading-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+.loading-description {
+  color: #6A727B;
+  font-size: 16px;
 }
 
 /* 自定义滚动条样式 */
@@ -104,17 +131,20 @@ body {
   border-radius: 5px;
   color: #000;
   height: 32px;
+  border:0;
   line-height: 32px;  
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   padding: 0 10px;
   transition: all 0.3s ease;
+  text-decoration: none;
   &:hover{
     background: #00B287;
   } 
 }
 .button-secondary{
+  text-decoration: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -135,6 +165,32 @@ body {
 .navs{
   flex:1;
   padding:0 20px;
+  display: flex;
+}
+.header-actions{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 语言切换器样式 */
+.language-switcher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  background: #3B82F6;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.language-switcher:hover {
+  background: #2563EB;
 }
 .navs li{
   list-style: none;
@@ -147,6 +203,7 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  text-decoration: none;
   display: block;
   padding: 8px 0;
   position: relative;
@@ -1438,4 +1495,20 @@ body {
 .user_info .name p button,.user_info .name p a{
   margin:0 5px;
 
+}
+
+/* 错误和加载状态样式 */
+.error-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 256px; /* 相当于 h-64 */
+}
+
+.error-message {
+  color: #ef4444; /* 相当于 text-red-500 */
+}
+
+.not-found-message {
+  color: #ffffff; /* 相当于 text-white */
 }

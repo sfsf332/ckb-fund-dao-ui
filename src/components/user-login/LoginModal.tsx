@@ -19,8 +19,7 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
-  const { open, wallet, signerInfo } = ccc.useCcc();
-  // 修复：移除未定义的 singer 变量的日志
+  const { open, wallet, signerInfo, disconnect } = ccc.useCcc();
   const [currentStep, setCurrentStep] = useState(1);
   const [accountName, setAccountName] = useState("");
   const [isDragging, setIsDragging] = useState(false);
@@ -36,10 +35,12 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   } = useAccountNameValidation();
 
   const { checkSimpleBalance, isLoading: balanceLoading, extraIsEnough, error: balanceError } = useCheckCkb();
-  const { createAccount, loading: createLoading, createStatus } = useCreateAccount({
+  const { createAccount, loading: createLoading, createStatus, resetCreateStatus } = useCreateAccount({
     createSuccess: () => {
-      console.log('账户创建成功！');
-      // 可以在这里添加成功后的处理逻辑
+    
+      
+      // 注册成功后自动切换到step4
+      setCurrentStep(4);
     },
   });
 
@@ -53,7 +54,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       await open();
       // 钱包连接成功后不自动进入下一步，保持在第一步
     } catch (error) {
-      console.error("钱包连接失败:", error);
+      console.error("连接钱包失败:", error);
       setIsConnecting(false);
     }
   };
@@ -61,30 +62,20 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   // 断开钱包连接
   const handleDisconnectWallet = async () => {
     try {
-      // 这里需要调用断开连接的方法
-      // 由于ccc库可能没有直接的断开方法，我们重置状态
+      // 调用 ccc 库的断开连接方法
+      await disconnect();
+      // 重置所有状态
       setCurrentStep(1);
       setAccountName("");
       setIsDropped(false);
       setShowInsufficientFunds(false);
       setIsConnecting(false);
-      // 可以在这里添加其他重置逻辑
     } catch (error) {
       console.error("断开钱包连接失败:", error);
     }
   };
 
-  // 切换钱包地址
-  const handleSwitchWallet = async () => {
-    try {
-      setIsConnecting(true);
-      await open();
-      // 切换钱包后保持在第一步
-    } catch (error) {
-      console.error("切换钱包失败:", error);
-      setIsConnecting(false);
-    }
-  };
+ 
 
   // 监听钱包连接状态 - 不再自动跳转到下一步
   React.useEffect(() => {
@@ -94,17 +85,36 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     }
   }, [isConnected, signerInfo]);
 
+  // 进入步骤3时重置状态
+  React.useEffect(() => {
+    if (currentStep === 3) {
+      setIsDropped(false);
+      setShowInsufficientFunds(false);
+      setIsDragging(false);
+      resetCreateStatus();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentStep]);
+
   const handleNextStep = () => {
     if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
     }
   };
 
-  // const handlePrevStep = () => {
-  //   if (currentStep > 1) {
-  //     setCurrentStep(currentStep - 1);
-  //   }
-  // };
+  // 返回到步骤1
+  const handleBackToStep1 = () => {
+    setCurrentStep(1);
+    setAccountName("");
+  };
+
+  // 返回到步骤2
+  const handleBackToStep2 = () => {
+    setCurrentStep(2);
+    setIsDropped(false);
+    setShowInsufficientFunds(false);
+  };
+
 
 
   const handleDragStart = (e: React.DragEvent) => {
@@ -228,7 +238,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         {currentStep === 1 && (
           <LoginStep1 
             onDisconnect={handleDisconnectWallet}
-            onSwitchWallet={handleSwitchWallet}
+           
           />
         )}
 
@@ -273,8 +283,11 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           onConnectWallet={handleConnectWallet}
           onNextStep={handleNextStep}
           onComplete={handleComplete}
+          onBackToStep1={handleBackToStep1}
+          onBackToStep2={handleBackToStep2}
           isConnecting={isConnecting}
           isConnected={isConnected}
+          createStatus={createStatus}
         />
     </Modal>
   );

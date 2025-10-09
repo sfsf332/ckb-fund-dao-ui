@@ -11,6 +11,7 @@ export enum MilestoneStatus {
 // 里程碑接口
 export interface Milestone {
   id: string;
+  index: number; // 里程碑索引，从0开始
   title: string;
   description: string;
   status: MilestoneStatus;

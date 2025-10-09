@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { CreateAccountStatus, CREATE_STATUS } from "@/hooks/createAccount";
 
 interface LoginFooterProps {
   currentStep: number;
@@ -10,8 +11,11 @@ interface LoginFooterProps {
   onConnectWallet: () => void;
   onNextStep: () => void;
   onComplete: () => void;
+  onBackToStep1?: () => void;
+  onBackToStep2?: () => void;
   isConnecting?: boolean;
   isConnected?: boolean;
+  createStatus?: CreateAccountStatus;
 }
 
 export default function LoginFooter({
@@ -21,8 +25,11 @@ export default function LoginFooter({
   onConnectWallet,
   onNextStep,
   onComplete,
+  onBackToStep1,
+  onBackToStep2,
   isConnecting = false,
   isConnected = false,
+  createStatus,
 }: LoginFooterProps) {
   return (
     <div className="login-footer">
@@ -48,7 +55,16 @@ export default function LoginFooter({
       )}
 
       {currentStep === 2 && (
-        <div className="step-navigation">
+        <div className="step-navigation" style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+          {onBackToStep1 && (
+            <button
+              className="login-connect-button"
+              onClick={onBackToStep1}
+              style={{ backgroundColor: '#6A727B' }}
+            >
+              返回上一步
+            </button>
+          )}
           <button
             className="login-connect-button"
             onClick={onNextStep}
@@ -59,7 +75,18 @@ export default function LoginFooter({
         </div>
       )}
 
-      {currentStep === 3 && <></>}
+      {currentStep === 3 && (
+        <div className="step-navigation">
+          {createStatus?.status === CREATE_STATUS.FAILURE && onBackToStep2 && (
+            <button
+              className="login-connect-button"
+              onClick={onBackToStep2}
+            >
+              返回上一步
+            </button>
+          )}
+        </div>
+      )}
 
       {currentStep === 4 && (
         <div className="step-navigation">

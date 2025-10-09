@@ -7,6 +7,7 @@ import { handleCopy } from "@/utils/common";
 import { Modal } from "./ui/modal";
 interface Milestone {
   id: string;
+  index: number;
   title: string;
   description: string;
   date: string;

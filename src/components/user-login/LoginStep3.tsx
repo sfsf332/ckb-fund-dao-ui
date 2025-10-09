@@ -82,21 +82,22 @@ export default function LoginStep3({
             </div>
           </div>
           
-          {/* 余额状态显示 */}
-          {extraIsEnough && (
+          {/* 余额状态显示 - 只在余额不足时显示 */}
+          {extraIsEnough && !extraIsEnough.isEnough && (
             <div style={{
               marginTop: '8px',
               padding: '8px',
-              backgroundColor: extraIsEnough.isEnough ? '#e8f5e8' : '#fff3cd',
-              border: `1px solid ${extraIsEnough.isEnough ? '#28a745' : '#ffc107'}`,
+              backgroundColor: '#fff3cd',
+              border: '1px solid #ffc107',
               borderRadius: '4px',
-              fontSize: '12px'
+              fontSize: '12px',
+              color:'#333'
             }}>
               <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>
-                余额状态: {extraIsEnough.isEnough ? '✅ 余额充足' : '⚠️ 余额不足'}
+                ⚠️ 余额不足
               </div>
               <div>
-                所需容量: {extraIsEnough.capacity} CKB
+                所需容量: 355 CKB
               </div>
               {balanceLoading && (
                 <div style={{ marginTop: '4px', fontStyle: 'italic' }}>
@@ -142,7 +143,8 @@ export default function LoginStep3({
               backgroundColor: '#f0f8ff',
               border: '1px solid #007bff',
               borderRadius: '4px',
-              textAlign: 'center'
+              textAlign: 'center',
+              color:'#333'
             }}>
               <div>正在创建账户...</div>
               <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>

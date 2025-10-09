@@ -33,7 +33,7 @@ export default function RootLayout({
           <I18nProvider>
             <Header />
             <Banner />
-            <main className="min-h-screen">{children}</main>
+            <main className="main-content">{children}</main>
             <TooltipClient />
             <Footer />
             <Toaster position="top-center" toastOptions={{ duration: 1500 }} />

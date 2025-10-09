@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslation } from "../../../../utils/i18n";
 import "./create-proposal.css";
 import { IoMdInformationCircleOutline } from "react-icons/io";
@@ -12,6 +13,9 @@ import ProjectGoals from "@/components/proposal-steps/ProjectGoals";
 import TeamIntroduction from "@/components/proposal-steps/TeamIntroduction";
 import ProjectBudget from "@/components/proposal-steps/ProjectBudget";
 import ProjectMilestones from "@/components/proposal-steps/ProjectMilestones";
+import { writesPDSOperation } from "@/app/posts/utils";
+import useUserInfoStore from "@/store/userInfo";
+import { useI18n } from "@/contexts/I18nContext";
 
 const steps = [
   { id: 1, name: "提案设置", description: "基本设置信息" },
@@ -25,6 +29,9 @@ const steps = [
 export default function CreateProposal() {
   useTranslation();
   
+  const router = useRouter();
+  const { locale } = useI18n();
+  const { userInfo } = useUserInfoStore();
   const [isClient, setIsClient] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -37,6 +44,7 @@ export default function CreateProposal() {
     budget: "",
     milestones: [] as Array<{
       id: string;
+      index: number;
       title: string;
       description: string;
       date: string;
@@ -143,6 +151,7 @@ export default function CreateProposal() {
   const addMilestone = () => {
     const newMilestone = {
       id: Date.now().toString(),
+      index: formData.milestones.length,
       title: "",
       description: "",
       date: "",
@@ -159,7 +168,9 @@ export default function CreateProposal() {
     const indexToRemove = formData.milestones.findIndex((m) => m.id === id);
     setFormData((prev) => ({
       ...prev,
-      milestones: prev.milestones.filter((milestone) => milestone.id !== id),
+      milestones: prev.milestones
+        .filter((milestone) => milestone.id !== id)
+        .map((m, idx) => ({ ...m, index: idx })), // 重新分配index
     }));
 
     // 调整活动里程碑索引
@@ -249,35 +260,64 @@ export default function CreateProposal() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // 检查用户是否登录
+    if (!userInfo?.did) {
+      setError("请先登录");
+      return;
+    }
+    
     setSubmitting(true);
     setError("");
 
     try {
-      // TODO: 提交提案到后端 API
       console.log("提交提案:", formData);
       
-      // 模拟提交
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // 调用 writesPDSOperation 发布提案到 PDS
+      const result = await writesPDSOperation({
+        record: {
+          $type: 'app.dao.proposal',
+          data:{
+          proposalType: formData.proposalType,
+          title: formData.title,
+          releaseDate: formData.releaseDate,
+          background: formData.background,
+          goals: formData.goals,
+          team: formData.team,
+          budget: formData.budget,
+          milestones: formData.milestones,
+        }
+        },
+        did: userInfo.did
+      });
       
-        // 重置表单
-        setFormData({
-          proposalType: "",
-          title: "",
-          releaseDate: "",
-          background: "",
-          goals: "",
-          team: "",
-          budget: "",
-          milestones: [],
-        });
+      console.log('提案发布成功:', result);
+      console.log('CID:', result.cid);
+      console.log('URI:', result.uri);
+      
+      // 重置表单
+      // setFormData({
+      //   proposalType: "",
+      //   title: "",
+      //   releaseDate: "",
+      //   background: "",
+      //   goals: "",
+      //   team: "",
+      //   budget: "",
+      //   milestones: [],
+      // });
 
-        // 删除草稿
-        // clearDraft();
+      // 删除草稿
+      // clearDraft();
 
-        alert("提案提交成功！");
+      alert("提案提交成功！");
+      
+      // 跳转到详情页面，传递 cid 参数
+      router.push(`/${locale}/proposal/${encodeURIComponent(result.uri)}`);
+      
     } catch (err) {
       setError("提交失败，请重试");
-      console.error(err);
+      console.error('提交提案失败:', err);
     } finally {
       setSubmitting(false);
     }

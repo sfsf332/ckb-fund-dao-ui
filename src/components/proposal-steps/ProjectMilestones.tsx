@@ -8,6 +8,7 @@ interface Milestone {
   title: string;
   description: string;
   date: string;
+  index:number
 }
 
 interface ProjectMilestonesProps {

@@ -17,7 +17,7 @@ export default function UserCenter() {
       <main className="user-center-main">
         {/* 顶部卡片行 */}
         <div className="user-center-cards">
-          <UserProfileCard />
+          {/* <UserProfileCard /> */}
           <Web5IdentityCard />
           <WalletDaoCard />
         </div>

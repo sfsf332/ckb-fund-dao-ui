@@ -7,12 +7,38 @@ import { ccc } from "@ckb-ccc/connector-react";
 
 interface LoginStep1Props {
   onDisconnect?: () => void;
-  onSwitchWallet?: () => void;
 }
 
-export default function LoginStep1({ onDisconnect, onSwitchWallet }: LoginStep1Props) {
+export default function LoginStep1({ onDisconnect }: LoginStep1Props) {
   const { wallet, signerInfo } = ccc.useCcc();
   const isConnected = !!wallet && !!signerInfo;
+  
+  // 获取钱包地址并格式化
+  const [walletAddress, setWalletAddress] = React.useState<string>("");
+  
+  React.useEffect(() => {
+    if (signerInfo?.signer) {
+      signerInfo.signer.getAddresses().then(addresses => {
+        if (addresses.length > 0) {
+          setWalletAddress(addresses[0]);
+        }
+      });
+    }
+  }, [signerInfo]);
+  
+  // 格式化地址显示（显示前10位...后10位）
+  const formatAddress = (address: string) => {
+    if (!address) return "";
+    if (address.length <= 20) return address;
+    return `${address.slice(0, 10)}...${address.slice(-10)}`;
+  };
+  
+  // 复制地址到剪贴板
+  const copyAddress = () => {
+    if (walletAddress) {
+      navigator.clipboard.writeText(walletAddress);
+    }
+  };
   
   return (
     <>
@@ -30,7 +56,14 @@ export default function LoginStep1({ onDisconnect, onSwitchWallet }: LoginStep1P
           {isConnected && (
             <div className="wallet-status">
               <p className="wallet-connected">✅ 钱包已连接</p>
-              <p className="wallet-address">钱包: 已连接</p>
+              <p 
+                className="wallet-address" 
+                onClick={copyAddress} 
+                style={{ cursor: 'pointer' }} 
+                title="点击复制完整地址"
+              >
+                钱包: {formatAddress(walletAddress)}
+              </p>
               <div className="wallet-controls">
                 <button 
                   className="wallet-control-btn disconnect-btn"
@@ -38,12 +71,7 @@ export default function LoginStep1({ onDisconnect, onSwitchWallet }: LoginStep1P
                 >
                   断开连接
                 </button>
-                <button 
-                  className="wallet-control-btn switch-btn"
-                  onClick={onSwitchWallet}
-                >
-                  切换钱包
-                </button>
+              
               </div>
             </div>
           )}

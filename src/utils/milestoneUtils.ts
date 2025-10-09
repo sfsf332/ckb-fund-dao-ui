@@ -7,22 +7,38 @@ export const generateMilestones = (proposal: Proposal): Milestone[] => {
   const milestones: Milestone[] = [];
   const createdAt = new Date(proposal.createdAt);
   
-  // 只有执行阶段的提案才有里程碑
-  if (proposal.status !== ProposalStatus.MILESTONE && 
-      proposal.status !== ProposalStatus.APPROVED && 
-      proposal.status !== ProposalStatus.ENDED) {
-    return milestones;
+  // 所有提案都可以显示里程碑计划
+
+  // 确定项目启动里程碑的状态
+  let startMilestoneStatus: MilestoneStatus;
+  let startMilestoneProgress: number;
+  
+  if (proposal.status === ProposalStatus.DRAFT || 
+      proposal.status === ProposalStatus.REVIEW || 
+      proposal.status === ProposalStatus.VOTE) {
+    // 提案还未通过，启动里程碑处于待开始状态
+    startMilestoneStatus = MilestoneStatus.PENDING;
+    startMilestoneProgress = 0;
+  } else if (proposal.status === ProposalStatus.REJECTED) {
+    // 提案被拒绝，里程碑取消
+    startMilestoneStatus = MilestoneStatus.CANCELLED;
+    startMilestoneProgress = 0;
+  } else {
+    // 提案已通过，启动里程碑完成
+    startMilestoneStatus = MilestoneStatus.COMPLETED;
+    startMilestoneProgress = 100;
   }
 
   // 项目启动里程碑
   milestones.push({
     id: `${proposal.id}-start`,
+    index: 0,
     title: '项目启动',
     description: '项目正式启动，团队组建完成',
-    status: MilestoneStatus.COMPLETED,
+    status: startMilestoneStatus,
     startDate: new Date(createdAt.getTime() + 20 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     endDate: new Date(createdAt.getTime() + 25 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    progress: 100,
+    progress: startMilestoneProgress,
     deliverables: ['团队组建', '项目规划', '技术架构设计']
   });
 
@@ -38,7 +54,18 @@ export const generateMilestones = (proposal: Proposal): Milestone[] => {
     let status: MilestoneStatus;
     let progress = 0;
     
-    if (i < currentMilestone) {
+    // 根据提案状态和里程碑位置确定里程碑状态
+    if (proposal.status === ProposalStatus.DRAFT || 
+        proposal.status === ProposalStatus.REVIEW || 
+        proposal.status === ProposalStatus.VOTE) {
+      // 提案还未通过，所有里程碑都是待开始状态
+      status = MilestoneStatus.PENDING;
+      progress = 0;
+    } else if (proposal.status === ProposalStatus.REJECTED) {
+      // 提案被拒绝，里程碑取消
+      status = MilestoneStatus.CANCELLED;
+      progress = 0;
+    } else if (i < currentMilestone) {
       status = MilestoneStatus.COMPLETED;
       progress = 100;
     } else if (i === currentMilestone) {
@@ -51,14 +78,16 @@ export const generateMilestones = (proposal: Proposal): Milestone[] => {
 
     const milestoneId = `${proposal.id}-milestone-${i}`;
     
-    // 为进行中的里程碑生成投票信息
+    // 只为进行中且提案状态为执行阶段的里程碑生成投票信息
     let votingInfo: MilestoneVotingInfo | undefined;
-    if (status === MilestoneStatus.IN_PROGRESS && proposal.status === ProposalStatus.MILESTONE) {
+    if (status === MilestoneStatus.IN_PROGRESS && 
+        proposal.status === ProposalStatus.MILESTONE) {
       votingInfo = generateMilestoneVotingInfo(proposal, milestoneId);
     }
 
     milestones.push({
       id: milestoneId,
+      index: i,
       title: `里程碑 ${i}`,
       description: `项目第 ${i} 个重要阶段`,
       status,

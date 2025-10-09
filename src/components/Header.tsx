@@ -8,13 +8,26 @@ import { CiCirclePlus } from "react-icons/ci";
 import { usePathname } from "next/navigation";
 import { useI18n } from "@/contexts/I18nContext";
 import { LoginModal } from "./user-login";
+import useUserInfoStore from "@/store/userInfo";
 import "./user-login/LoginModal.css";
+import router from "next/router";
 
 export default function Header() {
     const pathname = usePathname();
     const { locale } = useI18n();
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const { userInfo, logout } = useUserInfoStore();
+    
+    // 提取 handle 第一个 . 前面的部分
+    const getUserDisplayName = () => {
+      if (!userInfo) return '';
+      if (userInfo.handle) {
+        return userInfo.handle.split('.')[0];
+      }
+      return userInfo.did;
+    };
 
+   
     const homeHref = `/${locale}`;
     const treasuryHref = `/${locale}/treasury`;
     const managementHref = `/${locale}/management`;
@@ -31,13 +44,13 @@ export default function Header() {
     };
 
   return (
-    <div className="flex items-center justify-between p-4 header-container">
-      <div className="flex items-center gap-2 logo">
+    <div className="header-container">
+      <div className="logo">
         <Image src="/nervos-logo.svg" alt="logo" width={36} height={36} priority />
         <span>CKB Community Fund DAO</span>
         <span className="version">V1.1</span>
       </div>
-      <ul className="navs flex items-center flex-start gap-2">
+      <ul className="navs">
         <li>
           <Link href={homeHref} className={isActive(homeHref) ? "active" : ""}>治理主页</Link>
         </li>
@@ -54,12 +67,18 @@ export default function Header() {
           <Link href={ruleHref}  className={isActive(ruleHref) ? "active" : ""}>治理规则</Link>
         </li>
       </ul>
-      <div className="flex items-center gap-2">
+      <div className="header-actions">
         <LanguageSwitcher />
         <Link href={`${homeHref}/proposal/create`} className="button-secondary">
           <CiCirclePlus /> 发起提案
         </Link>
-        <button onClick={() => setIsLoginModalOpen(true)} className="button-normal">Login</button>
+        {userInfo ? (
+          <Link  href={userCenterHref} className="button-normal" >
+            {getUserDisplayName()}
+          </Link>
+        ) : (
+          <button onClick={() => setIsLoginModalOpen(true)} className="button-normal">Login</button>
+        )}
         {/* <button
           onClick={open}
           className="button-normal"

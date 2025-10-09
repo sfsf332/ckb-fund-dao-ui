@@ -56,6 +56,9 @@ type PostRecordType = {
   displayName: string;
   handle: string;
   [key: string]: unknown;
+} | {
+  $type: 'app.dao.proposal'
+  [key: string]: unknown;
 }
 
 type CreatePostResponse = {
@@ -146,5 +149,8 @@ export async function writesPDSOperation(params: {
     },
   })
 
-  return res.results[0].uri
+  return {
+    uri: res.results[0].uri,
+    cid: res.results[0].cid
+  }
 }

@@ -3,17 +3,48 @@
 import Image from "next/image";
 import 'react-tooltip/dist/react-tooltip.css'
 import { IoMdInformationCircleOutline } from "react-icons/io";
-import { mockProposals, getProposalStats } from "../../data/mockProposals";
-import { formatNumber } from "../../utils/proposalUtils";
 import ProposalItem from "../../components/ProposalItem";
+import { useProposalList } from "../../hooks/useProposalList";
 
 export default function Treasury() {
-  const stats = getProposalStats();
+  // 使用hooks获取提案列表
+  const { proposals, loading: proposalsLoading, error: proposalsError } = useProposalList({
+    page: 1,
+    pageSize: 100, // 获取所有提案
+  });
+  
+  debugger
+
+  // 显示加载状态
+  if (proposalsLoading) {
+    return (
+      <div className="container">
+        <main>
+          <div style={{ textAlign: 'center', padding: '50px' }}>
+            <p>加载中...</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // 显示错误状态
+  if (proposalsError) {
+    return (
+      <div className="container">
+        <main>
+          <div style={{ textAlign: 'center', padding: '50px', color: 'red' }}>
+            <p>加载失败: {proposalsError}</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="container">
       <main>
-        <ul className="dao_info">
+        {/* <ul className="dao_info">
           <li>
             <h3>申请中提案</h3>
             <p>{stats.pending}</p>
@@ -30,7 +61,7 @@ export default function Treasury() {
             <h3>待拨款预算</h3>
             <p>{formatNumber(stats.pendingBudget)} CKB</p>
           </li>
-        </ul>
+        </ul> */}
         <div className="proposal_list_container">
         <section className="proposal_list">
           <nav>
@@ -47,9 +78,15 @@ export default function Treasury() {
           </nav>
           
           <ul className="proposal_list_content">
-            {mockProposals.map((proposal) => (
-              <ProposalItem key={proposal.id} proposal={proposal} />
-            ))}
+            {proposals.length > 0 ? (
+              proposals.map((proposal) => (
+                <ProposalItem key={proposal.uri} proposal={proposal} />
+              ))
+            ) : (
+              <li style={{ textAlign: 'center', padding: '20px', color: '#888' }}>
+                暂无提案
+              </li>
+            )}
           </ul>
         </section>
         <div className="my_info">

@@ -10,9 +10,9 @@ import * as cbor from "@ipld/dag-cbor";
 import { tokenConfig } from "@/constant/token";
 import { useWallet } from "@/provider/WalletProvider";
 
-// import { DidWeb5Data } from "@/lib/molecules"; // 暂时不使用，避免序列化问题
+import { DidWeb5Data } from "@/lib/molecules"; // 暂时不使用，避免序列化问题
 import useUserInfoStore from "@/store/userInfo";
-// import { base32 } from "@scure/base";
+import { base32 } from "@scure/base";
 import { hexToUint8Array, uint8ArrayToHex } from "@/lib/dag-cbor";
 // import { UnsignedCommit } from "@atproto/repo";
 // import { CID } from "multiformats";
@@ -74,7 +74,6 @@ export async function userLogin(localStorage: TokenStorageType): Promise<ComAtpr
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err && err.error === 'CkbDidocCellNotFound') {
-      console.log('CkbDidocCellNotFound')
       await deleteErrUser(did, walletAddress, signKey)
       return
     } else {
@@ -154,7 +153,6 @@ export async function deleteErrUser(did: string, address: string, signKey: strin
   })
 
   storage.removeToken()
-  console.log('web5 delete account finish')
 }
 
 // 完整的创建账户 Hook
@@ -224,11 +222,17 @@ export default function useCreateAccount({ createSuccess }: {
           },
         },
       }
-        // 简化DID数据，避免复杂的序列化问题
-        const didDocBytes = cbor.encode(diDoc);
-        const didWeb5Data0Str = hexFrom(didDocBytes);
-        
-        console.log('DID文档编码成功:', didWeb5Data0Str.substring(0, 50) + '...');
+
+      
+      const cborEncoded = cbor.encode(diDoc);
+      const didWeb5Data0 = DidWeb5Data.from({
+        type: "DidWeb5DataV1",
+        value: {
+          document: cborEncoded,
+          localId: null,
+        },
+      })
+      const didWeb5Data0Str = hexFrom(didWeb5Data0.toBytes())
 
       const { script: lock } = await ccc.Address.fromString(
         fromAddress[0],
@@ -284,11 +288,7 @@ export default function useCreateAccount({ createSuccess }: {
 
       await tx.completeFeeBy(signer as unknown as never)
 
-     debugger
-
-      // 简化的DID生成，避免依赖base32
-      const preDid = hexToUint8Array(args.slice(2, 42)).toString().replace(/,/g, '')
-      console.log('签名后的交易:', tx);
+      const preDid = base32.encode(hexToUint8Array(args.slice(2, 42))).toLowerCase()
       changeParams({
         createdTx: tx,
         did: `did:web5:${preDid}`,
@@ -347,11 +347,8 @@ export default function useCreateAccount({ createSuccess }: {
     })
 
     const preCreateResult = res.data
-    
-    console.log('preCreateResult完整结构:', JSON.stringify(preCreateResult, null, 2));
 
     // 直接使用服务器提供的unSignBytes，不进行任何计算
-    console.log('使用服务器提供的unSignBytes:', preCreateResult.unSignBytes);
     
     // 将十六进制字符串转换为Uint8Array用于签名
     const encoded = hexToUint8Array(preCreateResult.unSignBytes);
@@ -385,31 +382,34 @@ export default function useCreateAccount({ createSuccess }: {
     let txHash;
     const createdTx = createUserParamsRef.current.createdTx
 
-    console.log('准备发送交易:');
-    console.log('- 交易对象:', createdTx);
-    console.log('- 交易输入数量:', createdTx?.inputs?.length);
-    console.log('- 交易输出数量:', createdTx?.outputs?.length);
-    console.log('- 交易输出数据:', createdTx?.outputsData);
-
     try {
       txHash = await signer?.sendTransaction(createdTx! as unknown as never)
-      console.log('txHash', txHash)
     } catch (error) {
       console.error('发送交易失败:', error);
       throw new Error(SEND_TRANSACTION_ERR_MESSAGE);
     }
 
-    console.log('txHash', txHash)
     if (!txHash) return
     
     const txRes = await walletClient?.waitTransaction(txHash, 0, 60000 * 2)
-    console.log('txRes', txRes)
     
     if (txRes?.status !== 'committed') {
       await deleteErrUser(preCreateResult.did, address, signKey!)
     }
 
     setCreateLoading(false)
+    
+    // 🎯 注册成功断点 - 交易确认后
+    debugger;
+    console.log('🎉 注册成功！交易已确认上链');
+    console.log('📊 交易详情:', {
+      txHash,
+      txRes,
+      userHandle,
+      address,
+      did: preCreateResult.did
+    });
+    
     createSuccess?.()
     setCreateStatus({
       status: CREATE_STATUS.SUCCESS,
@@ -440,10 +440,8 @@ export default function useCreateAccount({ createSuccess }: {
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : String(err)
       console.error('创建账户过程中发生错误:', err)
-      console.log('err.message', errorMessage)
 
       if (errorMessage === SEND_TRANSACTION_ERR_MESSAGE) {
-        console.log('检测到交易发送错误，清理已创建的用户数据')
         const params = createUserParamsRef.current
         await deleteErrUser(params.did!, address, params.createdSignKeyPriv!)
       }

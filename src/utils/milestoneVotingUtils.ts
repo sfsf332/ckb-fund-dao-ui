@@ -1,5 +1,5 @@
 import { MilestoneVotingInfo, MilestoneVoteOption, MilestoneVotingStatus } from '../types/milestoneVoting';
-import { Proposal, ProposalStatus } from '../data/mockProposals';
+import { Proposal } from '../data/mockProposals';
 
 // 生成里程碑投票信息
 export const generateMilestoneVotingInfo = (proposal: Proposal, milestoneId: string): MilestoneVotingInfo => {

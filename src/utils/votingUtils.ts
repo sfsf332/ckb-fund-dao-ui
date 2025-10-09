@@ -1,5 +1,5 @@
 import { VotingInfo, VoteOption, VotingStatus } from '../types/voting';
-import { Proposal } from '../data/mockProposals';
+import { Proposal, ProposalStatus } from '../data/mockProposals';
 
 // 生成投票信息
 export const generateVotingInfo = (proposal: Proposal): VotingInfo => {
@@ -22,9 +22,9 @@ export const generateVotingInfo = (proposal: Proposal): VotingInfo => {
   
   // 确定投票状态
   let status: VotingStatus;
-  if (proposal.status === 'vote') {
+  if (proposal.status === ProposalStatus.VOTE) {
     status = userVote ? VotingStatus.VOTED : VotingStatus.PENDING;
-  } else if (proposal.status === 'approved' || proposal.status === 'rejected') {
+  } else if (proposal.status === ProposalStatus.APPROVED || proposal.status === ProposalStatus.REJECTED) {
     status = VotingStatus.ENDED;
   } else {
     status = VotingStatus.PENDING;

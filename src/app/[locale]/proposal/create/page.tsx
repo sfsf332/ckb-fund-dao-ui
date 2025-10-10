@@ -16,6 +16,7 @@ import ProjectMilestones from "@/components/proposal-steps/ProjectMilestones";
 import { writesPDSOperation } from "@/app/posts/utils";
 import useUserInfoStore from "@/store/userInfo";
 import { useI18n } from "@/contexts/I18nContext";
+import { postUriToHref } from "@/lib/postUriHref";
 
 const steps = [
   { id: 1, name: "提案设置", description: "基本设置信息" },
@@ -291,9 +292,7 @@ export default function CreateProposal() {
         did: userInfo.did
       });
       
-      console.log('提案发布成功:', result);
-      console.log('CID:', result.cid);
-      console.log('URI:', result.uri);
+
       
       // 重置表单
       // setFormData({
@@ -313,7 +312,7 @@ export default function CreateProposal() {
       alert("提案提交成功！");
       
       // 跳转到详情页面，传递 cid 参数
-      router.push(`/${locale}/proposal/${encodeURIComponent(result.uri)}`);
+      router.push(`/${locale}/proposal/${postUriToHref(result.uri)}`);
       
     } catch (err) {
       setError("提交失败，请重试");

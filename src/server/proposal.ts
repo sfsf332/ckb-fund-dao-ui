@@ -75,6 +75,7 @@ export interface ProposalListParams {
   keyword?: string; // 关键词搜索
   sortBy?: string; // 排序字段
   sortOrder?: "asc" | "desc"; // 排序方向
+  viewer?: string | null; // 查看者的did
 }
 
 // 提案列表项类型 - 与提案详情结构相同
@@ -132,7 +133,7 @@ export const getProposalList = defineAPI<
   "POST",
   {
     divider: {
-      body: ["page", "pageSize", "status", "type", "keyword", "sortBy", "sortOrder"],
+      body: ["page", "pageSize", "status", "type", "keyword", "sortBy", "sortOrder", "viewer"],
     },
   }
 );

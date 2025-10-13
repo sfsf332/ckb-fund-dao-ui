@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { Proposal } from "../data/mockProposals";
 import { ProposalListItem } from "@/server/proposal";
 import { formatNumber, formatDate } from "../utils/proposalUtils";
+import { postUriToHref } from "@/lib/postUriHref";
+import { useI18n } from "@/contexts/I18nContext";
 
 interface ProposalItemProps {
   proposal: Proposal | ProposalListItem;
@@ -12,6 +14,7 @@ interface ProposalItemProps {
 
 export default function ProposalItem({ proposal }: ProposalItemProps) {
   const router = useRouter();
+  const { locale } = useI18n();
 
   // 兼容两种数据结构 (mockProposals 和 API)
   const isAPIFormat = 'record' in proposal;
@@ -44,10 +47,10 @@ export default function ProposalItem({ proposal }: ProposalItemProps) {
 
   // 处理点击跳转到详情页
   const handleClick = () => {
-    // 如果有 uri，使用 uri 跳转，否则使用 id
-    const path = 'uri' in proposal && proposal.uri 
-      ? `/zh/proposal/${encodeURIComponent(proposal.uri)}`
-      : `/zh/proposal/detail?id=${isAPIFormat ? proposal.uri : (proposal as Proposal).id}`;
+    // 优先使用 proposal.uri，如果没有则使用 proposal.id
+    const uri = ('uri' in proposal && proposal.uri) ? proposal.uri : (('id' in proposal && proposal.id) ? proposal.id : '');
+    const path = `/${locale}/proposal/${postUriToHref(uri)}`;
+
     router.push(path);
   };
 

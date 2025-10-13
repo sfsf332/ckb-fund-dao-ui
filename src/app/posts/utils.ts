@@ -40,17 +40,12 @@ export async function getSectionList(did?: string) {
   })
 }
 
-type PostRecordType = {
-  $type: 'app.bbs.post'
-  section_id: string;
-  title: string;
-  text: string;
-} | {
-  $type: 'app.bbs.reply'
-  root: string  // 原帖uri
-  parent: string  // 原帖uri 或 回复的uri
-  text: string;
-  section_id: string;
+type PostRecordType =  {
+  $type: 'app.dao.reply'
+  proposal: string    // 提案的uri
+  to?: string   // 对方did（可选，有就是回复某人）
+  text: string  // 评论内容
+  parent?: string  // 父评论的uri（可选，用于回复评论）
 } | {
   $type: 'app.actor.profile'
   displayName: string;
@@ -59,6 +54,10 @@ type PostRecordType = {
 } | {
   $type: 'app.dao.proposal'
   [key: string]: unknown;
+}| {
+  $type: 'app.dao.like'
+  to: string; // 点赞的帖子uri或者评论\回复的uri
+  viewer:string;//点赞的人的did
 }
 
 type CreatePostResponse = {

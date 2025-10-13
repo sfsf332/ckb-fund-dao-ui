@@ -16,6 +16,12 @@ export interface Comment {
   parentId?: string; // 用于回复功能
   isLiked?: boolean; // 当前用户是否点赞
   isAuthor?: boolean; // 是否为当前用户发布
+  to?: { // 被回复人的信息（如果是回复评论）
+    did: string;
+    displayName?: string;
+    handle?: string;
+    avatar?: string;
+  };
 }
 
 export interface CommentSectionProps {

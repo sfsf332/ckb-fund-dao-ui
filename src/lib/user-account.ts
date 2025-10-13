@@ -62,35 +62,30 @@ export async function userLogin(localStorage: TokenStorageType): Promise<ComAtpr
   const signingKey = keyPair.did()
 
   try {
-    const loginInfo = await pdsClient.web5Login({
+    const loginInfo = await pdsClient.com.atproto.web5.indexAction({
       did,
       message: preLogin.data.message,
       signingKey: signingKey,
       signedBytes: hexFrom(loginSig),
       ckbAddr: walletAddress,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      index: loginIndex as any,
+      index: loginIndex,
     })
     
     const result = loginInfo.data.result as ComAtprotoWeb5IndexAction.CreateSessionResult
     
-    // 登录成功后，将用户会话信息缓存到 Cookie
-    storage.setUserSession({
-      did: result.did,
-      handle: result.handle,
-      accessJwt: result.accessJwt,
-      refreshJwt: result.refreshJwt,
-      ckbAddr: walletAddress,
-      cachedAt: Date.now(),
-    })
+    // 🔧 关键修复：通过 sessionManager 设置 session，这样后续请求才能带上 accessJwt
+    pdsClient.sessionManager.session = {
+      ...result,
+      active: result.active ?? true
+    }
     
-    console.log('✅ 登录成功，用户会话已缓存到Cookie');
+    console.log('✅ Session 已设置:', pdsClient.sessionManager.session)
     
     return result
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (err: any) {
-    alert("登录失败")
+  } catch (err) {
+    console.error('登录失败:', err);
+    // alert("登录失败")
     // showGlobalToast({
     //   title: '登录失败',
     //   icon: 'error',
@@ -121,7 +116,7 @@ export async function deleteErrUser(did: string, address: string, signKey: strin
     $type: 'com.atproto.web5.indexAction#deleteAccount',
   }
 
-  const deleteInfo = await pdsClient.com.atproto.web5.indexAction({
+  await pdsClient.com.atproto.web5.indexAction({
     did,
     message: preDelete.data.message,
     signingKey,

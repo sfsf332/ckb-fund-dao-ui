@@ -39,43 +39,34 @@ export default function CommentSection({
     onDeleteComment(commentId);
   };
 
-
-  if (loading) {
-    return (
-      <div className="comment-section">
-        <div className="comment-header">
-          <h3 className="comment-title">加载中...</h3>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="comment-section">
-        <div className="comment-header">
-          <h3 className="comment-title">加载评论失败: {error}</h3>
-        </div>
-      </div>
-    );
-  }
-
   return (
      <div className="comment-section">
         <div className="comment-header">
-          <h3 className="comment-title">{comments.length}条评论</h3>
+          <h3 className="comment-title">
+            {loading ? '加载中...' : error ? `加载评论失败: ${error}` : `${comments.length}条评论`}
+          </h3>
         </div>
         <div className="comment-content">
-          {comments.map((comment) => (
-            <CommentItem
-              key={comment.id}
-              comment={comment}
-              onLike={handleLikeComment}
-              onReply={handleReplyComment}
-              onEdit={handleEditComment}
-              onDelete={handleDeleteComment}
-            />
-          ))}
+          {!loading && !error && comments.length > 0 ? (
+            comments.map((comment) => (
+              <CommentItem
+                key={comment.id}
+                comment={comment}
+                onLike={handleLikeComment}
+                onReply={handleReplyComment}
+                onEdit={handleEditComment}
+                onDelete={handleDeleteComment}
+              />
+            ))
+          ) : !loading && !error && comments.length === 0 ? (
+            <div className="no-comments" style={{ 
+              padding: '20px', 
+              textAlign: 'center', 
+              color: '#999' 
+            }}>
+              暂无评论，快来发表第一条评论吧！
+            </div>
+          ) : null}
         </div>
         <div className="comment-quote-section">
           <CommentQuote 

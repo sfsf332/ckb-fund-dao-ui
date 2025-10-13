@@ -58,7 +58,7 @@ export async function fetchUserProfile(did: string): Promise<UserProfileType> {
 export async function userLogin(localStorage: TokenStorageType): Promise<ComAtprotoWeb5IndexAction.CreateSessionResult | undefined> {
   const pdsClient = getPDSClient()
   const { did, signKey, walletAddress } = localStorage
-
+  debugger
   const preLoginIndex = {
     $type: 'com.atproto.web5.preIndexAction#createSession',
   }
@@ -98,23 +98,33 @@ export async function userLogin(localStorage: TokenStorageType): Promise<ComAtpr
   }
 
   const signingKey = keyPair.did()
-
+debugger
   try {
-    const loginInfo = await pdsClient.web5Login({
+    const loginInfo = await pdsClient.com.atproto.web5.indexAction({
       did,
       message: preLogin.data.message,
       signingKey: signingKey,
       signedBytes: hexFrom(loginSig),
       ckbAddr: walletAddress,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      index: loginIndex as any,
+      index: loginIndex,
     })
-    return loginInfo.data.result as ComAtprotoWeb5IndexAction.CreateSessionResult
+    
+    const result = loginInfo.data.result as ComAtprotoWeb5IndexAction.CreateSessionResult
+    
+    // 🔧 关键修复：通过 sessionManager 设置 session，这样后续请求才能带上 accessJwt
+    pdsClient.sessionManager.session = {
+      ...result,
+      active: result.active ?? true
+    }
+    
+    console.log('✅ Session 已设置:', pdsClient.sessionManager.session)
+    
+    return result
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error('登录失败:', err);
-    alert('登录失败')
+    // alert('登录失败')
   }
 }
 

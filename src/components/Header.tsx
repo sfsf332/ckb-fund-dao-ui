@@ -10,13 +10,12 @@ import { useI18n } from "@/contexts/I18nContext";
 import { LoginModal } from "./user-login";
 import useUserInfoStore from "@/store/userInfo";
 import "./user-login/LoginModal.css";
-import router from "next/router";
 
 export default function Header() {
     const pathname = usePathname();
     const { locale } = useI18n();
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-    const { userInfo, logout } = useUserInfoStore();
+    const { userInfo } = useUserInfoStore();
     
     // 提取 handle 第一个 . 前面的部分
     const getUserDisplayName = () => {

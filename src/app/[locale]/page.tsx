@@ -5,15 +5,17 @@ import 'react-tooltip/dist/react-tooltip.css'
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import ProposalItem from "../../components/ProposalItem";
 import { useProposalList } from "../../hooks/useProposalList";
+import useUserInfoStore from "@/store/userInfo";
 
 export default function Treasury() {
+  const { userInfo } = useUserInfoStore();
+  console.log(userInfo);
   // 使用hooks获取提案列表
   const { proposals, loading: proposalsLoading, error: proposalsError } = useProposalList({
     page: 1,
-    pageSize: 100, // 获取所有提案
+    pageSize: 1,
+    viewer: userInfo?.did, // 获取所有提案
   });
-  
-  debugger
 
   // 显示加载状态
   if (proposalsLoading) {

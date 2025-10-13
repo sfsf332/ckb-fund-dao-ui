@@ -18,7 +18,6 @@
     "@ipld/dag-cbor": "^9.2.4",
     "@scure/base": "^2.0.0",
     "@types/react-datepicker": "^7.0.0",
-    "@web5/api": "^0.12.0",
     "axios": "^1.12.2",
     "copy-to-clipboard": "^3.3.3",
     "dayjs": "^1.11.18",
@@ -39,7 +38,7 @@
     "react-notion-x": "^7.4.3",
     "react-quill-new": "^3.6.0",
     "react-tooltip": "^5.29.1",
-    "web5-api": "^0.0.25",
+    "web5-api": "^0.0.23",
     "zustand": "^5.0.8"
   },
   "devDependencies": {

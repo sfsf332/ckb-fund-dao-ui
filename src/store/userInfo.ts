@@ -2,11 +2,10 @@ import { create } from 'zustand'
 import createSelectors from './helper/createSelector';
 import { ccc } from "@ckb-ccc/core";
 import getPDSClient from "@/lib/pdsClient";
-import storage from "@/lib/storage";
+import storage, { TokenStorageType } from "@/lib/storage";
 import { ComAtprotoWeb5CreateAccount, ComAtprotoServerCreateSession } from "web5-api";
 import { writesPDSOperation } from "@/app/posts/utils";
 import { handleToNickName } from "@/lib/handleToNickName";
-import server from "@/server";
 import { fetchUserProfile, userLogin } from "@/lib/user-account";
 
 export type UserProfileType = {
@@ -14,7 +13,7 @@ export type UserProfileType = {
   displayName?: string
   highlight?: string  // 在白名单内才有这个字段
   post_count?: string
-  reply_count?: string
+  comment_count?: string
   created?: string
   handle?: string
 }
@@ -27,7 +26,7 @@ type UserInfoStoreValue = {
   visitorId?: string
 }
 
-const STORAGE_VISITOR = '@bbs:visitor'
+const STORAGE_VISITOR = '@dao:visitor'
 
 
 type UserInfoStore = UserInfoStoreValue & {
@@ -40,6 +39,7 @@ type UserInfoStore = UserInfoStoreValue & {
   writeProfile: () => Promise<'NO_NEED' | 'SUCCESS' | 'FAIL'>
   resetUserStore: () => void
   initialize: (signer?: ccc.Signer) => Promise<void>
+  importUserDid: (info: TokenStorageType) => Promise<void>
 }
 
 const useUserInfoStore = createSelectors(
@@ -59,12 +59,23 @@ const useUserInfoStore = createSelectors(
       const createRes = await pdsClient.web5CreateAccount(params)
       const userInfo = createRes.data
 
-      storage.setToken({
-        did: userInfo.did,
-        signKey: params.password || '',
-        walletAddress: params.ckbAddr
-      })
+      // 在客户端环境下存储 token
+      if (typeof window !== 'undefined') {
+        storage.setToken({
+          did: userInfo.did,
+          signKey: params.password ?? '',
+          walletAddress: params.ckbAddr
+        })
+      }
 
+      // 🔧 关键修复：通过 sessionManager 设置 session，这样后续请求才能带上 accessJwt
+      pdsClient.sessionManager.session = {
+        ...userInfo,
+        active: true
+      }
+      
+      console.log('✅ Session 已设置:', pdsClient.sessionManager.session)
+  
       set(() => ({ userInfo, userProfile: { did: userInfo.did, handle: userInfo.handle } }))
     },
 
@@ -83,23 +94,19 @@ const useUserInfoStore = createSelectors(
           rkey: "self"
         })
         return 'SUCCESS'
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (e: any) {
-        console.log('write profile err')
+      } catch (e) {
+        console.log('write profile err', e)
         return 'FAIL'
       }
     },
 
     web5Login: async () => {
       const localStorage = storage.getToken()
-
       if (!localStorage) return
-
-      const userInfoRes = await userLogin(localStorage)
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      
+      const userInfoRes = await userLogin(localStorage)  // ← 调用登录函数
       if (!userInfoRes) return
-
+      
       set(() => ({ userInfo: userInfoRes }))
       await get().getUserProfile()
     },
@@ -139,19 +146,6 @@ const useUserInfoStore = createSelectors(
       return result
     },
 
-    // getSigningKey: (walletAddress) => {
-    //   if (get().signingKey) {
-    //     return get().signingKey;
-    //   }
-    //   const signingKeyMap = storage.getToken();
-    //
-    //   const key = signingKeyMap?.[walletAddress];
-    //   if (key) {
-    //     set(() => ({ signingKey: key }))
-    //   }
-    //   return key
-    // },
-
     initialize: async () => {
       await get().web5Login()
       let visitor = localStorage.getItem(STORAGE_VISITOR)
@@ -161,6 +155,11 @@ const useUserInfoStore = createSelectors(
         localStorage.setItem(STORAGE_VISITOR, visitor)
       }
       set(() => ({ initialized: true, visitorId: visitor }))
+    },
+
+    importUserDid: async (info) => {
+      storage.setToken(info)
+      await get().web5Login()
     }
 
   })),

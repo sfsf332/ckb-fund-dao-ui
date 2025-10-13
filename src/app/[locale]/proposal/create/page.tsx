@@ -17,6 +17,7 @@ import { writesPDSOperation } from "@/app/posts/utils";
 import useUserInfoStore from "@/store/userInfo";
 import { useI18n } from "@/contexts/I18nContext";
 import { postUriToHref } from "@/lib/postUriHref";
+import toast from "react-hot-toast";
 
 const steps = [
   { id: 1, name: "提案设置", description: "基本设置信息" },
@@ -293,28 +294,15 @@ export default function CreateProposal() {
       });
       
 
-      
-      // 重置表单
-      // setFormData({
-      //   proposalType: "",
-      //   title: "",
-      //   releaseDate: "",
-      //   background: "",
-      //   goals: "",
-      //   team: "",
-      //   budget: "",
-      //   milestones: [],
-      // });
-
       // 删除草稿
       // clearDraft();
 
-      alert("提案提交成功！");
-      
+      toast.success("提案提交成功！");
       // 跳转到详情页面，传递 cid 参数
       router.push(`/${locale}/proposal/${postUriToHref(result.uri)}`);
       
     } catch (err) {
+      
       setError("提交失败，请重试");
       console.error('提交提案失败:', err);
     } finally {

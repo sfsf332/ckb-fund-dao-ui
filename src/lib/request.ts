@@ -54,31 +54,48 @@ export async function requestAPI<T = unknown, O extends ConfigWithWholeBizData =
 ): Promise<APIResponse<T>>;
 export async function requestAPI<T = unknown, O = RequestConfig>(url: string, config: O): Promise<T>
 export async function requestAPI(url: string, config: RequestConfig) {
-  // let response = null
-  // try {
-  //   const token = getPDSClient().session?.accessJwt
-  //   response = await axios(`${ SERVER }${ url }`, {
-  //     ...config,
-  //     headers: {
-  //       Authorization: token ? `Bearer ${token}` : token,
-  //     },
-  //   });
-  // } catch (e: any) {
-  //   response = {
-  //     data: {
-  //       code: e.status,
-  //       message: e.message,
-  //       data: null,
-  //     }
-  //   }
-  // }
-  const token = getPDSClient().session?.accessJwt
-  const response = await axios(`${ SERVER }${ url }`, {
-    ...config,
-    headers: {
-      Authorization: token ? `Bearer ${token}` : token,
-    },
+  const pdsClient = getPDSClient()
+  
+  const token = pdsClient.session?.accessJwt
+  
+  console.log('API请求:', {
+    url: `${SERVER}${url}`,
+    method: config.method,
+    hasToken: !!token
   });
+  
+  let response;
+  try {
+    response = await axios(`${ SERVER }${ url }`, {
+      ...config,
+      headers: {
+        Authorization: token ? `Bearer ${token}` : token,
+        ...config.headers,
+      },
+    });
+    
+    console.log('API响应:', {
+      url,
+      status: response.status,
+      data: response.data
+    });
+  } catch (e) {
+    const error = e as { message?: string; response?: { data?: unknown; status?: number } };
+    console.error('API请求失败:', {
+      url,
+      error: error.message,
+      response: error.response?.data,
+      status: error.response?.status
+    });
+    
+    // 如果是 axios 错误，尝试返回错误响应
+    if (error.response) {
+      response = error.response;
+    } else {
+      // 网络错误或其他错误，返回一个模拟响应
+      throw new Error(error.message || '网络请求失败');
+    }
+  }
 
   if (response?.data?.code === 401) {
     // throttleLogout();

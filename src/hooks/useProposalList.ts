@@ -25,7 +25,8 @@ interface UseProposalListResult {
  * ```tsx
  * const { proposals, loading, error, page, totalPages, refetch } = useProposalList({ 
  *   page: 1, 
- *   pageSize: 10 
+ *   pageSize: 10,
+ *   viewer: 'did:plc:xxx'
  * });
  * 
  * if (loading) return <div>加载中...</div>;
@@ -39,7 +40,7 @@ interface UseProposalListResult {
  * ```
  */
 export function useProposalList(
-  initialParams: ProposalListParams = { page: 1, pageSize: 10 }
+  initialParams: ProposalListParams = { page: 1, pageSize: 10, viewer: null }
 ): UseProposalListResult {
   const [proposals, setProposals] = useState<ProposalListItem[]>([]);
   const [cursor, setCursor] = useState<string>('');
@@ -55,7 +56,7 @@ export function useProposalList(
       const finalParams = queryParams || params;
       
       const response = await getProposalList(finalParams);
-      debugger
+      
       // 处理新的返回数据结构
       if (response && Array.isArray(response.proposals)) {
         // 为milestones添加index字段

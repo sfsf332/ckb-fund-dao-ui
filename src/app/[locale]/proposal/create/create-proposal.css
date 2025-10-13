@@ -990,7 +990,28 @@ cursor: pointer;
   display: flex;
   justify-content: flex-end;
 }
-
+.button-actions{
+  height: 32px;
+  line-height: 32px;
+  border-radius:20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #fff;
+  background: #00CC9B33;
+  color: #00CC9B;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0 16px;
+  transition: all 0.3s ease;
+  margin-right: 12px;
+  &:hover,&.selected{
+    background: #00B287;
+    color: #fff;
+  }
+}
 /* 轮廓按钮样式 */
 .btn-outline {
   background-color: transparent;

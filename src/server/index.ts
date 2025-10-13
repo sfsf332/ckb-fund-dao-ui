@@ -12,3 +12,7 @@ export default function server<T>(
     options,
   ) as Promise<T>;
 }
+
+// 导出 API 接口
+export * from './proposal';
+export * from './comment';

@@ -426,8 +426,17 @@ padding: 12px;
 .comment-reply-item {
   display: flex;
   gap: 12px;
+  background: #262A33;
+  border-left: 3px solid #00CC9B;
+  padding-left: 8px;
+  padding: 12px;
 }
-
+.comment-reply-item  blockquote{
+  border-left:transparent;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+}
 .comment-reply-avatar {
   flex-shrink: 0;
   width: 32px;
@@ -465,6 +474,27 @@ padding: 12px;
   font-size: 12px;
   font-weight: 400;
   color: #9CA3AF;
+}
+
+/* 回复提示样式 */
+.comment-reply-header h4 .reply-to-indicator {
+  font-size: 13px;
+  font-weight: 400;
+  color: #9CA3AF;
+  display: inline-flex;
+  align-items: center;
+}
+
+.comment-reply-header h4 .reply-to-name {
+  color: #00CC9B;
+  font-weight: 500;
+}
+
+.comment-reply-header h4 .comment-time {
+  font-size: 12px;
+  font-weight: 400;
+  color: #6B7280;
+  margin-left: 8px;
 }
 
 .comment-reply-actions {

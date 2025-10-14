@@ -528,6 +528,28 @@ padding: 12px;
   color: #D1D5DB;
 }
 
+/* 引用块样式 */
+.comment-quoted-content {
+  background: rgba(0, 204, 155, 0.08);
+  border-left: 4px solid #00CC9B;
+  padding: 12px 16px;
+  margin: 12px 0;
+  border-radius: 0 6px 6px 0;
+  color: #9CA3AF;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.comment-quoted-content .comment-content-html p {
+  color: #9CA3AF;
+  margin: 4px 0;
+  font-size: 13px;
+}
+
+.comment-quoted-content .comment-content-html {
+  color: #9CA3AF;
+}
+
 .comment-reply-footer {
   display: flex;
   gap: 16px;

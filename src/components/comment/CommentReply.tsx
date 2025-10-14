@@ -21,18 +21,18 @@ export default function CommentReply({
     }
   }; */
 
-  // 格式化时间
-  const formatTimeAgo = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-    
-    if (diffInSeconds < 60) return "刚刚";
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}分钟前`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}小时前`;
-    if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}天前`;
-    return date.toLocaleDateString("zh-CN");
-  };
+  // 格式化时间（暂时未使用）
+  // const formatTimeAgo = (dateString: string) => {
+  //   const date = new Date(dateString);
+  //   const now = new Date();
+  //   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  //   
+  //   if (diffInSeconds < 60) return "刚刚";
+  //   if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}分钟前`;
+  //   if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}小时前`;
+  //   if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}天前`;
+  //   return date.toLocaleDateString("zh-CN");
+  // };
 
   // 判断是否为回复评论
   const isReplyToComment = comment.to && comment.to.did;
@@ -40,7 +40,28 @@ export default function CommentReply({
     ? (comment.to?.displayName || comment.to?.handle || comment.to?.did)
     : null;
 
+  // 拆分引用内容和回复内容
+  const parseReplyContent = () => {
+    if (!isReplyToComment) {
+      return { quotedContent: null, replyContent: comment.content };
+    }
+
+    // 使用正则表达式提取 blockquote 标签内容
+    const blockquoteMatch = comment.content.match(/<blockquote>([\s\S]*?)<\/blockquote>/);
+    
+    if (blockquoteMatch) {
+      const quotedContent = blockquoteMatch[1]; // blockquote 内的内容
+      const replyContent = comment.content.replace(/<blockquote>[\s\S]*?<\/blockquote>/, '').trim(); // 移除 blockquote 后的内容
+      return { quotedContent, replyContent };
+    }
+    
+    return { quotedContent: null, replyContent: comment.content };
+  };
+
+  const { quotedContent, replyContent } = parseReplyContent();
+
   return (
+    <>
     <div className="comment-reply-item">
       <div className="comment-reply-content">
         <div className="comment-reply-header">
@@ -76,13 +97,29 @@ export default function CommentReply({
             </div>
           )} */}
         </div>
-        <div className="comment-reply-text">
-          <div 
-            dangerouslySetInnerHTML={{ __html: comment.content }}
-            className="comment-content-html"
-          />
-        </div>
+        
+        {/* 显示被引用的评论内容 */}
+        {quotedContent && (
+          <blockquote className="comment-quoted-content">
+            <div 
+              dangerouslySetInnerHTML={{ __html: quotedContent }}
+              className="comment-content-html"
+            />
+          </blockquote>
+        )}
+        
+       
       </div>
     </div>
+     {/* 显示回复的内容 */}
+     {replyContent && (
+      <div className="comment-reply-text" style={{marginTop: "12px"}}>
+        <div 
+          dangerouslySetInnerHTML={{ __html: replyContent }}
+          className="comment-content-html"
+        />
+      </div>
+    )}
+    </>
   );
 }

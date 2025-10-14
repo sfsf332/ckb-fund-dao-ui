@@ -9,7 +9,6 @@ import useUserInfoStore from "@/store/userInfo";
 
 export default function Treasury() {
   const { userInfo } = useUserInfoStore();
-  console.log(userInfo);
   // 使用hooks获取提案列表
   const { proposals, loading: proposalsLoading, error: proposalsError } = useProposalList({
     page: 1,

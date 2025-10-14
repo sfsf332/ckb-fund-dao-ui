@@ -1,5 +1,5 @@
 import { Milestone, MilestoneStatus } from '../types/milestone';
-import { Proposal, ProposalStatus } from '../data/mockProposals';
+import { Proposal, ProposalStatus } from './proposalUtils';
 import { MilestoneVotingInfo, MilestoneVoteOption, MilestoneVotingStatus } from '../types/milestoneVoting';
 
 // 根据提案生成里程碑数据
@@ -13,13 +13,13 @@ export const generateMilestones = (proposal: Proposal): Milestone[] => {
   let startMilestoneStatus: MilestoneStatus;
   let startMilestoneProgress: number;
   
-  if (proposal.status === ProposalStatus.DRAFT || 
-      proposal.status === ProposalStatus.REVIEW || 
-      proposal.status === ProposalStatus.VOTE) {
+  if (proposal.state === ProposalStatus.DRAFT || 
+      proposal.state === ProposalStatus.REVIEW || 
+      proposal.state === ProposalStatus.VOTE) {
     // 提案还未通过，启动里程碑处于待开始状态
     startMilestoneStatus = MilestoneStatus.PENDING;
     startMilestoneProgress = 0;
-  } else if (proposal.status === ProposalStatus.REJECTED) {
+  } else if (proposal.state === ProposalStatus.REJECTED) {
     // 提案被拒绝，里程碑取消
     startMilestoneStatus = MilestoneStatus.CANCELLED;
     startMilestoneProgress = 0;
@@ -55,13 +55,13 @@ export const generateMilestones = (proposal: Proposal): Milestone[] => {
     let progress = 0;
     
     // 根据提案状态和里程碑位置确定里程碑状态
-    if (proposal.status === ProposalStatus.DRAFT || 
-        proposal.status === ProposalStatus.REVIEW || 
-        proposal.status === ProposalStatus.VOTE) {
+    if (proposal.state === ProposalStatus.DRAFT || 
+        proposal.state === ProposalStatus.REVIEW || 
+        proposal.state === ProposalStatus.VOTE) {
       // 提案还未通过，所有里程碑都是待开始状态
       status = MilestoneStatus.PENDING;
       progress = 0;
-    } else if (proposal.status === ProposalStatus.REJECTED) {
+    } else if (proposal.state === ProposalStatus.REJECTED) {
       // 提案被拒绝，里程碑取消
       status = MilestoneStatus.CANCELLED;
       progress = 0;
@@ -81,7 +81,7 @@ export const generateMilestones = (proposal: Proposal): Milestone[] => {
     // 只为进行中且提案状态为执行阶段的里程碑生成投票信息
     let votingInfo: MilestoneVotingInfo | undefined;
     if (status === MilestoneStatus.IN_PROGRESS && 
-        proposal.status === ProposalStatus.MILESTONE) {
+        proposal.state === ProposalStatus.MILESTONE) {
       votingInfo = generateMilestoneVotingInfo(proposal, milestoneId);
     }
 

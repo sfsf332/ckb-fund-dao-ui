@@ -1,5 +1,5 @@
 import { TimelineEvent, TimelineEventType, TimelineEventStatus } from '../types/timeline';
-import { Proposal, ProposalStatus } from '../data/mockProposals';
+import { Proposal, ProposalStatus } from './proposalUtils';
 
 // 根据提案状态生成当前阶段的时间线事件
 export const generateTimelineEvents = (proposal: Proposal): TimelineEvent[] => {
@@ -18,7 +18,7 @@ export const generateTimelineEvents = (proposal: Proposal): TimelineEvent[] => {
   });
 
   // 根据提案状态添加相应事件
-  switch (proposal.status) {
+  switch (proposal.state) {
     case ProposalStatus.REVIEW:
       // 审议阶段 - 只显示当前阶段的事件
       events.push({

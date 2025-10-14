@@ -84,9 +84,24 @@ export function useCommentList(
       if (data) {
         const newComments = data.replies || [];
         
+        // 如果是重置操作，使用智能合并；否则追加数据
+        setComments(prev => {
+          if (reset) {
+            // 重置时智能合并：保留已存在评论的UI状态
+            const prevMap = new Map(prev.map(c => [c.cid, c]));
+            return newComments.map(nc => {
+              const existing = prevMap.get(nc.cid);
+              // 如果评论已存在，保留其状态（如点赞状态）
+              return existing || nc;
+            });
+          } else {
+            // 加载更多时，过滤掉重复的评论
+            const existingIds = new Set(prev.map(c => c.cid));
+            const uniqueNew = newComments.filter(nc => !existingIds.has(nc.cid));
+            return [...prev, ...uniqueNew];
+          }
+        });
         
-        // 如果是重置操作，直接设置新数据；否则追加数据
-        setComments(prev => reset ? newComments : [...prev, ...newComments]);
         setCursor(data.cursor);
         setHasMore(!!data.cursor); // 如果有 cursor，说明还有更多数据
       } else {

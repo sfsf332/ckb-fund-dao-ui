@@ -1,6 +1,7 @@
 /**
  * 提案相关API接口定义
  */
+import { ProposalStatus } from "@/utils/proposalUtils";
 import defineAPI from "./defineAPI";
 
 // 提案详情接口的参数类型
@@ -28,6 +29,7 @@ export interface ProposalDetailResponse {
     displayName: string;
     handle: string;
   };
+
   cid: string;
   like_count: string;
   liked: boolean;
@@ -35,6 +37,7 @@ export interface ProposalDetailResponse {
     $type: string;
     created: string;
     data: {
+      state: ProposalStatus;
       background: string;
       budget: string;
       goals: string;

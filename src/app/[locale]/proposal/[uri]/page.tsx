@@ -4,9 +4,8 @@ import { useEffect, useState } from "react";
 import { useParams } from 'next/navigation';
 import { useTranslation } from "../../../../utils/i18n";
 import { FaCopy, FaHeart, FaShare } from "react-icons/fa";
-import { AiOutlineExport } from "react-icons/ai";
 import Image from "next/image";
-import Link from "next/link";
+import { RingLoader } from "react-spinners";
 import { handleCopy } from "@/utils/common";
 import "../create/create-proposal.css";
 import { IoDocumentTextOutline } from "react-icons/io5";
@@ -25,7 +24,7 @@ import { Milestone } from "@/types/milestone";
 import { MilestoneVotingInfo, MilestoneVoteOption } from "@/types/milestoneVoting";
 import { useProposalDetail } from "@/hooks/useProposalDetail";
 import { ProposalDetailResponse } from "@/server/proposal";
-import { Proposal, ProposalStatus, ProposalType } from "@/data/mockProposals";
+import { Proposal, ProposalStatus, ProposalType, getStatusText } from "@/utils/proposalUtils";
 import { writesPDSOperation } from "@/app/posts/utils";
 import useUserInfoStore from "@/store/userInfo";
 import { useCommentList } from "@/hooks/useCommentList";
@@ -46,7 +45,7 @@ const adaptProposalDetail = (detail: ProposalDetailResponse): Proposal => {
   return {
     id: detail.cid, // 使用 cid 作为 id
     title: proposalData.title,
-    status: ProposalStatus.REVIEW, // 默认状态，可以根据实际情况调整
+    state: proposalData.state, // 默认状态，可以根据实际情况调整
     type: proposalData.proposalType as ProposalType,
     proposer: {
       name: detail.author.displayName,
@@ -64,7 +63,6 @@ const adaptProposalDetail = (detail: ProposalDetailResponse): Proposal => {
 
 // 适配器函数：将API返回的CommentItem转换为组件需要的Comment类型
 const adaptCommentItem = (item: CommentItem, currentUserDid?: string): Comment => {
-  console.log('适配评论数据:', item);
   
   return {
     id: item.cid,
@@ -77,7 +75,6 @@ const adaptCommentItem = (item: CommentItem, currentUserDid?: string): Comment =
     },
     createdAt: item.created, // 直接使用 created，不是 record.created
     likes: parseInt(item.like_count) || 0, // like_count 是字符串，需要转换为数字
-    replies: [], // 回复需要单独处理
     parentId: item.parent_uri || undefined, // 使用 parent_uri 而不是 parent_id
     isLiked: item.liked || false,
     isAuthor: currentUserDid === item.author.did,
@@ -97,21 +94,10 @@ export default function ProposalDetail() {
   useTranslation();
   const params = useParams();
   const uri = params?.uri as string;
-  const { userInfo } = useUserInfoStore();
+  const { userInfo, userProfile } = useUserInfoStore();
 
   // 使用真实API接口获取提案详情
   const { proposal, loading, error } = useProposalDetail(uri);
-  
-  // 调试：打印提案信息
-  useEffect(() => {
-    if (proposal) {
-      console.log('提案详情已加载:', {
-        uri: proposal.uri,
-        cid: proposal.cid,
-        title: proposal.record.data.title
-      });
-    }
-  }, [proposal]);
   
   // 使用真实API接口获取评论列表
   const { 
@@ -140,6 +126,7 @@ export default function ProposalDetail() {
   // 点赞相关状态
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+  const [isLiking, setIsLiking] = useState(false);
 
   useEffect(() => {
     // 处理锚点高亮
@@ -181,7 +168,7 @@ export default function ProposalDetail() {
     };
   }, []);
 
-  // 处理 API 返回的评论数据，转换为组件需要的嵌套结构
+  // 处理 API 返回的评论数据，转换为平铺的列表结构
   useEffect(() => {
     if (!apiComments || apiComments.length === 0) {
       setComments([]);
@@ -190,51 +177,36 @@ export default function ProposalDetail() {
 
     console.log('原始评论数据:', apiComments);
 
-    // 转换评论数据
+    // 转换评论数据为平铺列表
     const adaptedComments = apiComments.map(item => 
       adaptCommentItem(item, userInfo?.did)
     );
 
-    console.log('转换后的评论数据:', adaptedComments);
+    console.log('转换后的评论数据（平铺列表）:', adaptedComments);
 
-    // 构建评论树结构：将回复关联到父评论
-    // 使用 URI 作为映射的 key，因为 parent_uri 是完整的 URI
-    const commentMapByUri = new Map<string, Comment>();
-    const commentMapById = new Map<string, Comment>();
-    const rootComments: Comment[] = [];
-
-    // 第一遍：创建所有评论的映射（同时建立 URI 和 ID 的映射）
-    apiComments.forEach((item, index) => {
-      const comment = adaptedComments[index];
-      const commentWithReplies = { ...comment, replies: [] };
-      commentMapByUri.set(item.uri, commentWithReplies);
-      commentMapById.set(comment.id, commentWithReplies);
-    });
-
-    // 第二遍：构建树结构
-    apiComments.forEach((item, index) => {
-      const comment = adaptedComments[index];
-      const commentNode = commentMapByUri.get(item.uri);
-      if (!commentNode) return;
-
-      if (comment.parentId) {
-        // 这是一个回复，使用 parent_uri 找到父评论
-        const parentComment = commentMapByUri.get(comment.parentId);
-        if (parentComment) {
-          parentComment.replies.push(commentNode);
-        } else {
-          // 如果找不到父评论，作为根评论
-          console.warn('找不到父评论:', comment.parentId);
-          rootComments.push(commentNode);
+    // 智能合并：保留已存在评论的状态，只更新变化的部分
+    setComments(prevComments => {
+      const commentMap = new Map(prevComments.map(c => [c.id, c]));
+      
+      // 合并新旧评论，保留旧评论的UI状态
+      const mergedComments = adaptedComments.map(newComment => {
+        const existingComment = commentMap.get(newComment.id);
+        if (existingComment) {
+          // 保留现有评论，但更新可能变化的字段（如点赞数）
+          return {
+            ...existingComment,
+            likes: newComment.likes,
+            isLiked: newComment.isLiked,
+          };
         }
-      } else {
-        // 这是一个根评论
-        rootComments.push(commentNode);
-      }
+        return newComment;
+      });
+      
+      // 按时间倒序排列
+      return mergedComments.sort((a, b) => {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      });
     });
-
-    console.log('构建的评论树:', rootComments);
-    setComments(rootComments);
   }, [apiComments, userInfo?.did]);
 
   // 当提案数据加载完成后，生成相关数据
@@ -252,20 +224,20 @@ export default function ProposalDetail() {
     setTimelineEvents(events);
     
     // 如果是投票阶段，生成投票信息
-    if (adaptedProposal.status === ProposalStatus.VOTE) {
+    if (adaptedProposal.state === ProposalStatus.VOTE) {
       const voting = generateVotingInfo(adaptedProposal);
       setVotingInfo(voting);
     }
     
     // 如果是执行阶段，生成里程碑信息
-    if (adaptedProposal.status === ProposalStatus.MILESTONE || 
-        adaptedProposal.status === ProposalStatus.APPROVED || 
-        adaptedProposal.status === ProposalStatus.ENDED) {
+    if (adaptedProposal.state === ProposalStatus.MILESTONE || 
+        adaptedProposal.state === ProposalStatus.APPROVED || 
+        adaptedProposal.state === ProposalStatus.ENDED) {
       const milestoneData = generateMilestones(adaptedProposal);
       setMilestones(milestoneData);
       
       // 如果是里程碑阶段，生成里程碑投票信息
-      if (adaptedProposal.status === ProposalStatus.MILESTONE && adaptedProposal.milestones) {
+      if (adaptedProposal.state === ProposalStatus.MILESTONE && adaptedProposal.milestones) {
         const currentMilestoneId = `${adaptedProposal.id}-milestone-${adaptedProposal.milestones.current}`;
         const milestoneVoting = generateMilestoneVotingInfo(adaptedProposal, currentMilestoneId);
         setMilestoneVotingInfo(milestoneVoting);
@@ -278,27 +250,37 @@ export default function ProposalDetail() {
       return;
     }
     
-    // 如果已经点赞，不再重复操作
-    if (isLiked) {
+    // 如果已经点赞或正在点赞，不再重复操作
+    if (isLiked || isLiking) {
       return;
     }
     
-    // 调用 writesPDSOperation 点赞到 PDS
-    const result = await writesPDSOperation({
-      record: {
-        $type: 'app.dao.like',
-        to: proposal?.uri,
-        viewer: userInfo?.did,
-      },
-      did: userInfo?.did ,
-    });
+    // 设置 loading 状态
+    setIsLiking(true);
     
-    console.log(result);
-    
-    // 如果操作成功，更新状态
-    if (result) {
-      setIsLiked(true);
-      setLikeCount(prev => prev + 1);
+    try {
+      // 调用 writesPDSOperation 点赞到 PDS
+      const result = await writesPDSOperation({
+        record: {
+          $type: 'app.dao.like',
+          to: proposal?.uri,
+          viewer: userInfo?.did,
+        },
+        did: userInfo?.did ,
+      });
+      
+      console.log(result);
+      
+      // 如果操作成功，更新状态
+      if (result) {
+        setIsLiked(true);
+        setLikeCount(prev => prev + 1);
+      }
+    } catch (error) {
+      console.error('点赞失败:', error);
+    } finally {
+      // 无论成功还是失败，都要取消 loading 状态
+      setIsLiking(false);
     }
   };
   // 评论处理函数
@@ -353,14 +335,37 @@ export default function ProposalDetail() {
 
       console.log('评论发布结果:', result);
 
-      // 如果操作成功，刷新评论列表
+      // 如果操作成功，乐观添加到列表
       if (result) {
-        // 刷新评论列表以获取最新数据
-        await refetchComments();
+        // 乐观添加新评论到列表顶部
+        const newComment: Comment = {
+          id: result.cid || `temp-${Date.now()}`, // 使用返回的 cid 或临时 ID
+          content: content,
+          author: {
+            id: userInfo.did,
+            name: userProfile?.displayName || userInfo.handle || userInfo.did,
+            avatar: "/avatar.jpg", // 使用默认头像
+            did: userInfo.did,
+          },
+          createdAt: new Date().toISOString(),
+          likes: 0,
+          isLiked: false,
+          isAuthor: true,
+          parentId: record.parent,
+          to: targetCommentId ? apiComments.find(c => c.cid === targetCommentId || c.uri === targetCommentId)?.to : undefined,
+        };
+        
+        setComments(prev => [newComment, ...prev]);
+        
         // 清除引用文本和回复目标
         setQuotedText("");
         setReplyToCommentId(null);
-        console.log('评论发布成功，列表已刷新');
+        console.log('评论发布成功，已添加到列表');
+        
+        // 后台静默刷新，确保数据同步（延迟刷新避免闪烁）
+        setTimeout(() => {
+          refetchComments();
+        }, 1000);
       }
     } catch (error) {
       console.error('发布评论失败:', error);
@@ -389,25 +394,17 @@ export default function ProposalDetail() {
 
     try {
       // 乐观更新：先更新 UI
-      const toggleLike = (comments: Comment[]): Comment[] => {
-        return comments.map(comment => {
-          if (comment.id === commentId) {
-            return {
-              ...comment,
-              likes: comment.likes + 1,
-              isLiked: true
-            };
-          }
-          if (comment.replies.length > 0) {
-            return {
-              ...comment,
-              replies: toggleLike(comment.replies)
-            };
-          }
-          return comment;
-        });
-      };
-      setComments(toggleLike(comments));
+      // 先乐观更新 UI（平铺列表无需递归）
+      setComments(comments.map(comment => {
+        if (comment.id === commentId) {
+          return {
+            ...comment,
+            likes: comment.likes + 1,
+            isLiked: true
+          };
+        }
+        return comment;
+      }));
 
       // 调用 writesPDSOperation 点赞评论
       const result = await writesPDSOperation({
@@ -421,33 +418,22 @@ export default function ProposalDetail() {
 
       console.log('评论点赞结果:', result);
 
-      // 成功后刷新评论列表以获取最新状态
-      if (result) {
-        await refetchComments();
-      }
+      // 点赞成功，保持乐观更新的状态即可，不需要刷新
+      // 这样可以避免列表闪烁，提升用户体验
     } catch (error) {
       console.error('评论点赞失败:', error);
       
-      // 失败时回滚 UI
-      const revertLike = (comments: Comment[]): Comment[] => {
-        return comments.map(comment => {
-          if (comment.id === commentId) {
-            return {
-              ...comment,
-              likes: comment.likes - 1,
-              isLiked: false
-            };
-          }
-          if (comment.replies.length > 0) {
-            return {
-              ...comment,
-              replies: revertLike(comment.replies)
-            };
-          }
-          return comment;
-        });
-      };
-      setComments(revertLike(comments));
+      // 失败时回滚 UI（平铺列表无需递归）
+      setComments(comments.map(comment => {
+        if (comment.id === commentId) {
+          return {
+            ...comment,
+            likes: comment.likes - 1,
+            isLiked: false
+          };
+        }
+        return comment;
+      }));
     }
   };
 
@@ -468,40 +454,22 @@ export default function ProposalDetail() {
   };
 
   const handleEditComment = (commentId: string, content: string) => {
-    const editComment = (comments: Comment[]): Comment[] => {
-      return comments.map(comment => {
-        if (comment.id === commentId) {
-          return {
-            ...comment,
-            content,
-            updatedAt: new Date().toISOString()
-          };
-        }
-        if (comment.replies.length > 0) {
-          return {
-            ...comment,
-            replies: editComment(comment.replies)
-          };
-        }
-        return comment;
-      });
-    };
-    setComments(editComment(comments));
+    // 平铺列表无需递归，直接查找并更新
+    setComments(comments.map(comment => {
+      if (comment.id === commentId) {
+        return {
+          ...comment,
+          content,
+          updatedAt: new Date().toISOString()
+        };
+      }
+      return comment;
+    }));
   };
 
   const handleDeleteComment = (commentId: string) => {
-    const deleteComment = (comments: Comment[]): Comment[] => {
-      return comments.filter(comment => {
-        if (comment.id === commentId) {
-          return false;
-        }
-        if (comment.replies.length > 0) {
-          comment.replies = deleteComment(comment.replies);
-        }
-        return true;
-      });
-    };
-    setComments(deleteComment(comments));
+    // 平铺列表无需递归，直接过滤
+    setComments(comments.filter(comment => comment.id !== commentId));
   };
 
   const handleQuote = (selectedText: string) => {
@@ -557,18 +525,12 @@ export default function ProposalDetail() {
       governance: "治理提案",
       technical: "技术提案",
       community: "社区提案",
+      development: "开发项目",
+      ecosystem: "生态建设",
+      research: "研究项目",
+      infrastructure: "基础设施",
     };
     return types[type] || "未知类型";
-  };
-
-  const getStatusText = (status: number) => {
-    const statuses: { [key: string]: string } = {
-      active: "进行中",
-      completed: "已完成",
-      cancelled: "已取消",
-      pending: "待审核",
-    };
-    return statuses[status] || "未知状态";
   };
 
 
@@ -662,9 +624,7 @@ export default function ProposalDetail() {
                           >
                             <FaCopy size={12} />
                           </button>
-                          <Link href="#" aria-label="export-author-did">
-                            <AiOutlineExport size={12} />
-                          </Link>
+                         
                         </div>
                       </div>
                     </div>
@@ -806,14 +766,23 @@ export default function ProposalDetail() {
                 </div>
                 <div className="proposal-like">
                     <a 
-                      className={`button-actions ${isLiked ? 'liked' : ''}`}
+                      className={`button-actions ${isLiked ? 'liked' : ''} ${isLiking ? 'loading' : ''}`}
                       onClick={handleLike}
                       style={{ 
                         color: isLiked ? '#ff4d6d' : undefined,
-                        cursor: isLiked ? 'default' : 'pointer'
+                        cursor: isLiked || isLiking ? 'default' : 'pointer'
                       }}
                     >
-                      <FaHeart /> {likeCount}
+                      {isLiking ? (
+                        <>
+                          <RingLoader size={16} color={isLiked ? '#ff4d6d' : '#ffffff'} />
+                          <span style={{ marginLeft: '4px' }}>点赞中...</span>
+                        </>
+                      ) : (
+                        <>
+                          <FaHeart /> {likeCount}
+                        </>
+                      )}
                     </a>
                     <a className="button-actions">
                       <FaShare /> 分享

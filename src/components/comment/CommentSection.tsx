@@ -23,8 +23,8 @@ export default function CommentSection({
     onAddComment(content, parentId);
   };
 
-  const handleLikeComment = (commentId: string) => {
-    onLikeComment(commentId);
+  const handleLikeComment = async (commentId: string) => {
+    await onLikeComment(commentId);
   };
 
   const handleReplyComment = (commentId: string, content: string) => {

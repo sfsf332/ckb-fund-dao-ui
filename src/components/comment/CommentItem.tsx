@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import {
   MdOutlineModeComment /*, MdOutlineEdit, MdOutlineDelete */,
 } from "react-icons/md";
 import { GrShareOption } from "react-icons/gr";
+import { RingLoader } from "react-spinners";
 // import dynamic from "next/dynamic";
 
 import "./comment.css";
@@ -43,12 +44,14 @@ export default function CommentItem({
   onReply,
   onEdit, // 暂时屏蔽
   onDelete, // 暂时屏蔽
-  level = 0,
 }: CommentItemProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const _unusedEdit = onEdit;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const _unusedDelete = onDelete;
+  // 点赞 loading 状态
+  const [isLiking, setIsLiking] = useState(false);
+  
   // 判断是否为回复评论
   const isReplyToComment = comment.to && comment.to.did;
   const replyToName = isReplyToComment
@@ -83,8 +86,20 @@ export default function CommentItem({
     onReply(comment.id, comment.content);
   };
 
-  const handleLike = () => {
-    onLike(comment.id);
+  const handleLike = async () => {
+    // 如果已经点赞或正在点赞，不再重复操作
+    if (comment.isLiked || isLiking) {
+      return;
+    }
+    
+    setIsLiking(true);
+    try {
+      await onLike(comment.id);
+    } catch (error) {
+      console.error('点赞失败:', error);
+    } finally {
+      setIsLiking(false);
+    }
   };
 
   // 暂时屏蔽编辑和删除功能
@@ -120,10 +135,7 @@ export default function CommentItem({
   // ];
 
   return (
-    <div
-      className={`comment-item ${level > 0 ? "comment-reply" : ""}`}
-      style={{ marginLeft: `${level * 20}px` }}
-    >
+    <div className="comment-item">
       <div className="comment-item-avatar">
         <Image
           src={comment.author.avatar}
@@ -141,15 +153,15 @@ export default function CommentItem({
             </h3>
             {/* 暂时屏蔽编辑和删除功能 */}
             {/* {comment.isAuthor && (
-            <div className="comment-actions">
-              <button onClick={handleEdit} className="comment-action-btn">
-                <MdOutlineEdit />
-              </button>
-              <button onClick={handleDelete} className="comment-action-btn">
-                <MdOutlineDelete />
-              </button>
-            </div>
-          )} */}
+              <div className="comment-actions">
+                <button onClick={handleEdit} className="comment-action-btn">
+                  <MdOutlineEdit />
+                </button>
+                <button onClick={handleDelete} className="comment-action-btn">
+                  <MdOutlineDelete />
+                </button>
+              </div>
+            )} */}
           </div>
 
           <div className="comment-item-text">
@@ -174,10 +186,20 @@ export default function CommentItem({
             onClick={handleLike}
             className={`comment-footer-button ${
               comment.isLiked ? "liked" : ""
-            }`}
+            } ${isLiking ? "loading" : ""}`}
+            disabled={isLiking || comment.isLiked}
           >
-            {comment.isLiked ? <FaHeart /> : <FaRegHeart />}
-            {comment.likes > 0 && <span>{comment.likes}</span>}
+            {isLiking ? (
+              <>
+                <RingLoader size={14} color={comment.isLiked ? '#ff4d6d' : '#ffffff'} />
+                <span style={{ marginLeft: '4px' }}>点赞中</span>
+              </>
+            ) : (
+              <>
+                {comment.isLiked ? <FaHeart /> : <FaRegHeart />}
+                {comment.likes > 0 && <span>{comment.likes}</span>}
+              </>
+            )}
           </button>
 
           <button className="comment-footer-button">

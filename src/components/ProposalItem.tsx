@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Proposal } from "../data/mockProposals";
+import { Proposal } from "../utils/proposalUtils";
 import { ProposalListItem } from "@/server/proposal";
-import { formatNumber, formatDate } from "../utils/proposalUtils";
+import { formatNumber, formatDate, getStatusText } from "../utils/proposalUtils";
 import { postUriToHref } from "@/lib/postUriHref";
 import { useI18n } from "@/contexts/I18nContext";
 
@@ -64,11 +64,10 @@ export default function ProposalItem({ proposal }: ProposalItemProps) {
     >
       <h4>
         {title}
-        {/* <span className={getStatusClass(state)}>
-          {getStatusText(state)}
-        </span> */}
+        <span className="status-tag">
+          {getStatusText(proposal.state)}
+        </span>
       </h4>
-      
       <div className="proposal_person">
         <Image src={avatar} alt="avatar" width={40} height={40} />
         <div className="name">

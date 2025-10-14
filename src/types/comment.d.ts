@@ -12,8 +12,7 @@ export interface Comment {
   createdAt: string;
   updatedAt?: string;
   likes: number;
-  replies: Comment[];
-  parentId?: string; // 用于回复功能
+  parentId?: string; // 用于回复功能（如果需要跟踪回复关系）
   isLiked?: boolean; // 当前用户是否点赞
   isAuthor?: boolean; // 是否为当前用户发布
   to?: { // 被回复人的信息（如果是回复评论）
@@ -27,7 +26,7 @@ export interface Comment {
 export interface CommentSectionProps {
   comments: Comment[];
   onAddComment: (content: string, parentId?: string) => void;
-  onLikeComment: (commentId: string) => void;
+  onLikeComment: (commentId: string) => Promise<void>;
   onReplyComment: (commentId: string, content: string) => void;
   onEditComment: (commentId: string, content: string) => void;
   onDeleteComment: (commentId: string) => void;
@@ -38,11 +37,10 @@ export interface CommentSectionProps {
 
 export interface CommentItemProps {
   comment: Comment;
-  onLike: (commentId: string) => void;
+  onLike: (commentId: string) => Promise<void>;
   onReply: (commentId: string, content: string) => void;
   onEdit: (commentId: string, content: string) => void;
   onDelete: (commentId: string) => void;
-  level?: number; // 嵌套层级，用于回复显示
 }
 
 export interface CommentReplyProps {

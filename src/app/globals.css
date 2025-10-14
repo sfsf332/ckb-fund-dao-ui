@@ -585,11 +585,11 @@ body {
   padding: 24px;
   position: relative;
   transition: all 0.3s ease;
+  border:1px solid transparent;
 }
 
 .proposal_list_content li:hover {
-  border-color: #00B287;
-  box-shadow: 0 4px 12px rgba(0, 178, 135, 0.1);
+  border-color: #00CC9B80;
 }
 
 /* 可点击的提案项样式 */
@@ -599,8 +599,7 @@ body {
 
 .proposal-item-clickable:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 178, 135, 0.15);
-  border-color: #00B287;
+  border-color: #00CC9B80;
 }
 
 .proposal-item-clickable:active {

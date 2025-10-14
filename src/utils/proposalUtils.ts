@@ -1,10 +1,54 @@
-import { ProposalStatus } from "../data/mockProposals";
 
 // 格式化数字显示
 export const formatNumber = (num: number) => {
   return num.toLocaleString('zh-CN');
 };
+// 提案状态枚举
+export enum ProposalStatus {
+  DRAFT = 1,           // 草稿
+  REVIEW = 2,         // 社区审议中
+  VOTE = 3,            // 投票中
+  MILESTONE = 1001,   // 里程碑交付中
+  APPROVED = 4,     // 已通过
+  REJECTED = 5,     // 已拒绝
+  ENDED = 0           // 结束
+}
+// 提案接口
+export interface Proposal {
+  id: string;
+  title: string;
+  type: ProposalType;
+  state: ProposalStatus;
+  proposer: {
+    name: string;
+    avatar: string;
+    did: string;
+  };
+  budget: number; // CKB 数量
+  createdAt: string;
+  description: string;
+  milestones?: {
+    current: number;
+    total: number;
+    progress: number; // 百分比
+  };
+  voting?: {
+    approve: number; // 赞成票百分比
+    oppose: number;  // 反对票百分比
+    totalVotes: number; // 总投票数
+  };
+  category: string;
+  tags: string[];
+}
 
+// 提案类型枚举
+export enum ProposalType {
+  DEVELOPMENT = 'development',  // 开发项目
+  GOVERNANCE = 'governance',    // 治理规则
+  ECOSYSTEM = 'ecosystem',      // 生态建设
+  RESEARCH = 'research',        // 研究项目
+  INFRASTRUCTURE = 'infrastructure' // 基础设施
+}
 // 获取状态标签样式
 export const getStatusClass = (status: ProposalStatus) => {
   switch (status) {

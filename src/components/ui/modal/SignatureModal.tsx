@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { MdContentCopy } from 'react-icons/md';
 import Modal from './Modal';
+import { GoCopy } from 'react-icons/go';
 
 export interface SignatureModalProps {
   isOpen: boolean;
@@ -26,8 +27,9 @@ export default function SignatureModal({
     }
   };
 
-  const handleCopyMessage = () => {
-    navigator.clipboard.writeText(message);
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    // 这里可以添加复制成功的提示
   };
 
   return (
@@ -54,8 +56,12 @@ export default function SignatureModal({
         <div className="message-section">
           <div>
             <span className="message-text">{message}</span>
-            <button  onClick={handleCopyMessage}>
-              <MdContentCopy />
+            <button
+              className="copy-button"
+              onClick={() => copyToClipboard(message)}
+              title="复制"
+            >
+              <GoCopy />
             </button>
           </div>
           <p className="message-instruction">

@@ -45,9 +45,8 @@ export default function Header() {
   return (
     <div className="header-container">
       <div className="logo">
-        <Image src="/nervos-logo.svg" alt="logo" width={36} height={36} priority />
-        <span>CKB Community Fund DAO</span>
-        <span className="version">V1.1</span>
+        <Image src="/header_logo.svg" width={330} height={36} alt="CKB Community Fund DAO" priority />
+      
       </div>
       <ul className="navs">
         <li>

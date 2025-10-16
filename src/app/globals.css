@@ -81,48 +81,7 @@ body {
   scrollbar-width: thin;
   scrollbar-color: rgba(106, 115, 125, 0.6) transparent;
 }
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 32px;
-  box-sizing: border-box;
-  height: 70px;
-  width: 100%;
-  background-color: #141619;
-}
 
-.header-container .logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 18px;
-  font-weight: 800;
-  color: #fff;
-  min-width: 320px;
-  background-color: transparent;
- 
-}
-.header-container .logo img{
-  background-color: #fff;
-  width: 36px;
-  height: 36px;
-  border-radius: 5px;
-}
-
-.header-container .logo span{
-  font-size: 16px;
-}
-.header-container span.version {
-  font-size: 14px;
-  font-weight: 400;
-  height: 18px;
-  line-height: 18px;
-  background: #00B287;
-  border-radius: 5px;
-  color: #000;
-  padding: 0 4px;
-}
 .button-normal{
   display: flex;
   align-items: center;
@@ -162,6 +121,44 @@ body {
     background: #1C2027;
   } 
 }
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 32px;
+  box-sizing: border-box;
+  height: 70px;
+  width: 100%;
+  background-color: #141619;
+}
+
+.header-container .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  min-width: 330px;
+  background-color: transparent;
+ 
+}
+
+
+.header-container .logo span{
+  font-size: 16px;
+}
+.header-container span.version {
+  font-size: 14px;
+  font-weight: 400;
+  height: 18px;
+  line-height: 18px;
+  background: #00B287;
+  border-radius: 5px;
+  color: #000;
+  padding: 0 4px;
+}
+
 .navs{
   flex:1;
   padding:0 20px;
@@ -174,23 +171,79 @@ body {
 }
 
 /* 语言切换器样式 */
+.language-switcher-container {
+  position: relative;
+  display: inline-block;
+}
+
 .language-switcher {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 12px;
+  padding: 8px 12px;
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
   transition: all 0.3s ease;
-  background: #3B82F6;
+  background: transparent;
   color: #fff;
   border: none;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .language-switcher:hover {
-  background: #2563EB;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.language-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  background: #1C2027;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  z-index: 1000;
+  min-width: 120px;
+  animation: dropdownFadeIn 0.2s ease-out;
+}
+
+.language-option {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  background: transparent;
+  color: #fff;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.language-option:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.language-option.active {
+  background: rgba(0, 178, 135, 0.2);
+  color: #00B287;
+}
+
+/* 下拉菜单淡入动画 */
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .navs li{
   list-style: none;
@@ -257,6 +310,8 @@ body {
     transform: translateX(-50%) translateY(0);
   }
 }
+
+
 
 /* Footer 组件样式 */
 .footer-container {

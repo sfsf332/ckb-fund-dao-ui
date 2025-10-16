@@ -60,11 +60,22 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
   const [bindInfo, setBindInfo] = useState<BindInfo | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // 将 base64 签名转换为十六进制
-  const base64ToHex = (base64: string): string => {
+  // 将签名转换为十六进制（兼容base64和0x格式）
+  const convertSignatureToHex = (signature: string): string => {
     try {
+      // 检查是否为0x开头的十六进制字符串
+      if (signature.startsWith('0x') || signature.startsWith('0X')) {
+        // 移除0x前缀并验证是否为有效的十六进制
+        const hexString = signature.slice(2);
+        if (/^[0-9a-fA-F]+$/.test(hexString)) {
+          return hexString.toLowerCase();
+        }
+        throw new Error("无效的十六进制签名");
+      }
+      
+      // 否则按base64处理
       // 移除可能的填充字符
-      const cleanBase64 = base64.replace(/[^A-Za-z0-9+/]/g, '');
+      const cleanBase64 = signature.replace(/[^A-Za-z0-9+/]/g, '');
       // 解码 base64 为字节数组
       const bytes = atob(cleanBase64);
       // 转换为十六进制
@@ -72,7 +83,7 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
         .map(byte => byte.charCodeAt(0).toString(16).padStart(2, '0'))
         .join('');
     } catch (error) {
-      console.error('Base64 转换失败:', error);
+      console.error('签名转换失败:', error);
       return '';
     }
   };
@@ -118,8 +129,8 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await tx.completeFeeBy(signer as any);
 
-    // 将 base64 签名转换为十六进制
-    const signatureHex = base64ToHex(signature);
+    // 将签名转换为十六进制（兼容base64和0x格式）
+    const signatureHex = convertSignatureToHex(signature);
     if (!signatureHex) {
       console.error("签名转换失败");
       return;
@@ -127,7 +138,7 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
 
     const bindInfoWithSig = BindInfoWithSig.from({
       bind_info: bindInfo,
-      sig: hexFrom(`0x${signatureHex}`)
+      sig: hexFrom(signature.startsWith('0x') ? signature : `0x${signatureHex}`)
     })
   
     const bindInfoWithSigBytes = bindInfoWithSig.toBytes();
@@ -144,7 +155,8 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
     await signer.signTransaction(tx);
 
     console.log("tx: ", ccc.stringify(tx));
-
+    const txHash = await signer.sendTransaction(tx);
+    console.log("The transaction hash is", txHash);
     setShowSignatureModal(false);
     setShowSuccessModal(true);
   };

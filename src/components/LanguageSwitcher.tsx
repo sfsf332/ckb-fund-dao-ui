@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useI18n } from '../contexts/I18nContext';
 import { PiGlobeLight } from "react-icons/pi";
@@ -10,15 +10,15 @@ export default function LanguageSwitcher() {
   const router = useRouter();
   const pathname = usePathname();
   const [isClient, setIsClient] = React.useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   React.useEffect(() => {
     setIsClient(true);
   }, []);
 
-  const handleLanguageChange = () => {
+  const handleLanguageChange = (newLocale: 'en' | 'zh') => {
     if (!isClient) return;
     
-    const newLocale = locale === 'en' ? 'zh' : 'en';
     setLocale(newLocale);
     
     // 更新URL路径
@@ -27,16 +27,38 @@ export default function LanguageSwitcher() {
     router.push(newPath);
   };
 
-  // 显示当前非活跃的语言
-  const displayText = locale === 'en' ? '中文' : 'English';
+  // 语言选项
+  const languages: Array<{ code: 'en' | 'zh', name: string, display: string }> = [
+    { code: 'zh', name: '简体中文', display: 'ZH' },
+    { code: 'en', name: 'English', display: 'EN' }
+  ];
+
+  const currentLanguage = languages.find(lang => lang.code === locale) || languages[0];
 
   return (
-    <button
-      onClick={handleLanguageChange}
-      className="language-switcher"
+    <div 
+      className="language-switcher-container"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <PiGlobeLight />
-      {displayText}
-    </button>
+      <button className="language-switcher">
+        <PiGlobeLight />
+        {currentLanguage.display}
+      </button>
+      
+      {isHovered && (
+        <div className="language-dropdown">
+          {languages.map((language) => (
+            <button
+              key={language.code}
+              className={`language-option ${language.code === locale ? 'active' : ''}`}
+              onClick={() => handleLanguageChange(language.code)}
+            >
+              {language.name}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

@@ -91,6 +91,28 @@ export const getStatusText = (status: ProposalStatus) => {
   }
 };
 
+// 基于设计稿的 Tag 颜色类名（与 Tag.css 中的 -- 修饰类一致）
+export const getStatusTagClass = (status: ProposalStatus) => {
+  switch (status) {
+    case ProposalStatus.REVIEW:
+      return 'tag-status--review';
+    case ProposalStatus.VOTE:
+      return 'tag-status--vote';
+    case ProposalStatus.MILESTONE:
+      return 'tag-status--milestone';
+    case ProposalStatus.APPROVED:
+      return 'tag-status--approved';
+    case ProposalStatus.REJECTED:
+      return 'tag-status--rejected';
+    case ProposalStatus.ENDED:
+      return 'tag-status--ended';
+    case ProposalStatus.DRAFT:
+      return 'tag-status--draft';
+    default:
+      return '';
+  }
+};
+
 // 格式化日期显示
 export const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('zh-CN');

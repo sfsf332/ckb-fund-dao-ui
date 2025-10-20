@@ -2,8 +2,9 @@
 
 import React from "react";
 import Image from "next/image";
-import { FaCopy } from "react-icons/fa";
 import { useWalletAddress } from "@/hooks/useWalletAddress";
+import { handleCopy } from "@/utils/common";
+import CopyButton from "../ui/copy/CopyButton";
 
 interface LoginStep4Props {
   accountName: string;
@@ -11,15 +12,12 @@ interface LoginStep4Props {
 
 export default function LoginStep4({ accountName }: LoginStep4Props) {
   
-  const { walletAddress, isLoadingAddress, copyAddress, formatAddress } = useWalletAddress();
+  const { walletAddress, isLoadingAddress, formatAddress } = useWalletAddress();
 
   // 复制地址到剪贴板
-  const handleCopyAddress = async () => {
-    const success = await copyAddress();
-    if (success) {
-      console.log("✅ 地址已复制到剪贴板");
-    } else {
-      console.log("❌ 地址复制失败");
+  const handleCopyAddress = () => {
+    if (walletAddress) {
+      handleCopy(walletAddress);
     }
   };
   return (
@@ -44,7 +42,7 @@ export default function LoginStep4({ accountName }: LoginStep4Props) {
             </div>
             <div className="success-address" onClick={handleCopyAddress} style={{ cursor: 'pointer' }}>
               {isLoadingAddress ? "获取地址中..." : formatAddress(walletAddress)} 
-              <FaCopy style={{ marginLeft: '8px' }} />
+              <CopyButton text={walletAddress} className="copy-button" ariaLabel="copy-wallet-address" />
             </div>
           </div>
         </div>

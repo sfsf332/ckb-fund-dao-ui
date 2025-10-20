@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { MdContentCopy } from 'react-icons/md';
 import Modal from './Modal';
 import { GoCopy } from 'react-icons/go';
+import CopyButton from '@/components/ui/copy/CopyButton';
 
 export interface SignatureModalProps {
   isOpen: boolean;
@@ -27,10 +27,7 @@ export default function SignatureModal({
     }
   };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    // 这里可以添加复制成功的提示
-  };
+  
 
   return (
     <Modal
@@ -56,13 +53,13 @@ export default function SignatureModal({
         <div className="message-section">
           <div>
             <span className="message-text">{message}</span>
-            <button
+            <CopyButton
               className="copy-button"
-              onClick={() => copyToClipboard(message)}
+              text={message}
               title="复制"
             >
               <GoCopy />
-            </button>
+            </CopyButton>
           </div>
           <p className="message-instruction">
             该消息将使用&quot;Nervos Message&quot;进行签名

@@ -2,8 +2,7 @@ import React from "react";
 import { AiOutlineExport } from "react-icons/ai";
 import Image from "next/image";
 import Link from "next/link";
-import { FaCopy } from "react-icons/fa";
-import { handleCopy } from "@/utils/common";
+import CopyButton from "@/components/ui/copy/CopyButton";
 import { Modal } from "./ui/modal";
 interface Milestone {
   id: string;
@@ -53,13 +52,13 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
               <h3>John</h3>
               <p>
                 did:ckb:ckt1qvqr...7q2h
-                <button
+                <CopyButton
                   className="button-copy"
-                  onClick={() => handleCopy("did:ckb:ckt1qvqr...7q2h")}
-                  aria-label="copy-treasury-address"
+                  text={"did:ckb:ckt1qvqr...7q2h"}
+                  ariaLabel="copy-treasury-address"
                 >
-                  <FaCopy />
-                </button>
+                 
+                </CopyButton>
                 <Link href="#" aria-label="export-treasury-address">
                   <AiOutlineExport />
                 </Link>

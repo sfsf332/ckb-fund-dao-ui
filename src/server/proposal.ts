@@ -69,15 +69,12 @@ export const getProposalDetail = defineAPI<
   }
 );
 
-// 提案列表查询参数类型
+// 提案列表查询参数类型（cursor/limit 模式）
 export interface ProposalListParams {
-  page?: number; // 页码，默认1
-  pageSize?: number; // 每页数量，默认10
-  status?: string; // 提案状态筛选
-  type?: string; // 提案类型筛选
-  keyword?: string; // 关键词搜索
-  sortBy?: string; // 排序字段
-  sortOrder?: "asc" | "desc"; // 排序方向
+  cursor?: string | null; // 分页游标
+  limit?: number; // 返回数量，默认20
+  q?: string | null; // 关键词搜索
+  repo?: string | null; // 过滤作者DID（用户 DID）
   viewer?: string | null; // 查看者的did
 }
 
@@ -112,16 +109,10 @@ export interface ProposalListItem {
   uri: string;
 }
 
-// 提案列表响应类型
+// 提案列表响应类型（扁平结构）
 export interface ProposalListResponse {
-  proposals: ProposalListResponse;
-  cursor: string;
-  code: number;
-  data: {
-    cursor: string;
-    proposals: ProposalListItem[];
-  };
-  message: string;
+  proposals: ProposalListItem[];
+  cursor: string | null;
 }
 
 /**
@@ -136,7 +127,7 @@ export const getProposalList = defineAPI<
   "POST",
   {
     divider: {
-      body: ["page", "pageSize", "status", "type", "keyword", "sortBy", "sortOrder", "viewer"],
+      body: ["cursor", "limit", "q", "repo", "viewer"],
     },
   }
 );

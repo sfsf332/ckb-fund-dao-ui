@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { GoDatabase ,GoCopy,GoCheckCircle} from "react-icons/go";
+import CopyButton from '@/components/ui/copy/CopyButton';
 import { MdOutlinePrivacyTip } from "react-icons/md";
 import storage from '@/lib/storage';
 import useUserInfoStore from '@/store/userInfo';
@@ -46,10 +47,7 @@ export default function Web5IdentityCard({ className = '' }: Web5IdentityCardPro
     { label: '数据备份:', status: '自动', enabled: true },
   ];
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    // 这里可以添加复制成功的提示
-  };
+  
 
   return (
     <div className={`web5-identity-card ${className}`}>
@@ -65,13 +63,13 @@ export default function Web5IdentityCard({ className = '' }: Web5IdentityCardPro
               readOnly
               className="field-input"
             />
-            <button
+            <CopyButton
               className="copy-button"
-              onClick={() => copyToClipboard(did)}
+              text={did}
               title="复制"
             >
               <GoCopy />
-            </button>
+            </CopyButton>
           </div>
         </div>
 

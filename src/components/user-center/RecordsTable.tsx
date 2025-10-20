@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Tag from "@/components/ui/tag/Tag";
 import VotingRecordsTable from './VotingRecordsTable';
 import DiscussionRecordsTable from './DiscussionRecordsTable';
 
@@ -79,16 +80,7 @@ export default function RecordsTable({ activeTab, setActiveTab, className = '' }
     { key: 'discussion', label: '讨论记录' }
   ];
 
-  const getStatusClass = (status: string) => {
-    const statusMap: { [key: string]: string } = {
-      '社区审议中': 'status-review',
-      '里程碑交付中': 'status-delivery',
-      '项目复核': 'status-review',
-      '终止': 'status-terminated',
-      '结项': 'status-closed'
-    };
-    return statusMap[status] || 'status-default';
-  };
+  
 
   const handleAction = (action: string, recordId: string) => {
     console.log(`执行操作: ${action}, 记录ID: ${recordId}`);
@@ -123,9 +115,9 @@ export default function RecordsTable({ activeTab, setActiveTab, className = '' }
                       <td className="proposal-type">{record.type}</td>
                       <td className="proposal-budget">{record.budget}</td>
                       <td className="proposal-status">
-                        <span className={`status-tag ${getStatusClass(record.status)}`}>
+                        <Tag type="status" size="sm" className="tag-status--review">
                           {record.status}
-                        </span>
+                        </Tag>
                       </td>
                       <td className="proposal-date">{record.publishDate}</td>
                       <td className="proposal-actions">

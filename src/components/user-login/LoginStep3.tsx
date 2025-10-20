@@ -2,10 +2,11 @@
 
 import React from "react";
 import Image from "next/image";
-import { FaCopy } from "react-icons/fa";
 import { useWalletAddress } from "@/hooks/useWalletAddress";
+import { handleCopy } from "@/utils/common";
 import { CreateAccountStatus, CREATE_STATUS } from "@/hooks/createAccount";
 import { ExtraIsEnoughState } from "@/hooks/checkCkb";
+import CopyButton from "../ui/copy/CopyButton";
 
 interface LoginStep3Props {
   accountName: string;
@@ -41,12 +42,11 @@ export default function LoginStep3({
   extraIsEnough,
   balanceError,
 }: LoginStep3Props) {
-  const { walletAddress, isLoadingAddress, copyAddress, formatAddress } = useWalletAddress();
-  // 复制地址到剪贴板
-  const handleCopyAddress = async () => {
-    const success = await copyAddress();
-    if (success) {
-      console.log("地址已复制到剪贴板");
+  const { walletAddress, isLoadingAddress, formatAddress } = useWalletAddress();
+  // 复制地址到剪贴板（统一行为+toast）
+  const handleCopyAddress = () => {
+    if (walletAddress) {
+      handleCopy(walletAddress);
     }
   };
   return (
@@ -76,9 +76,9 @@ export default function LoginStep3({
             <div className="account-name">
               {accountName || "alice"}
             </div>
-            <div className="account-address" onClick={handleCopyAddress} style={{ cursor: 'pointer' }}>
+            <div className="account-address" style={{ cursor: 'pointer' }}>
               {isLoadingAddress ? "获取地址中..." : formatAddress(walletAddress)} 
-              <FaCopy style={{ marginLeft: '8px' }} />
+              <CopyButton text={walletAddress} className="copy-button" ariaLabel="copy-wallet-address" />
             </div>
           </div>
           

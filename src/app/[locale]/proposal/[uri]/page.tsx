@@ -3,13 +3,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from 'next/navigation';
 import { useTranslation } from "../../../../utils/i18n";
-import { FaCopy, FaHeart, FaShare } from "react-icons/fa";
+import { FaHeart, FaShare } from "react-icons/fa";
 import Image from "next/image";
 import { RingLoader } from "react-spinners";
-import { handleCopy } from "@/utils/common";
-import "../create/create-proposal.css";
+import CopyButton from "@/components/ui/copy/CopyButton";
+import "../proposal.css";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { AiOutlineComment } from "react-icons/ai";
+import Tag from "@/components/ui/tag/Tag";
+import { getStatusTagClass } from "@/utils/proposalUtils";
 import CommentSection from "@/components/comment/CommentSection";
 import QuoteButton from "@/components/comment/QuoteButton";
 import { Comment } from "@/types/comment";
@@ -617,13 +619,13 @@ export default function ProposalDetail() {
                         </div>
                         <div className="author-did">
                           {proposal.author.did}
-                          <button
+                          <CopyButton
                             className="copy-btn"
-                            onClick={() => handleCopy(proposal.author.did)}
-                            aria-label="copy-author-did"
+                            text={proposal.author.did}
+                            ariaLabel="copy-author-did"
                           >
-                            <FaCopy size={12} />
-                          </button>
+                          
+                          </CopyButton>
                          
                         </div>
                       </div>
@@ -650,9 +652,9 @@ export default function ProposalDetail() {
                             ).toLocaleString()}.000 CKB`
                           : "未设置预算"}
                       </span>
-                      <span className="meta-tag status-tag">
+                      <Tag type="status" size="sm" className={`meta-tag ${getStatusTagClass(proposal.state)}`}>
                         {getStatusText(proposal.state)}
-                      </span>
+                      </Tag>
                     </div>
 
                     <div className="proposal-actions">
@@ -661,7 +663,7 @@ export default function ProposalDetail() {
                         className="action-btn secondary-btn"
                       >
                         <IoDocumentTextOutline />
-                        提案详细
+                        提案详情
                       </a>
                       <a 
                         href="#comment-section"

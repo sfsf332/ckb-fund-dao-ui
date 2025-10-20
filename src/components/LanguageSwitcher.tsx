@@ -58,7 +58,7 @@ export default function LanguageSwitcher() {
             </button>
           ))}
         </div>
-      )}
+       )} 
     </div>
   );
 }

@@ -1,9 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { FaCopy } from "react-icons/fa";
 import { AiOutlineExport } from "react-icons/ai";
-import { handleCopy } from "@/utils/common";
+import CopyButton from "@/components/ui/copy/CopyButton";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 
 export type ProjectWallet = {
@@ -161,12 +160,12 @@ export default function ProjectWalletsTable({
               </div>
               <div className="cell address">
                 <span title={w.address}>{truncateMiddle(w.address)}</span>
-                <button
-                  onClick={() => handleCopy(w.address)}
-                  aria-label="copy-project-wallet-address"
+                <CopyButton
+                  text={w.address}
+                  ariaLabel="copy-project-wallet-address"
                 >
-                  <FaCopy />
-                </button>
+                 
+                </CopyButton>
                 <a
                   href="#"
                   aria-label="open-explorer-project-wallet-address"

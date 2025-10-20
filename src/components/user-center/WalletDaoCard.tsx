@@ -145,7 +145,6 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
   
     const bindInfoWithSigHex = ccc.hexFrom(bindInfoWithSigBytes);
   
-    console.log("bind info with sig: ", bindInfoWithSigHex);
     // 修正: 确保 WitnessArgs 已正确定义且 imported，并使用 const
     const witnessArgs = ccc.WitnessArgs.from({
       inputType: bindInfoWithSigBytes,
@@ -154,7 +153,6 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
 
     await signer.signTransaction(tx);
 
-    console.log("tx: ", ccc.stringify(tx));
     const txHash = await signer.sendTransaction(tx);
     console.log("The transaction hash is", txHash);
     setShowSignatureModal(false);
@@ -301,7 +299,7 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
       <SuccessModal
         isOpen={showSuccessModal}
         onClose={handleSuccessClose}
-        message="绑定成功!"
+        message="绑定成功,链上数据确认可能需要几分钟时间,请稍后刷新页面!"
       />
     </div>
   );

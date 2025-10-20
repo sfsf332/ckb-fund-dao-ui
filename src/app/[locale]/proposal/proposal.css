@@ -1133,21 +1133,6 @@ cursor: pointer;
   gap: 8px;
 }
 
-.copy-btn {
-  background: none;
-  border: none;
-  color: #8A949E;
-  cursor: pointer;
-  padding: 2px;
-  border-radius: 3px;
-  transition: all 0.2s;
-}
-
-.copy-btn:hover {
-  color: #00CC9B;
-  background-color: rgba(0, 204, 155, 0.1);
-}
-
 .author-badge {
   display: flex;
   align-items: center;
@@ -1363,7 +1348,7 @@ html {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 20px;
+  padding: 0px 20px;
   border-radius: 8px;
   font-weight: 500;
   transition: all 0.3s ease;

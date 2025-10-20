@@ -13,7 +13,9 @@ interface UseProposalListResult {
   cursor: string;
   loading: boolean;
   error: string;
+  hasMore: boolean;
   refetch: (params?: ProposalListParams) => Promise<void>;
+  loadMore: () => Promise<void>;
 }
 
 /**
@@ -40,13 +42,14 @@ interface UseProposalListResult {
  * ```
  */
 export function useProposalList(
-  initialParams: ProposalListParams = { page: 1, pageSize: 10, viewer: null }
+  initialParams: ProposalListParams = { limit: 20, viewer: null, cursor: null }
 ): UseProposalListResult {
   const [proposals, setProposals] = useState<ProposalListItem[]>([]);
   const [cursor, setCursor] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
   const [params, setParams] = useState<ProposalListParams>(initialParams);
+  const [hasMore, setHasMore] = useState<boolean>(true);
 
   const fetchProposals = useCallback(async (queryParams?: ProposalListParams) => {
     try {
@@ -77,9 +80,12 @@ export function useProposalList(
         
         setProposals(proposalsWithIndex);
         setCursor(response.cursor || '');
+        // 有 cursor 表示还有下一页；否则依据返回数量与 limit 判断
+        setHasMore(!!response.cursor || proposalsWithIndex.length >= (finalParams.limit || 20));
       } else {
         setProposals([]);
         setCursor('');
+        setHasMore(false);
       }
       
       if (queryParams) {
@@ -102,6 +108,7 @@ export function useProposalList(
       
       setProposals([]);
       setCursor('');
+      setHasMore(false);
     } finally {
       setLoading(false);
     }
@@ -112,12 +119,53 @@ export function useProposalList(
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
+  const loadMore = useCallback(async () => {
+    if (loading || !hasMore) return;
+    try {
+      setLoading(true);
+      const nextParams: ProposalListParams = {
+        ...params,
+        cursor: cursor || null,
+      };
+      const response = await getProposalList(nextParams);
+      if (response && Array.isArray(response.proposals)) {
+        const proposalsWithIndex = response.proposals.map((proposal: ProposalListItem) => ({
+          ...proposal,
+          record: {
+            ...proposal.record,
+            data: {
+              ...proposal.record.data,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              milestones: proposal.record.data.milestones?.map((milestone: any, index: number) => ({
+                ...milestone,
+                index,
+              })) || [],
+            },
+          },
+        }));
+        setProposals(prev => [...prev, ...proposalsWithIndex]);
+        setCursor(response.cursor || '');
+        setParams({ ...params });
+        setHasMore(!!response.cursor || proposalsWithIndex.length >= (nextParams.limit || 20));
+      } else {
+        setHasMore(false);
+      }
+    } catch (err) {
+      console.error('加载更多提案失败:', err);
+      setHasMore(false);
+    } finally {
+      setLoading(false);
+    }
+  }, [params, loading, hasMore, cursor]);
+  
   return {
     proposals,
     cursor,
     loading,
     error,
+    hasMore,
     refetch: fetchProposals,
+    loadMore,
   };
 }
 

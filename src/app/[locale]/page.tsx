@@ -1,46 +1,41 @@
 'use client';
 
-import Image from "next/image";
 import 'react-tooltip/dist/react-tooltip.css'
-import { IoMdInformationCircleOutline } from "react-icons/io";
 import ProposalItem from "../../components/ProposalItem";
 import { useProposalList } from "../../hooks/useProposalList";
 import useUserInfoStore from "@/store/userInfo";
+import { useEffect, useRef, useState } from "react";
+import { ProposalStatus } from "@/utils/proposalUtils";
+import UserGovernance from "@/components/UserGovernance";
+import TreasuryOverview from "@/components/TreasuryOverview";
 
 export default function Treasury() {
   const { userInfo } = useUserInfoStore();
   // 使用hooks获取提案列表
-  const { proposals, loading: proposalsLoading, error: proposalsError } = useProposalList({
-    page: 1,
-    pageSize: 1,
-    viewer: userInfo?.did, // 获取所有提案
+  const { proposals, loading: proposalsLoading, error: proposalsError, refetch, loadMore, hasMore } = useProposalList({
+    cursor: null,
+    limit: 2,
+    viewer: userInfo?.did || null,
   });
 
-  // 显示加载状态
-  if (proposalsLoading) {
-    return (
-      <div className="container">
-        <main>
-          <div style={{ textAlign: 'center', padding: '50px' }}>
-            <p>加载中...</p>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  const [selectedStatus, setSelectedStatus] = useState<string>('');
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-  // 显示错误状态
-  if (proposalsError) {
-    return (
-      <div className="container">
-        <main>
-          <div style={{ textAlign: 'center', padding: '50px', color: 'red' }}>
-            <p>加载失败: {proposalsError}</p>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!loadMoreRef.current) return;
+    const sentinel = loadMoreRef.current;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        if (hasMore && !proposalsLoading) {
+          loadMore();
+        }
+      }
+    }, { rootMargin: '200px 0px' });
+    observer.observe(sentinel);
+    return () => observer.unobserve(sentinel);
+  }, [hasMore, proposalsLoading, loadMore]);
+
+  // 加载与错误状态改为仅在列表区域显示
 
   return (
     <div className="container">
@@ -67,67 +62,66 @@ export default function Treasury() {
         <section className="proposal_list">
           <nav>
             <h3>提案列表</h3>
-            {/* <div className="nav-controls">
-              <input type="search" placeholder="搜索提案" />
-              <select name="" id="" defaultValue={'筛选状态'}>
+            <div className="nav-controls">
+              {/* <input type="search" placeholder="搜索提案" /> */}
+              <select
+                name="proposal-status-filter"
+                id="proposal-status-filter"
+                value={selectedStatus}
+                onChange={async (e) => {
+                  const value = e.target.value;
+                  setSelectedStatus(value);
+                  await refetch({
+                    cursor: null,
+                    limit: 20,
+                    viewer: userInfo?.did || null,
+                  });
+                }}
+              >
                 <option value="">全部</option>
-                <option value="">提案中</option>
-                <option value="">提案通过</option>
-                <option value="">提案拒绝</option>
+                <option value={String(ProposalStatus.REVIEW)}>社区审议中</option>
+                <option value={String(ProposalStatus.VOTE)}>投票中</option>
+                <option value={String(ProposalStatus.MILESTONE)}>里程碑交付中</option>
+                <option value={String(ProposalStatus.APPROVED)}>已通过</option>
+                <option value={String(ProposalStatus.REJECTED)}>已拒绝</option>
+                <option value={String(ProposalStatus.DRAFT)}>草稿</option>
+                <option value={String(ProposalStatus.ENDED)}>结束</option>
               </select>
-            </div> */}
+            </div>
           </nav>
           
           <ul className="proposal_list_content">
-            {proposals.length > 0 ? (
+            {proposalsError ? (
+              <li style={{ textAlign: 'center', padding: '20px', color: 'red' }}>
+                加载失败: {proposalsError}
+              </li>
+            ) : proposals.length > 0 ? (
               proposals.map((proposal) => (
                 <ProposalItem key={proposal.uri} proposal={proposal} />
               ))
+            ) : proposalsLoading ? (
+              <li style={{ textAlign: 'center', padding: '20px', color: '#8A949E' }}>
+                加载中...
+              </li>
             ) : (
               <li style={{ textAlign: 'center', padding: '20px', color: '#888' }}>
                 暂无提案
               </li>
             )}
           </ul>
+          <div ref={loadMoreRef} style={{ height: 1 }} />
+          {!proposalsLoading && hasMore && (
+            <div style={{ textAlign: 'center', padding: '12px' }}>
+              <button className="view_treasury_button" onClick={() => loadMore()}>加载更多</button>
+            </div>
+          )}
         </section>
         <div className="my_info">
-          {/* 我的治理部分 */}
-          <section className="my_governance">
-            <h3>我的治理</h3>
-            <div className="wallet_info">
-              <h4>钱包地址/DID</h4>
-              <p className="did_address">did:ckb:ckt1q9gry5zgxmpjnm26ztnq3w0y3j9f6j28q5y7q2</p>
-            </div>
-            <div className="voting_rights">
-              <h4>
-                我的投票权 <IoMdInformationCircleOutline data-tooltip-id="my-tooltip" data-tooltip-content="投票权的解释" />
-              </h4>
-              <h5 className="rights_amount">2,000,000 CKB</h5>
-            </div>
-            <button className="stake_button">
-              <Image src="/nervos-logo-s.svg" alt="nervos" width={14} height={14} />
-               质押CKB
-            </button>
-            <div className="pending_section">
-              <h4>待处理</h4>
-              <div className="pending_item">
-                <p className="pending_title">CKB-UTXO 全链游戏引擎</p>
-                <span className="status-tag vote">投票中</span>
-              </div>
-            </div>
-          </section>
+          {/* 我的治理部分 - 组件化并固定显示 */}
+          <UserGovernance />
 
-          {/* 金库概览部分 */}
-          <section className="treasury_overview">
-            <h3>金库概览</h3>
-            <div className="treasury_balance">
-              <label>主金库余额</label>
-              <p className="balance_amount">500,000,000 CKB</p>
-            </div>
-            <button className="view_treasury_button">
-              查看金库详细
-            </button>
-          </section>
+          {/* 金库概览部分 - 组件化并固定显示 */}
+          <TreasuryOverview />
         </div>
         </div>
       </main>

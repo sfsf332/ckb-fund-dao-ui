@@ -4,9 +4,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Proposal } from "../utils/proposalUtils";
 import { ProposalListItem } from "@/server/proposal";
-import { formatNumber, formatDate, getStatusText } from "../utils/proposalUtils";
+import { formatNumber, formatDate, getStatusText, getStatusTagClass } from "../utils/proposalUtils";
 import { postUriToHref } from "@/lib/postUriHref";
 import { useI18n } from "@/contexts/I18nContext";
+import Tag from "@/components/ui/tag/Tag";
 
 interface ProposalItemProps {
   proposal: Proposal | ProposalListItem;
@@ -64,9 +65,9 @@ export default function ProposalItem({ proposal }: ProposalItemProps) {
     >
       <h4>
         {title}
-        <span className="status-tag">
+        <Tag type="status" size="sm" className={getStatusTagClass(proposal.state)}>
           {getStatusText(proposal.state)}
-        </span>
+        </Tag>
       </h4>
       <div className="proposal_person">
         <Image src={avatar} alt="avatar" width={40} height={40} />

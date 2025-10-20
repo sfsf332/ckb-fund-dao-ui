@@ -164,6 +164,10 @@ body {
   padding:0 20px;
   display: flex;
 }
+.login-name{
+  min-width: 120px;
+  padding: 0;
+}
 .header-actions{
   display: flex;
   align-items: center;
@@ -180,9 +184,10 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
+  padding: 8px 0;
   border-radius: 6px;
   font-size: 14px;
+  min-width: 120px;
   font-weight: 500;
   transition: all 0.3s ease;
   background: transparent;
@@ -190,6 +195,8 @@ body {
   border: none;
   cursor: pointer;
   white-space: nowrap;
+  align-items: center;
+  justify-content: center;
 }
 
 .language-switcher:hover {
@@ -200,7 +207,7 @@ body {
   position: absolute;
   top: 100%;
   left: 0;
-  margin-top: 4px;
+  margin-top: 0px;
   background: #1C2027;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -214,24 +221,27 @@ body {
 .language-option {
   display: block;
   width: 100%;
-  padding: 10px 16px;
   background: transparent;
   color: #fff;
   border: none;
-  text-align: left;
+  text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 14px;
   font-weight: 400;
+  height: 40px;
+  line-height: 40px;
+  color:#8A949E
 }
 
 .language-option:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background:#141619;
+  color: #fff;
 }
 
 .language-option.active {
-  background: rgba(0, 178, 135, 0.2);
-  color: #00B287;
+  background:#1D2026;
+  color: #fff;
 }
 
 /* 下拉菜单淡入动画 */
@@ -245,6 +255,30 @@ body {
     transform: translateY(0);
   }
 }
+
+
+.user-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #00B287;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+
+
+.avatar-icon {
+  font-size: 14px;
+  color: #fff;
+}
+
 .navs li{
   list-style: none;
   padding:0 20px;
@@ -673,14 +707,6 @@ body {
   align-items: center;
 }
 
-.proposal_list_content li h4 span {
-  font-size: 12px;
-  font-weight: 500;
-  padding: 4px 8px;
-  border-radius: 4px;
-  line-height: 12px;
-  color: #fff;
-}
 
 /* 统一的状态标签样式 */
 .status-tag{
@@ -749,7 +775,7 @@ body {
 
 .proposal_person p:last-child {
   color: #6A727B;
-  font-size: 12px;
+  font-size: 14px;
   margin: 0;
 }
 
@@ -881,8 +907,13 @@ body {
 /* my_info 部分样式 */
 .my_info {
   width:385px ;
- 
+  position: sticky;
+  top: 16px;
+  z-index: 10;
+  align-self: flex-start; /* 防止被父级 flex 拉伸，高度以内容为准 */
+  height: fit-content; /* 使粘性定位的盒子高度不占满容器 */
 }
+
 
 /* 我的治理部分 */
 .my_governance {
@@ -1023,14 +1054,6 @@ body {
   z-index: 1;
 }
 
-.status_tag {
-  background: #F59E0B;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 500;
-  padding: 4px 8px;
-  border-radius: 12px;
-}
 
 /* 金库概览部分 */
 .treasury_overview {
@@ -1039,6 +1062,8 @@ body {
   padding: 20px;
   margin-top: 28px;
 }
+
+
 
 .treasury_overview h3 {
   color: #fff;
@@ -1215,9 +1240,7 @@ body {
   line-height: 20px;
   margin: 20px 0;
 }
-.button-copy{
-  cursor: pointer;
-}
+
 .treasury_wallet{
   display: flex;
   align-items: center;

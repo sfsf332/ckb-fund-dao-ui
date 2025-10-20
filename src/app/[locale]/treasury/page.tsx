@@ -3,11 +3,9 @@
 import { useTranslation } from "../../../utils/i18n";
 import "react-tooltip/dist/react-tooltip.css";
 import Link from "next/link";
-import { FaCopy } from "react-icons/fa";
 import { AiOutlineExport } from "react-icons/ai";
-import { handleCopy } from "@/utils/common";
+import CopyButton from "@/components/ui/copy/CopyButton";
 import dynamic from "next/dynamic";
-import { IoMdInformationCircleOutline } from "react-icons/io";
 import ProjectWalletsTable from "@/components/ProjectWalletsTable";
 
 export default function Treasury() {
@@ -31,10 +29,10 @@ export default function Treasury() {
             <p>{address}</p>
             </div>
             
-            <button className="button-copy" onClick={() => handleCopy(address)} aria-label="copy-treasury-address">
-              <FaCopy />
-            </button>
-            <Link href="#" aria-label="export-treasury-address">
+            <CopyButton className="button-copy" text={address} ariaLabel="copy-treasury-address">
+           
+            </CopyButton>
+            <Link href="#" aria-label="export-treasury-address" className="copy-button-reset">
               <AiOutlineExport />
             </Link>
           </div>
@@ -44,30 +42,27 @@ export default function Treasury() {
             <li>
               <span className="treasury_list_did">did::ckb:Daniel.xyz</span>
               <span>ckb1qyqwtz3x2z7g8g7q2hdasmm5m4enr0v40s8k0q8x2v</span>
-              <button onClick={() => handleCopy("ckb1qyqwtz3x2z7g8g7q2hdasmm5m4enr0v40s8k0q8x2v")} aria-label="copy-treasury-address">
-                <FaCopy />
-              </button>
-              <Link href="#" aria-label="export-treasury-address">
+              <CopyButton text={"ckb1qyqwtz3x2z7g8g7q2hdasmm5m4enr0v40s8k0q8x2v"} ariaLabel="copy-treasury-address">
+              </CopyButton>
+              <Link href="#" aria-label="export-treasury-address" className="copy-button-reset">
                 <AiOutlineExport />
               </Link>
             </li>
             <li>
               <span className="treasury_list_did">did::ckb:Daniel.xyz</span>
               <span>ckb1qyqwtz3x2z7g8g7q2hdasmm5m4enr0v40s8k0q8x2v</span>
-              <button onClick={() => handleCopy("ckb1qyqwtz3x2z7g8g7q2hdasmm5m4enr0v40s8k0q8x2v")} aria-label="copy-treasury-address">
-                <FaCopy />
-              </button>
-              <Link href="#" aria-label="export-treasury-address">
+              <CopyButton text={"ckb1qyqwtz3x2z7g8g7q2hdasmm5m4enr0v40s8k0q8x2v"} ariaLabel="copy-treasury-address">
+              </CopyButton>
+              <Link href="#" aria-label="export-treasury-address" className="copy-button-reset">
                 <AiOutlineExport />
               </Link>
             </li>
             <li>
               <span className="treasury_list_did">did::ckb:Daniel.xyz</span>
               <span>ckb1qyqwtz3x2z7g8g7q2hdasmm5m4enr0v40s8k0q8x2v</span>
-              <button onClick={() => handleCopy("ckb1qyqwtz3x2z7g8g7q2hdasmm5m4enr0v40s8k0q8x2v")} aria-label="copy-treasury-address">
-                <FaCopy />
-              </button>
-              <Link href="#" aria-label="export-treasury-address">
+              <CopyButton text={"ckb1qyqwtz3x2z7g8g7q2hdasmm5m4enr0v40s8k0q8x2v"} ariaLabel="copy-treasury-address">
+              </CopyButton>
+              <Link href="#" aria-label="export-treasury-address" className="copy-button-reset">
                 <AiOutlineExport />
               </Link>
             </li>

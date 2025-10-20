@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import LanguageSwitcher from "./LanguageSwitcher";
 import Link from "next/link";
@@ -11,11 +11,12 @@ import { LoginModal } from "./user-login";
 import useUserInfoStore from "@/store/userInfo";
 import "./user-login/LoginModal.css";
 
+
 export default function Header() {
     const pathname = usePathname();
     const { locale } = useI18n();
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-    const { userInfo } = useUserInfoStore();
+    const { userInfo, logout } = useUserInfoStore();
     
     // 提取 handle 第一个 . 前面的部分
     const getUserDisplayName = () => {
@@ -25,8 +26,7 @@ export default function Header() {
       }
       return userInfo.did;
     };
-
-   
+ 
     const homeHref = `/${locale}`;
     const treasuryHref = `/${locale}/treasury`;
     const managementHref = `/${locale}/management`;
@@ -71,9 +71,18 @@ export default function Header() {
           <CiCirclePlus /> 发起提案
         </Link>
         {userInfo ? (
-          <Link  href={userCenterHref} className="button-normal" >
-            {getUserDisplayName()}
-          </Link>
+          <div 
+            className="user-dropdown-container"
+          
+          >
+            <button className="button-normal user-button">
+              
+              {getUserDisplayName()}
+             
+            </button>
+            
+           
+          </div>
         ) : (
           <button onClick={() => setIsLoginModalOpen(true)} className="button-normal">Login</button>
         )}

@@ -5,13 +5,13 @@ export const formatNumber = (num: number) => {
 };
 // 提案状态枚举
 export enum ProposalStatus {
-  DRAFT = 1,           // 草稿
-  REVIEW = 2,         // 社区审议中
-  VOTE = 3,            // 投票中
+  DRAFT = 0,           // 草稿
+  REVIEW = 1,         // 社区审议中
+  VOTE = 2,            // 投票中
   MILESTONE = 1001,   // 里程碑交付中
-  APPROVED = 4,     // 已通过
-  REJECTED = 5,     // 已拒绝
-  ENDED = 0           // 结束
+  APPROVED = 3,     // 已通过
+  REJECTED = 4,     // 已拒绝
+  ENDED = 5           // 结束
 }
 // 提案接口
 export interface Proposal {

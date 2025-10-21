@@ -84,7 +84,6 @@ export default function Treasury() {
                 <option value={String(ProposalStatus.MILESTONE)}>里程碑交付中</option>
                 <option value={String(ProposalStatus.APPROVED)}>已通过</option>
                 <option value={String(ProposalStatus.REJECTED)}>已拒绝</option>
-                <option value={String(ProposalStatus.DRAFT)}>草稿</option>
                 <option value={String(ProposalStatus.ENDED)}>结束</option>
               </select>
             </div>

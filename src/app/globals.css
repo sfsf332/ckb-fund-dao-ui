@@ -1146,6 +1146,10 @@ body {
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
+.block_container .team_list a{
+  color: #8A949E;
+  text-decoration: none;
+}
 .block_container .team_item{
   background: #262A33;
   border-radius: 10px;

@@ -11,6 +11,7 @@ import { useWalletBalance } from "../../hooks/useWalletBalance";
 import { BindInfo, BindInfoWithSig } from "../../utils/molecules";
 import { ccc, hexFrom } from "@ckb-ccc/core";
 import { useWallet } from "@/provider/WalletProvider";
+import { useVoteWeightByAddress } from "@/hooks/useVoteWeight";
 
 interface WalletDaoCardProps {
   className?: string;
@@ -21,6 +22,7 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
   const { walletAddress, isLoadingAddress, isConnected } = useWalletAddress();
   const { walletBalance, isLoadingBalance, formatBalance } = useWalletBalance();
   const { signer } = useWallet();
+  const { voteWeight, isLoading: isLoadingVoteWeight, formatVoteWeight } = useVoteWeightByAddress(walletAddress || "");
 
   // 自定义地址格式化函数：前7个字符...后4个字符
   const formatWalletAddress = (address: string) => {
@@ -203,7 +205,9 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
             />
           </h4>
         </div>
-        <div className="voting-power-amount">{votingPower} CKB</div>
+        <div className="voting-power-amount">
+          {isLoadingVoteWeight ? "获取中..." : formatVoteWeight(voteWeight)} CKB
+        </div>
       </div>
 
       <div className="wallet-section">

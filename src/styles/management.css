@@ -1,0 +1,230 @@
+/* 管理中心样式 */
+.management-center {
+  background: #262A33;
+  color: #ffffff;
+  padding: 24px;
+  border-radius: 15px;
+  margin-bottom: 32px;
+}
+
+/* 顶部标签页 */
+.management-tabs {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tab-button.active {
+  color: #00d4aa;
+}
+
+
+
+.badge {
+  background: #ff4444;
+  color: white;
+  font-size: 12px;
+  border-radius: 10px;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  text-align: center;
+  position: absolute;
+  top: 3px;
+  right: -8px;
+}
+
+/* 筛选区域 */
+.filter-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 24px;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-button {
+ 
+  border: 1px solid #8A949E;
+  color: #8A949E;
+  padding: 0px 12px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+}
+
+.filter-button:hover {
+  border-color: #00CC9B;
+  color: #00CC9B;
+}
+
+.filter-button.active {
+  border-color: #00d4aa;
+  color: #00d4aa;
+}
+
+/* 搜索区域 */
+.search-section {
+  flex-shrink: 0;
+}
+
+/* 管理中心搜索框样式 - 与提案页面保持一致 */
+.management-search-input {
+  background: #1C2027;
+  border: 1px solid #4C525C;
+  border-radius: 8px;
+  color: #fff;
+  padding: 12px 16px;
+  font-size: 14px;
+  min-width: 240px;
+  position: relative;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.management-search-input:focus {
+  outline: none;
+  border-color: #00B287;
+  box-shadow: 0 0 0 2px rgba(0, 178, 135, 0.1);
+}
+
+.management-search-input::placeholder {
+  color: #6A727B;
+}
+
+/* 提案表格 */
+.proposals-table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.proposals-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.proposals-table th {
+  color: #fff;
+  padding: 16px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 14px;
+  border-bottom: 1px solid #4C525C33
+}
+
+.proposals-table td {
+  padding: 16px;
+  border-bottom: 1px solid #4C525C33;
+  font-size: 14px;
+}
+
+.proposals-table tr:hover {
+  background: #1E222966;
+}
+
+.proposal-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.new-tag {
+  background: #ff4444;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* 状态标签样式已移至Tag组件 */
+
+/* 任务操作按钮 */
+.task-action-button {
+  background: #00d4aa;
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.task-action-button:hover {
+  background: #00b894;
+  transform: translateY(-1px);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .filter-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  
+  .filter-buttons {
+    justify-content: center;
+  }
+  
+  .management-search-input {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .proposals-table {
+    overflow-x: auto;
+  }
+  
+  .proposals-table table {
+    min-width: 600px;
+  }
+}
+
+@media (max-width: 480px) {
+  .management-center {
+    padding: 16px;
+  }
+  
+  .filter-buttons {
+    gap: 8px;
+  }
+  
+  .filter-button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .proposals-table th,
+  .proposals-table td {
+    padding: 12px 8px;
+    font-size: 12px;
+  }
+}

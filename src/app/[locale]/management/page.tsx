@@ -1,12 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useTranslation } from "../../../utils/i18n";
 import "react-tooltip/dist/react-tooltip.css";
 import Link from "next/link";
 
 export default function Management() {
-  const { t } = useTranslation();
 
   return (
     <div className="container">

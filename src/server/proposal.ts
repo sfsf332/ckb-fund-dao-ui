@@ -131,3 +131,31 @@ export const getProposalList = defineAPI<
     },
   }
 );
+
+// 投票权重查询参数类型
+export interface VoteWeightParams {
+  ckb_addr: string; // 用户CKB地址
+}
+
+// 投票权重响应类型
+export interface VoteWeightResponse {
+  weight: number; // 投票权重
+  ckb_addr: string; // 用户CKB地址
+}
+
+/**
+ * 获取用户投票权重
+ * GET /api/vote/weight
+ */
+export const getVoteWeight = defineAPI<
+  VoteWeightParams,
+  VoteWeightResponse
+>(
+  "/vote/weight",
+  "GET",
+  {
+    divider: {
+      query: ["ckb_addr"], // ckb_addr作为查询参数
+    },
+  }
+);

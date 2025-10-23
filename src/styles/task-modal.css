@@ -1,0 +1,349 @@
+/* 任务处理Modal样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.task-processing-modal {
+  background: #141619;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 950px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Modal标题 */
+.modal-header {
+  padding: 24px 24px 0;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.modal-title {
+  color: #00d4aa;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+}
+
+/* Modal内容 */
+.modal-content {
+  padding: 0 24px;
+}
+
+/* 提案信息部分 */
+.proposal-info-section {
+  margin-bottom: 32px;
+}
+
+.section-title {
+  color: #00d4aa;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+}
+
+.info-grid {
+  border-radius: 8px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.info-label {
+  color: #999;
+  font-size: 14px;
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.info-value {
+  color: #fff;
+  font-size: 14px;
+  flex: 1;
+}
+
+/* 任务信息部分 */
+.task-info-section {
+  margin-bottom: 24px;
+}
+
+/* 表单字段容器 - 与提案发布页面保持一致 */
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* 表单行布局 */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.form-item.full-width {
+  grid-column: 1 / -1;
+}
+
+/* 标签样式 - 水平布局 */
+.form-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.form-label.required::after {
+  content: " *";
+  color: #ff4444;
+}
+
+.readonly-field {
+  background: #262A33;
+  color: #8A949E;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  border: 1px solid #4C525C;
+}
+
+/* 基础输入框样式 - 与提案发布页面保持一致 */
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #4C525C;
+  border-radius: 6px;
+  outline: none;
+  color: #fff;
+  background-color: transparent;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: #00cc9b;
+  box-shadow: 0 0 0 2px rgba(0, 204, 155, 0.2);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #9ca3af;
+}
+
+.form-textarea {
+  resize: vertical;
+}
+
+.form-select {
+  appearance: none;
+  padding-right: 32px;
+}
+
+/* select样式已合并到上面的基础样式中 */
+
+/* 带图标的输入框 */
+.input-with-icon {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  font-size: 18px;
+  pointer-events: none;
+}
+
+/* 富文本编辑器 */
+.rich-text-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rich-textarea {
+  background: transparent;
+  border: 1px solid #4C525C;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.rich-textarea:focus {
+  border-color: #00cc9b;
+  box-shadow: 0 0 0 2px rgba(0, 204, 155, 0.2);
+}
+
+.rich-textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* 富文本工具栏 - 与提案发布页面保持一致 */
+.rich-text-toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #262A33;
+  border-radius: 6px;
+  border: 1px solid #4C525C;
+}
+
+.toolbar-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #9ca3af;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+}
+
+.toolbar-btn:hover {
+  background-color: rgba(0, 204, 155, 0.1);
+  border-color: rgba(0, 204, 155, 0.3);
+  color: #00CC9B;
+}
+
+/* Modal底部按钮 */
+.modal-footer {
+  padding: 24px;
+  border-top: 1px solid #333;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+/* 按钮样式 - 与提案发布页面保持一致 */
+.btn-complete {
+  background-color: #0d9488;
+  color: #ffffff;
+  border: none;
+  padding: 8px 32px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-complete:hover:not(:disabled) {
+  background-color: #0f766e;
+}
+
+.btn-complete:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-close {
+  background-color: transparent;
+  color: #00CC9B;
+  border: 1px solid #00CC9B;
+  padding: 8px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-close:hover {
+  background-color: #00CC9B;
+  color: #fff;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: 10px;
+  }
+  
+  .task-processing-modal {
+    max-height: 95vh;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-content {
+    padding: 0 16px;
+  }
+  
+  .modal-footer {
+    padding: 16px;
+    flex-direction: column;
+  }
+  
+  .btn-complete,
+  .btn-close {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-title {
+    font-size: 18px;
+  }
+  
+  .info-grid {
+    padding: 12px;
+  }
+  
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .info-label {
+    min-width: auto;
+  }
+}

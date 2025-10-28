@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import CopyButton from "@/components/ui/copy/CopyButton";
 import { Modal } from "./ui/modal";
+import { getAvatarByDid } from "@/utils/avatarUtils";
 interface Milestone {
   id: string;
   index: number;
@@ -47,7 +48,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
       <div className="proposal-header">
         <div className="proposal-info">
           <div className="user_info">
-            <Image src="/avatar.jpg" alt="avatar" width={32} height={32} />
+            <Image src={getAvatarByDid("did:ckb:ckt1qvqr...7q2h")} alt="avatar" width={32} height={32} />
             <div className="name">
               <h3>John</h3>
               <p>

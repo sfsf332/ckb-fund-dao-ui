@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Tag from "@/components/ui/tag/Tag";
+import { ProposalStatus } from "@/utils/proposalUtils";
 import VotingRecordsTable from './VotingRecordsTable';
 import DiscussionRecordsTable from './DiscussionRecordsTable';
 
@@ -24,6 +25,28 @@ interface ProposalRecord {
 export default function RecordsTable({ activeTab, setActiveTab, className = '' }: RecordsTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 1;
+
+  // 将字符串状态转换为ProposalStatus枚举
+  const getStatusFromString = (status: string): ProposalStatus => {
+    switch (status) {
+      case '社区审议中':
+        return ProposalStatus.REVIEW;
+      case '投票中':
+        return ProposalStatus.VOTE;
+      case '里程碑交付中':
+        return ProposalStatus.MILESTONE;
+      case '已通过':
+        return ProposalStatus.APPROVED;
+      case '已拒绝':
+        return ProposalStatus.REJECTED;
+      case '结束':
+        return ProposalStatus.ENDED;
+      case '草稿':
+        return ProposalStatus.DRAFT;
+      default:
+        return ProposalStatus.REVIEW;
+    }
+  };
 
   // 模拟数据
   const proposalRecords: ProposalRecord[] = [
@@ -115,9 +138,7 @@ export default function RecordsTable({ activeTab, setActiveTab, className = '' }
                       <td className="proposal-type">{record.type}</td>
                       <td className="proposal-budget">{record.budget}</td>
                       <td className="proposal-status">
-                        <Tag type="status" size="sm" className="tag-status--review">
-                          {record.status}
-                        </Tag>
+                        <Tag status={getStatusFromString(record.status)} size="sm" />
                       </td>
                       <td className="proposal-date">{record.publishDate}</td>
                       <td className="proposal-actions">

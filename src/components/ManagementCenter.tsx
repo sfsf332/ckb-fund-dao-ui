@@ -92,35 +92,6 @@ export default function ManagementCenter() {
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [selectedProposal, setSelectedProposal] = useState<ProposalItem | null>(null);
 
-  const getStatusText = (status: ProposalStatus) => {
-    switch (status) {
-      case ProposalStatus.REVIEW:
-        return "社区审议中";
-      case ProposalStatus.MILESTONE:
-        return "里程碑交付中";
-      default:
-        return "未知";
-    }
-  };
-
-  const getStatusTagType = (status: ProposalStatus) => {
-    switch (status) {
-      case ProposalStatus.REVIEW:
-        return "tag-status--review";
-      case ProposalStatus.MILESTONE:
-        return "tag-status--milestone";
-      case ProposalStatus.APPROVED:
-        return "tag-status--approved";
-      case ProposalStatus.REJECTED:
-        return "tag-status--rejected";
-      case ProposalStatus.ENDED:
-        return "tag-status--ended";
-      case ProposalStatus.DRAFT:
-        return "tag-status--draft";
-      default:
-        return "tag-status--draft";
-    }
-  };
 
   const handleTaskProcess = (proposal: ProposalItem) => {
     setSelectedProposal(proposal);
@@ -211,12 +182,9 @@ export default function ManagementCenter() {
                 <td>{proposal.type}</td>
                 <td>
                   <Tag 
-                    type="status" 
+                    status={proposal.status}
                     size="sm" 
-                    className={getStatusTagType(proposal.status)}
-                  >
-                    {getStatusText(proposal.status)}
-                  </Tag>
+                  />
                 </td>
                 <td>{proposal.taskType}</td>
                 <td>{proposal.deadline}</td>

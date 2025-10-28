@@ -27,7 +27,7 @@ export default function UserGovernance() {
         <h4>待处理</h4>
         <div className="pending_item">
           <p className="pending_title">CKB-UTXO 全链游戏引擎</p>
-          <Tag type="status" size="sm" className="tag-status--vote">投票中</Tag>
+          <Tag status={2} size="sm" />
         </div>
       </div>
     </section>

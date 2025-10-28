@@ -6,6 +6,7 @@ import Image from "next/image";
 
 import "./comment.css";
 import { CommentReplyProps } from "@/types/comment";
+import { getAvatarByDid } from "@/utils/avatarUtils";
 
 export default function CommentReply({ 
   comment, 
@@ -71,7 +72,7 @@ export default function CommentReply({
               <span className="reply-to-indicator">
               
                 <Image 
-                  src={"/avatar.jpg"} 
+                  src={getAvatarByDid(comment.to?.did || '')} 
                   alt="reply to avatar" 
                   width={20} 
                   height={20}

@@ -6,6 +6,8 @@ import Image from "next/image";
 import { CommentQuoteProps } from "@/types/comment";
 import "./comment.css";
 import "react-quill-new/dist/quill.snow.css";
+import { getAvatarByDid } from "@/utils/avatarUtils";
+import useUserInfoStore from "@/store/userInfo";
 
 // 动态导入ReactQuill，禁用SSR
 const ReactQuill = dynamic(() => import("react-quill-new"), {
@@ -37,6 +39,7 @@ export default function CommentQuote({
   isReply = false,
   quotedText = ""
 }: CommentQuoteProps) {
+  const { userInfo } = useUserInfoStore();
   const [content, setContent] = useState(quotedText);
   const [isClient, setIsClient] = useState(false);
 
@@ -103,7 +106,7 @@ export default function CommentQuote({
   return (
     <div className={`comment-quote ${isReply ? "comment-quote-reply" : ""}`}>
       <div className="comment-quote-avatar">
-        <Image src="/avatar.jpg" alt="avatar" width={40} height={40} />
+        <Image src={getAvatarByDid(userInfo?.did || '')} alt="avatar" width={40} height={40} />
       </div>
       <div className="comment-quote-main">
         <div className="editor-container">

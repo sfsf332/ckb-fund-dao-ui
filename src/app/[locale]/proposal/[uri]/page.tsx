@@ -11,7 +11,6 @@ import "../proposal.css";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { AiOutlineComment } from "react-icons/ai";
 import Tag from "@/components/ui/tag/Tag";
-import { getStatusTagClass } from "@/utils/proposalUtils";
 import CommentSection from "@/components/comment/CommentSection";
 import QuoteButton from "@/components/comment/QuoteButton";
 import { Comment } from "@/types/comment";
@@ -20,13 +19,12 @@ import { VotingInfo, VoteOption } from "@/types/voting";
 import { ProposalTimeline, ProposalVoting, MilestoneTracking } from "@/components/proposal-phase";
 import { generateTimelineEvents } from "@/utils/timelineUtils";
 import { generateVotingInfo, handleVote } from "@/utils/votingUtils";
+import { getAvatarByDid } from "@/utils/avatarUtils";
 import { generateMilestones } from "@/utils/milestoneUtils";
-import { generateMilestoneVotingInfo, handleMilestoneVote } from "@/utils/milestoneVotingUtils";
 import { Milestone } from "@/types/milestone";
-import { MilestoneVotingInfo, MilestoneVoteOption } from "@/types/milestoneVoting";
 import { useProposalDetail } from "@/hooks/useProposalDetail";
 import { ProposalDetailResponse } from "@/server/proposal";
-import { Proposal, ProposalStatus, ProposalType, getStatusText } from "@/utils/proposalUtils";
+import { Proposal, ProposalStatus, ProposalType } from "@/utils/proposalUtils";
 import { writesPDSOperation } from "@/app/posts/utils";
 import useUserInfoStore from "@/store/userInfo";
 import { useCommentList } from "@/hooks/useCommentList";
@@ -51,7 +49,7 @@ const adaptProposalDetail = (detail: ProposalDetailResponse): Proposal => {
     type: proposalData.proposalType as ProposalType,
     proposer: {
       name: detail.author.displayName,
-      avatar: '/avatar.jpg', // API 中没有 avatar，使用默认值
+      avatar: getAvatarByDid(detail.author.did), // 根据DID生成头像
       did: detail.author.did,
     },
     budget: parseFloat(proposalData.budget) || 0,
@@ -72,7 +70,7 @@ const adaptCommentItem = (item: CommentItem, currentUserDid?: string): Comment =
     author: {
       id: item.author.did,
       name: item.author.displayName || item.author.handle || item.author.did,
-      avatar: item.author.avatar || "/avatar.jpg",
+      avatar: item.author.avatar || getAvatarByDid(item.author.did),
       did: item.author.did,
     },
     createdAt: item.created, // 直接使用 created，不是 record.created
@@ -124,7 +122,6 @@ export default function ProposalDetail() {
   const [timelineEvents, setTimelineEvents] = useState<TimelineEvent[]>([]);
   const [votingInfo, setVotingInfo] = useState<VotingInfo | null>(null);
   const [milestones, setMilestones] = useState<Milestone[]>([]);
-  const [milestoneVotingInfo, setMilestoneVotingInfo] = useState<MilestoneVotingInfo | null>(null);
   // 点赞相关状态
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -239,11 +236,6 @@ export default function ProposalDetail() {
       setMilestones(milestoneData);
       
       // 如果是里程碑阶段，生成里程碑投票信息
-      if (adaptedProposal.state === ProposalStatus.MILESTONE && adaptedProposal.milestones) {
-        const currentMilestoneId = `${adaptedProposal.id}-milestone-${adaptedProposal.milestones.current}`;
-        const milestoneVoting = generateMilestoneVotingInfo(adaptedProposal, currentMilestoneId);
-        setMilestoneVotingInfo(milestoneVoting);
-      }
     }
   }, [proposal]);
   //点赞
@@ -346,7 +338,7 @@ export default function ProposalDetail() {
           author: {
             id: userInfo.did,
             name: userProfile?.displayName || userInfo.handle || userInfo.did,
-            avatar: "/avatar.jpg", // 使用默认头像
+            avatar: getAvatarByDid(userInfo.did), // 根据DID生成头像
             did: userInfo.did,
           },
           createdAt: new Date().toISOString(),
@@ -607,7 +599,7 @@ export default function ProposalDetail() {
                     <div className="proposal-author-info">
                       <div className="author-avatar">
                         <Image
-                          src={'/avatar.jpg'}
+                          src={getAvatarByDid(proposal.author.did)}
                           alt="avatar"
                           width={40}
                           height={40}
@@ -652,9 +644,7 @@ export default function ProposalDetail() {
                             ).toLocaleString()}.000 CKB`
                           : "未设置预算"}
                       </span>
-                      <Tag type="status" size="sm" className={`meta-tag ${getStatusTagClass(proposal.state)}`}>
-                        {getStatusText(proposal.state)}
-                      </Tag>
+                      <Tag status={proposal.state} size="sm" className="meta-tag" />
                     </div>
 
                     <div className="proposal-actions">

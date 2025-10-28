@@ -5,12 +5,15 @@ import Image from 'next/image';
 import { MdOutlineModeEdit, MdCheck } from "react-icons/md";
 import { FaDiscord,FaTelegramPlane   } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import { getAvatarByDid } from "@/utils/avatarUtils";
+import useUserInfoStore from "@/store/userInfo";
 
 interface UserProfileCardProps {
   className?: string;
 }
 
 export default function UserProfileCard({ className = '' }: UserProfileCardProps) {
+  const { userInfo } = useUserInfoStore();
   const [isEditing, setIsEditing] = useState(false);
   const [userName, setUserName] = useState('Alice');
   const [joinDate] = useState('2025年1月1日');
@@ -90,12 +93,12 @@ export default function UserProfileCard({ className = '' }: UserProfileCardProps
   return (
     <div ref={cardRef} className={`user-profile-card ${className}`}>
       <div className="user-info">
-      <div className="user-avatar">
+        <div className="user-avatar">
           <Image
-            src="/nervos-planet.png"
+            src={getAvatarByDid(userInfo?.did || '')}
             alt="User Avatar"
             width={60}
-            height={32}
+            height={60}
             className="avatar-image"
           />
           <div className="avatar-edit-icon">

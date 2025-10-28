@@ -19,20 +19,20 @@
   width: 100%;
   max-width: 950px;
   max-height: 90vh;
-  overflow-y: auto;
+  overflow: visible;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
 }
 
 /* Modal标题 */
 .modal-header {
-  padding: 24px 24px 0;
-  margin-bottom: 24px;
+  padding: 16px 20px 0;
+  margin-bottom: 16px;
   text-align: center;
 }
 
 .modal-title {
   color: #00d4aa;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   margin: 0;
   text-align: center;
@@ -41,27 +41,26 @@
 
 /* Modal内容 */
 .modal-content {
-  padding: 0 24px;
+  padding: 0 20px;
 }
 
 /* 提案信息部分 */
 .proposal-info-section {
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 }
 
 .section-title {
   color: #00d4aa;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  margin: 0 0 16px 0;
+  margin: 0 0 10px 0;
 }
 
 .info-grid {
-  border-radius: 8px;
   padding: 12px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 10px;
 }
 
 .info-item {
@@ -83,43 +82,49 @@
   flex: 1;
 }
 
+.uri-value {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: #8A949E;
+  word-break: break-all;
+  max-width: 300px;
+}
+
 /* 任务信息部分 */
 .task-info-section {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 /* 表单字段容器 - 与提案发布页面保持一致 */
 .form-grid {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 14px;
 }
 
 /* 表单行布局 */
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 12px;
 }
 
 .form-item {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .form-item.full-width {
   grid-column: 1 / -1;
 }
 
-/* 标签样式 - 水平布局 */
+/* 标签样式 - 垂直布局 */
 .form-label {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: #fff;
-  min-width: 80px;
-  flex-shrink: 0;
+  margin-bottom: 3px;
 }
 
 .form-label.required::after {
@@ -128,27 +133,52 @@
 }
 
 .readonly-field {
-  background: #262A33;
   color: #8A949E;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 14px;
-  border: 1px solid #4C525C;
+  padding: 6px 0;
+  font-size: 13px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+/* 输入容器样式 - 与提案发布页面保持一致 */
+.input-container {
+  position: relative;
+  width: auto;
+  min-width: 200px;
+}
+
+/* 下拉箭头图标 */
+.select-arrow {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.select-arrow svg {
+  width: 16px;
+  height: 16px;
+  color: #9ca3af;
 }
 
 /* 基础输入框样式 - 与提案发布页面保持一致 */
 .form-input,
 .form-select,
 .form-textarea {
-  width: 100%;
+  width: auto;
+  min-width: 200px;
   padding: 8px 12px;
   border: 1px solid #4C525C;
   border-radius: 6px;
   outline: none;
   color: #fff;
   background-color: transparent;
-  font-size: 14px;
+  font-size: 13px;
   transition: all 0.2s;
+  min-height: 36px;
 }
 
 .form-input:focus,
@@ -165,6 +195,7 @@
 
 .form-textarea {
   resize: vertical;
+  width: 100%;
 }
 
 .form-select {
@@ -189,71 +220,262 @@
   pointer-events: none;
 }
 
-/* 富文本编辑器 */
-.rich-text-container {
+/* Quill 编辑器样式 - 与提案发布页面保持一致 */
+.editor-container {
+  width: 100%;
+  margin-top: 2px;
+}
+
+/* Quill 编辑器包装器 */
+.quill-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
-.rich-textarea {
-  background: transparent;
-  border: 1px solid #4C525C;
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 14px;
-  outline: none;
-  resize: vertical;
-  min-height: 100px;
-  font-family: inherit;
-  transition: all 0.2s;
+.quill-wrapper .ql-container {
+  order: 1; /* 编辑器内容在上方 */
 }
 
-.rich-textarea:focus {
-  border-color: #00cc9b;
-  box-shadow: 0 0 0 2px rgba(0, 204, 155, 0.2);
+.quill-wrapper .ql-toolbar {
+  order: 2; /* 工具栏在下方 */
 }
 
-.rich-textarea::placeholder {
-  color: #9ca3af;
+/* Quill 编辑器容器样式 */
+.ql-container {
+  border: 1px solid #4C525C !important;
+  border-radius: 6px 6px 0 0 !important;
+  background-color: #262A33 !important;
+  color: #fff !important;
+  font-size: 13px !important;
+  min-height: 120px !important;
 }
 
-/* 富文本工具栏 - 与提案发布页面保持一致 */
-.rich-text-toolbar {
-  display: flex;
-  gap: 8px;
-  padding: 8px 12px;
-  background: #262A33;
-  border-radius: 6px;
-  border: 1px solid #4C525C;
+.ql-editor {
+  color: #fff !important;
+  font-family: inherit !important;
+  line-height: 1.6 !important;
+  padding: 16px !important;
 }
 
-.toolbar-btn {
-  background: transparent;
-  border: 1px solid transparent;
-  color: #9ca3af;
-  font-size: 14px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 32px;
-  height: 32px;
+.ql-editor.ql-blank::before {
+  color: #6b7280 !important;
+  font-style: normal !important;
 }
 
-.toolbar-btn:hover {
-  background-color: rgba(0, 204, 155, 0.1);
-  border-color: rgba(0, 204, 155, 0.3);
-  color: #00CC9B;
+.quill {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+
+/* Quill 工具栏样式 - 移动到底部 */
+.ql-toolbar {
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  z-index: 10000;
+  border: none !important;
+}
+
+.ql-toolbar .ql-stroke {
+  stroke: #9ca3af !important;
+}
+
+.ql-toolbar .ql-fill {
+  fill: #9ca3af !important;
+}
+
+.ql-toolbar button:hover .ql-stroke {
+  stroke: #00CC9B !important;
+}
+
+.ql-toolbar button:hover .ql-fill {
+  fill: #00CC9B !important;
+}
+
+.ql-toolbar button.ql-active .ql-stroke {
+  stroke: #00CC9B !important;
+}
+
+.ql-toolbar button.ql-active .ql-fill {
+  fill: #00CC9B !important;
+}
+
+.ql-toolbar button {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: 4px !important;
+  margin: 0 2px !important;
+  padding: 4px !important;
+  transition: all 0.15s ease !important;
+}
+
+.ql-toolbar button:hover {
+  background-color: rgba(0, 204, 155, 0.1) !important;
+  border-color: rgba(0, 204, 155, 0.3) !important;
+}
+
+.ql-toolbar button.ql-active {
+  background-color: rgba(0, 204, 155, 0.2) !important;
+  border-color: rgba(0, 204, 155, 0.5) !important;
+}
+
+/* Quill 下拉菜单样式 */
+.ql-toolbar .ql-picker-label {
+  color: #9ca3af !important;
+  border: 1px solid transparent !important;
+  border-radius: 4px !important;
+  padding: 4px 8px !important;
+  transition: all 0.15s ease !important;
+}
+
+.ql-toolbar .ql-picker-label:hover {
+  color: #00CC9B !important;
+  background-color: rgba(0, 204, 155, 0.1) !important;
+  border-color: rgba(0, 204, 155, 0.3) !important;
+}
+
+.ql-toolbar .ql-picker.ql-expanded .ql-picker-label {
+  color: #00CC9B !important;
+  background-color: rgba(0, 204, 155, 0.1) !important;
+  border-color: rgba(0, 204, 155, 0.3) !important;
+}
+
+.ql-toolbar .ql-picker-options {
+  background-color: #1f2937 !important;
+  border: 1px solid #4C525C !important;
+  border-radius: 4px !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.ql-toolbar .ql-picker-item {
+  color: #9ca3af !important;
+  transition: all 0.15s ease !important;
+}
+
+.ql-toolbar .ql-picker-item:hover {
+  color: #00CC9B !important;
+  background-color: rgba(0, 204, 155, 0.1) !important;
+}
+
+/* Quill 编辑器内容样式 */
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3 {
+  color: #00CC9B !important;
+  margin: 16px 0 8px 0 !important;
+  font-weight: 600 !important;
+}
+
+.ql-editor h1 {
+  font-size: 1.875rem !important;
+  line-height: 2.25rem !important;
+}
+
+.ql-editor h2 {
+  font-size: 1.5rem !important;
+  line-height: 2rem !important;
+}
+
+.ql-editor h3 {
+  font-size: 1.25rem !important;
+  line-height: 1.75rem !important;
+}
+
+.ql-editor p {
+  color: #fff !important;
+  margin: 0 0 8px 0 !important;
+  line-height: 1.6 !important;
+}
+
+.ql-editor ul,
+.ql-editor ol {
+  color: #fff !important;
+  margin: 8px 0 !important;
+  padding-left: 20px !important;
+}
+
+.ql-editor li {
+  color: #fff !important;
+  margin: 4px 0 !important;
+  line-height: 1.6 !important;
+}
+
+.ql-editor blockquote {
+  color: #9ca3af !important;
+  border-left: 4px solid #00CC9B !important;
+  margin: 16px 0 !important;
+  padding-left: 16px !important;
+  background-color: rgba(0, 204, 155, 0.05) !important;
+  border-radius: 0 4px 4px 0 !important;
+  font-style: italic !important;
+}
+
+.ql-editor code {
+  background-color: rgba(0, 204, 155, 0.1) !important;
+  color: #00CC9B !important;
+  padding: 2px 4px !important;
+  border-radius: 3px !important;
+  font-family: 'Courier New', monospace !important;
+  font-size: 0.875rem !important;
+}
+
+.ql-editor pre {
+  background-color: rgba(0, 204, 155, 0.05) !important;
+  color: #fff !important;
+  padding: 12px !important;
+  border-radius: 6px !important;
+  margin: 16px 0 !important;
+  overflow-x: auto !important;
+  font-family: 'Courier New', monospace !important;
+  border: 1px solid rgba(0, 204, 155, 0.2) !important;
+}
+
+.ql-editor pre code {
+  background: none !important;
+  color: inherit !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+.ql-editor a {
+  color: #00CC9B !important;
+  text-decoration: underline !important;
+}
+
+.ql-editor a:hover {
+  color: #00b894 !important;
+  text-decoration: none !important;
+}
+
+.ql-editor strong {
+  font-weight: 600 !important;
+  color: #fff !important;
+}
+
+.ql-editor em {
+  font-style: italic !important;
+  color: #fff !important;
+}
+
+.ql-editor img {
+  max-width: 100% !important;
+  height: auto !important;
+  border-radius: 6px !important;
+  margin: 8px 0 !important;
+  cursor: pointer !important;
+  transition: opacity 0.2s ease !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
+.ql-editor img:hover {
+  opacity: 0.9 !important;
 }
 
 /* Modal底部按钮 */
 .modal-footer {
-  padding: 24px;
+  padding: 16px 20px;
   border-top: 1px solid #333;
   display: flex;
   gap: 12px;
@@ -328,13 +550,159 @@
   }
 }
 
+/* React DatePicker 自定义样式 */
+.react-datepicker-wrapper {
+  width: auto;
+  min-width: 200px;
+}
+
+.react-datepicker__input-container input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #4C525C;
+  border-radius: 6px;
+  outline: none;
+  background-color: transparent;
+  font-size: 13px;
+  transition: all 0.2s;
+  color: #fff;
+  cursor: pointer;
+}
+
+.react-datepicker__input-container input:focus {
+  border-color: #00cc9b;
+  box-shadow: 0 0 0 2px rgba(0, 204, 155, 0.2);
+}
+
+.react-datepicker__input-container input::placeholder {
+  color: #9ca3af;
+}
+
+/* 日期选择器弹窗样式 */
+.react-datepicker-popper {
+  z-index: 1001 !important;
+}
+
+.react-datepicker {
+  background-color: #262A33 !important;
+  border: 1px solid #4C525C !important;
+  border-radius: 10px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+  font-family: 'Nunito Sans', Arial, Helvetica, sans-serif !important;
+}
+
+.react-datepicker__header {
+  background-color: #262A33 !important;
+  border-bottom: 1px solid #4C525C !important;
+  border-radius: 10px 10px 0 0 !important;
+  padding: 16px !important;
+}
+
+.react-datepicker__current-month {
+  color: #00CC9B !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  margin-bottom: 8px !important;
+}
+
+.react-datepicker__day-names {
+  margin-bottom: 8px !important;
+}
+
+.react-datepicker__day-name {
+  color: #8A949E !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  width: 40px !important;
+  line-height: 40px !important;
+}
+
+.react-datepicker__month {
+  margin: 0 !important;
+  padding: 8px !important;
+}
+
+.react-datepicker__day {
+  color: #fff !important;
+  width: 40px !important;
+  height: 40px !important;
+  line-height: 40px !important;
+  text-align: center !important;
+  border-radius: 6px !important;
+  margin: 2px !important;
+  transition: all 0.2s !important;
+}
+
+.react-datepicker__day:hover {
+  background-color: #00CC9B !important;
+  color: #000 !important;
+}
+
+.react-datepicker__day--selected {
+  background-color: #00CC9B !important;
+  color: #000 !important;
+}
+
+.react-datepicker__day--today {
+  background-color: rgba(0, 204, 155, 0.2) !important;
+  color: #00CC9B !important;
+}
+
+.react-datepicker__day--disabled {
+  color: #4C525C !important;
+  cursor: not-allowed !important;
+}
+
+.react-datepicker__day--disabled:hover {
+  background-color: transparent !important;
+  color: #4C525C !important;
+}
+
+/* 投票表单特殊样式 */
+.time-preview {
+  background: #1a1d23;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 8px;
+  margin-top: 6px;
+  color: #8A949E;
+  font-size: 12px;
+}
+
+.time-preview p {
+  margin: 0 0 4px 0;
+  line-height: 1.4;
+}
+
+.time-preview p:last-child {
+  margin-bottom: 0;
+}
+
+/* 复选框样式 */
+.form-item input[type="checkbox"] {
+  margin-right: 8px;
+  transform: scale(1.1);
+}
+
+/* 错误信息样式 */
+.error-message {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #f5c6cb;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
 @media (max-width: 480px) {
   .modal-title {
-    font-size: 18px;
+    font-size: 16px;
   }
   
   .info-grid {
     padding: 12px;
+    grid-template-columns: 1fr;
   }
   
   .info-item {
@@ -345,5 +713,9 @@
   
   .info-label {
     min-width: auto;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
   }
 }

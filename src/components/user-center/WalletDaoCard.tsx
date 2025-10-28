@@ -18,7 +18,6 @@ interface WalletDaoCardProps {
 }
 
 export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
-  const [votingPower] = useState("4,000,000");
   const { walletAddress, isLoadingAddress, isConnected } = useWalletAddress();
   const { walletBalance, isLoadingBalance, formatBalance } = useWalletBalance();
   const { signer } = useWallet();
@@ -33,9 +32,7 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
 
   const [showNeuronDropdown, setShowNeuronDropdown] = useState(false);
   const [neuronWallets, setNeuronWallets] = useState([
-    "ckb1qyq...gjw",
-    "ckb1ikm...2x8",
-    "ckb1klp...ti9",
+ 
   ]);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -164,15 +161,15 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
   const handleSuccessClose = () => {
     setShowSuccessModal(false);
     // 这里可以添加新钱包地址到列表
-    const newWallet = `ckb1new...${Math.random().toString(36).substr(2, 4)}`;
-    setNeuronWallets((prev) => [...prev, newWallet]);
+    // const newWallet: string = `ckb1new...${Math.random().toString(36).substr(2, 4)}`;
+    // setNeuronWallets((prev: string[]) => [...prev, newWallet]);
   };
 
-  const handleRemoveWallet = (walletToRemove: string) => {
-    setNeuronWallets((prev) =>
-      prev.filter((wallet) => wallet !== walletToRemove)
-    );
-  };
+  // const handleRemoveWallet = (walletToRemove: string) => {
+  //   setNeuronWallets((prev: string[]) =>
+  //     prev.filter((wallet: string) => wallet !== walletToRemove)
+  //   );
+  // };
 
   // 点击外部区域关闭下拉菜单
   useEffect(() => {
@@ -278,12 +275,12 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
               {neuronWallets.map((wallet, index) => (
                 <div key={index} className="neuron-wallet-item">
                   <span className="wallet-address">{wallet}</span>
-                  <button
+                  {/* <button
                     className="remove-wallet-button"
                     onClick={() => handleRemoveWallet(wallet)}
                   >
                     <MdClose />
-                  </button>
+                  </button> */}
                 </div>
               ))}
             </div>

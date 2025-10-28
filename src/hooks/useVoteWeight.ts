@@ -30,7 +30,7 @@ export function useVoteWeight() {
       const response = await getVoteWeight({ ckb_addr: address });
       
       if (response && typeof response.weight === 'number') {
-        setVoteWeight(response.weight);
+        setVoteWeight(response.weight / 100000000);
       } else {
         throw new Error("获取投票权重失败：响应数据格式错误");
       }
@@ -59,7 +59,7 @@ export function useVoteWeight() {
   // 格式化投票权重显示
   const formatVoteWeight = (weight: number, showUnit: boolean = true) => {
     const formatted = weight.toLocaleString('zh-CN', {
-      minimumFractionDigits: 0,
+      minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
     return showUnit ? `${formatted} 票` : formatted;
@@ -104,7 +104,7 @@ export function useVoteWeightByAddress(ckb_addr: string) {
         const response = await getVoteWeight({ ckb_addr });
         
         if (response && typeof response.weight === 'number') {
-          setVoteWeight(response.weight);
+          setVoteWeight(response.weight / 100000000);
         } else {
           throw new Error("获取投票权重失败：响应数据格式错误");
         }
@@ -124,7 +124,7 @@ export function useVoteWeightByAddress(ckb_addr: string) {
   // 格式化投票权重显示
   const formatVoteWeight = (weight: number, showUnit: boolean = true) => {
     const formatted = weight.toLocaleString('zh-CN', {
-      minimumFractionDigits: 0,
+      minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
     return showUnit ? `${formatted} ` : formatted;

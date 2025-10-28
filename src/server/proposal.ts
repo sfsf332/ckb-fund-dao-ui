@@ -159,3 +159,41 @@ export const getVoteWeight = defineAPI<
     },
   }
 );
+
+// 投票元数据参数类型
+export interface CreateVoteMetaParams {
+  did: string; // 用户DID
+  params: {
+    candidates: unknown[]; // 候选人列表
+    end_time: number; // 投票结束时间
+    proposal_uri: string; // 提案URI
+    start_time: number; // 投票开始时间
+    vote_type: number; // 投票类型
+  };
+  signed_bytes: string; // 签名字节
+  signing_key_did: string; // 签名密钥DID
+}
+
+// 投票元数据响应类型
+export interface CreateVoteMetaResponse {
+  success: boolean;
+  message?: string;
+  vote_id?: string; // 投票ID
+}
+
+/**
+ * 创建投票元数据
+ * POST /api/vote/create_vote_meta
+ */
+export const createVoteMeta = defineAPI<
+  CreateVoteMetaParams,
+  CreateVoteMetaResponse
+>(
+  "/vote/create_vote_meta",
+  "POST",
+  {
+    divider: {
+      body: ["did", "params", "signed_bytes", "signing_key_did"],
+    },
+  }
+);

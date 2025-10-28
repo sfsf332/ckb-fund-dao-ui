@@ -38,6 +38,9 @@ importers:
       axios:
         specifier: ^1.12.2
         version: 1.12.2
+      cbor:
+        specifier: ^10.0.11
+        version: 10.0.11
       copy-to-clipboard:
         specifier: ^3.3.3
         version: 3.3.3
@@ -1722,6 +1725,10 @@ packages:
   cbor-x@1.6.0:
     resolution: {integrity: sha512-0kareyRwHSkL6ws5VXHEf8uY1liitysCVJjlmhaLG+IXLqhSaOO+t63coaso7yjwEzWZzLy8fJo06gZDVQM9Qg==}
 
+  cbor@10.0.11:
+    resolution: {integrity: sha512-vIwORDd/WyB8Nc23o2zNN5RrtFGlR6Fca61TtjkUXueI3Jf2DOZDl1zsshvBntZ3wZHBM9ztjnkXSmzQDaq3WA==}
+    engines: {node: '>=20'}
+
   cborg@1.10.2:
     resolution: {integrity: sha512-b3tFPA9pUr2zCUiCfRd2+wok2/LBSNUMKOuRRok+WlvvAgEt/PlbgPTsZUcwCOs53IJvLgTp0eotwtosE6njug==}
     hasBin: true
@@ -2699,6 +2706,10 @@ packages:
 
   node-releases@2.0.21:
     resolution: {integrity: sha512-5b0pgg78U3hwXkCM8Z9b2FJdPZlr9Psr9V2gQPESdGHqbntyFJKFW4r5TeWGFzafGY3hzs1JC62VEQMbl1JFkw==}
+
+  nofilter@3.1.0:
+    resolution: {integrity: sha512-l2NNj07e9afPnhAhvgVrCD/oy2Ai1yfLpuo3EpiO1jFTsB4sFz6oIfAfSZyQzVpkZQ9xS8ZS5g1jCBgq4Hwo0g==}
+    engines: {node: '>=12.19'}
 
   normalize-url@8.1.0:
     resolution: {integrity: sha512-X06Mfd/5aKsRHc0O0J5CUedwnPmnDtLF2+nq+KN9KSDlJHkPuh0JUviWjEWMe0SW/9TDdSLVPuk7L5gGTIA1/w==}
@@ -5659,6 +5670,10 @@ snapshots:
     optionalDependencies:
       cbor-extract: 2.2.0
 
+  cbor@10.0.11:
+    dependencies:
+      nofilter: 3.1.0
+
   cborg@1.10.2: {}
 
   cborg@4.2.15: {}
@@ -6765,6 +6780,8 @@ snapshots:
     optional: true
 
   node-releases@2.0.21: {}
+
+  nofilter@3.1.0: {}
 
   normalize-url@8.1.0: {}
 

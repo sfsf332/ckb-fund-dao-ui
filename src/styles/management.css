@@ -164,6 +164,13 @@
 
 /* 状态标签样式已移至Tag组件 */
 
+/* 操作按钮容器 */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 /* 任务操作按钮 */
 .task-action-button {
   background: #00d4aa;
@@ -180,6 +187,65 @@
 .task-action-button:hover {
   background: #00b894;
   transform: translateY(-1px);
+}
+
+/* 投票操作按钮 */
+.vote-action-button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.vote-action-button:hover {
+  background: #0056b3;
+  transform: translateY(-1px);
+}
+
+/* 加载和错误状态 */
+.loading-state,
+.error-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #8A949E;
+}
+
+.loading-state p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.error-state p {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  color: #ff4444;
+}
+
+.error-state button {
+  background: #00d4aa;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.error-state button:hover {
+  background: #00b894;
+}
+
+.no-data {
+  text-align: center;
+  color: #8A949E;
+  font-style: italic;
+  padding: 40px 20px;
 }
 
 /* 响应式设计 */

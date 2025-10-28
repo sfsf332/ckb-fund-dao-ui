@@ -19,6 +19,7 @@
     "@scure/base": "^2.0.0",
     "@types/react-datepicker": "^7.0.0",
     "axios": "^1.12.2",
+    "cbor": "^10.0.11",
     "copy-to-clipboard": "^3.3.3",
     "dayjs": "^1.11.18",
     "echarts": "^6.0.0",

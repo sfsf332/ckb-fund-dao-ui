@@ -7,6 +7,7 @@ import { handleCopy } from "@/utils/common";
 import { CreateAccountStatus, CREATE_STATUS } from "@/hooks/createAccount";
 import { ExtraIsEnoughState } from "@/hooks/checkCkb";
 import CopyButton from "../ui/copy/CopyButton";
+import { useTranslation } from "@/utils/i18n";
 
 interface LoginStep3Props {
   accountName: string;
@@ -42,11 +43,12 @@ export default function LoginStep3({
   extraIsEnough,
   balanceError,
 }: LoginStep3Props) {
+  const { t } = useTranslation();
   const { walletAddress, isLoadingAddress, formatAddress } = useWalletAddress();
   // 复制地址到剪贴板（统一行为+toast）
   const handleCopyAddress = () => {
     if (walletAddress) {
-      handleCopy(walletAddress);
+      handleCopy(walletAddress, t("copy.addressSuccess"));
     }
   };
   return (

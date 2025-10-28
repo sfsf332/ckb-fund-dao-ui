@@ -4,6 +4,7 @@ import React from 'react';
 import './copy.css';
 import { FaCopy } from 'react-icons/fa';
 import { handleCopy } from '@/utils/common';
+import { useTranslation } from '@/utils/i18n';
 
 interface CopyButtonProps {
   text: string;
@@ -26,8 +27,10 @@ export default function CopyButton({
   title,
   style,
 }: CopyButtonProps) {
+  const { t } = useTranslation();
+  
   const onClick = () => {
-    handleCopy(text);
+    handleCopy(text, t("copy.success"));
     if (onCopied) onCopied();
   };
 

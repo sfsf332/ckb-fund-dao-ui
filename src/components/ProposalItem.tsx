@@ -9,6 +9,7 @@ import { postUriToHref } from "@/lib/postUriHref";
 import { useI18n } from "@/contexts/I18nContext";
 import Tag from "@/components/ui/tag/Tag";
 import { getAvatarByDid } from "@/utils/avatarUtils";
+import { useTranslation } from "@/utils/i18n";
 
 interface ProposalItemProps {
   proposal: Proposal | ProposalListItem;
@@ -17,6 +18,7 @@ interface ProposalItemProps {
 export default function ProposalItem({ proposal }: ProposalItemProps) {
   const router = useRouter();
   const { locale } = useI18n();
+  const { t } = useTranslation();
 
   // 兼容两种数据结构 (mockProposals 和 API)
   const isAPIFormat = 'record' in proposal;
@@ -78,7 +80,7 @@ export default function ProposalItem({ proposal }: ProposalItemProps) {
       </div>
       
       <div className="proposal_detail">
-        <p>申请预算</p>
+        <p>{t("proposalItem.budgetApplication")}</p>
         <p>{formatNumber(budget)} CKB</p>
       </div>
       
@@ -86,11 +88,11 @@ export default function ProposalItem({ proposal }: ProposalItemProps) {
       {voting && (
         <div className="proposal_voting">
           <div className="vote-item approve">
-            <p>赞成</p>
+            <p>{t("proposalItem.approve")}</p>
             <p>{voting.approve}%</p>
           </div>
           <div className="vote-item oppose">
-            <p>反对</p>
+            <p>{t("proposalItem.oppose")}</p>
             <p>{voting.oppose}%</p>
           </div>
         </div>
@@ -100,7 +102,7 @@ export default function ProposalItem({ proposal }: ProposalItemProps) {
       <div className="proposal_progress">
         {milestones ? (
           <>
-            <p>进度: 里程碑 {milestones.current}/{milestones.total}</p>
+            <p>{t("proposalItem.progress")}: {t("proposalItem.milestone")} {milestones.current}/{milestones.total}</p>
             <div className="progress-bar">
               <div 
                 className="progress-fill" 
@@ -117,7 +119,7 @@ export default function ProposalItem({ proposal }: ProposalItemProps) {
           </div>
         ) : (
           <>
-            <p>进度: -</p>
+            <p>{t("proposalItem.progress")}: -</p>
             <div className="progress-bar">
               <div className="progress-fill" style={{width: '0%'}}></div>
             </div>

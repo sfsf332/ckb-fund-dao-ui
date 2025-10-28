@@ -3,6 +3,7 @@
 import React from 'react';
 import { MdCheck } from 'react-icons/md';
 import Modal from './Modal';
+import { useI18n } from '@/contexts/I18nContext';
 
 export interface SuccessModalProps {
   isOpen: boolean;
@@ -14,9 +15,11 @@ export interface SuccessModalProps {
 export default function SuccessModal({ 
   isOpen, 
   onClose, 
-  message = '操作成功!',
+  message, 
   icon
 }: SuccessModalProps) {
+  const { messages } = useI18n();
+  
   return (
     <Modal
       isOpen={isOpen}
@@ -25,7 +28,7 @@ export default function SuccessModal({
       showCloseButton={false}
       buttons={[
         {
-          text: '关闭',
+          text: messages.modal.successModal.close,
           onClick: onClose,
           variant: 'secondary'
         }
@@ -35,7 +38,7 @@ export default function SuccessModal({
         <div className="success-icon">
           {icon || <MdCheck />}
         </div>
-        <p className="success-message">{message}</p>
+        <p className="success-message">{message || messages.modal.successModal.defaultMessage}</p>
       </div>
     </Modal>
   );

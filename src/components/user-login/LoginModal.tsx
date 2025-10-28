@@ -13,12 +13,14 @@ import { useAccountNameValidation } from "@/hooks/useAccountNameValidation";
 import { useCheckCkb } from "@/hooks/checkCkb";
 import useCreateAccount from "@/hooks/createAccount";
 import { USER_DOMAIN } from "@/constant/Network";
+import { useTranslation } from "@/utils/i18n";
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
+  const { t } = useTranslation();
   const { open, wallet, signerInfo, disconnect } = ccc.useCcc();
   const [currentStep, setCurrentStep] = useState(1);
   const [accountName, setAccountName] = useState("");
@@ -54,7 +56,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       await open();
       // 钱包连接成功后不自动进入下一步，保持在第一步
     } catch (error) {
-      console.error("连接钱包失败:", error);
+      console.error(t("loginModal.connectWalletFailed"), error);
       setIsConnecting(false);
     }
   };
@@ -71,7 +73,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       setShowInsufficientFunds(false);
       setIsConnecting(false);
     } catch (error) {
-      console.error("断开钱包连接失败:", error);
+      console.error(t("loginModal.disconnectWalletFailed"), error);
     }
   };
 
@@ -145,7 +147,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         if (balanceResult.isEnough) {
           // 余额充足，开始创建账户
           setShowInsufficientFunds(false);
-          console.log("余额检查通过，开始创建账户...");
+          console.log(t("loginModal.balanceCheckPassed"));
           
           // 直接调用创建账户方法，它会自动处理余额验证和私钥生成
           if (signerInfo?.signer && wallet) {
@@ -165,14 +167,14 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         } else {
           // 余额不足，显示警告
           setShowInsufficientFunds(true);
-          console.log("CKB余额不足:", balanceResult.error);
+          console.log(t("loginModal.insufficientBalance"), balanceResult.error);
         }
       } catch (error) {
-        console.error("检查CKB余额时发生错误:", error);
+        console.error(t("loginModal.balanceCheckError"), error);
         setShowInsufficientFunds(true);
       }
     } else {
-      console.error("未找到签名器信息");
+      console.error(t("loginModal.signerNotFound"));
       setShowInsufficientFunds(true);
     }
   };
@@ -185,7 +187,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         console.log("balanceResult", balanceResult);
         if (balanceResult.isEnough) {
           setShowInsufficientFunds(false);
-          console.log("重新检查余额通过，开始创建账户...");
+          console.log(t("loginModal.recheckBalancePassed"));
           
           // 调用创建账户方法
           if (signerInfo?.signer && wallet) {
@@ -204,10 +206,10 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           }
         } else {
           setShowInsufficientFunds(true);
-          console.log("CKB余额仍然不足:", balanceResult.error);
+          console.log(t("loginModal.stillInsufficientBalance"), balanceResult.error);
         }
       } catch (error) {
-        console.error("重新检查CKB余额时发生错误:", error);
+        console.error(t("loginModal.recheckBalanceError"), error);
         setShowInsufficientFunds(true);
       }
     }
@@ -225,7 +227,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="创建账号"
+      title={t("loginModal.createAccount")}
       size="large"
       className="login-modal"
       showCloseButton={true}

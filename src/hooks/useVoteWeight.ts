@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { getVoteWeight } from "@/server/proposal";
+import { useTranslation } from "@/utils/i18n";
 import { useWalletAddress } from "./useWalletAddress";
 
 /**
@@ -9,17 +10,52 @@ import { useWalletAddress } from "./useWalletAddress";
  * 提供获取用户投票权重的功能
  */
 export function useVoteWeight() {
+  const { t } = useTranslation();
   const { walletAddress, isConnected } = useWalletAddress();
   const [voteWeight, setVoteWeight] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const lastFetchedAddress = useRef<string>("");
 
-  // 获取投票权重
+  // 当钱包地址变化时自动获取投票权重
+  useEffect(() => {
+    if (!walletAddress || !isConnected || walletAddress === lastFetchedAddress.current) {
+      return;
+    }
+
+    lastFetchedAddress.current = walletAddress;
+
+    const fetchVoteWeight = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const response = await getVoteWeight({ ckb_addr: walletAddress });
+        
+        if (response && typeof response.weight === 'number') {
+          setVoteWeight(response.weight / 100000000);
+        } else {
+          throw new Error("Response data error");
+        }
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Failed to get vote weight";
+        setError(errorMessage);
+        console.error("Failed to get vote weight:", error);
+        setVoteWeight(0);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchVoteWeight();
+  }, [walletAddress, isConnected]);
+
+  // 获取投票权重（用于手动调用）
   const fetchVoteWeight = useCallback(async (ckb_addr?: string) => {
     const address = ckb_addr || walletAddress;
     
     if (!address) {
-      setError("未找到CKB地址，请先连接钱包");
+      setError(t("voteWeight.noCKBAddress"));
       return;
     }
 
@@ -32,38 +68,31 @@ export function useVoteWeight() {
       if (response && typeof response.weight === 'number') {
         setVoteWeight(response.weight / 100000000);
       } else {
-        throw new Error("获取投票权重失败：响应数据格式错误");
+        throw new Error(t("voteWeight.responseDataError"));
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "获取投票权重失败";
+      const errorMessage = error instanceof Error ? error.message : t("voteWeight.getVoteWeightFailed");
       setError(errorMessage);
-      console.error("获取投票权重失败:", error);
+      console.error(t("voteWeight.getVoteWeightFailed"), error);
       setVoteWeight(0);
     } finally {
       setIsLoading(false);
     }
-  }, [walletAddress]);
-
-  // 当钱包地址变化时自动获取投票权重
-  useEffect(() => {
-    if (walletAddress && isConnected) {
-      fetchVoteWeight();
-    }
-  }, [walletAddress, isConnected, fetchVoteWeight]);
+  }, [walletAddress, t]);
 
   // 刷新投票权重
-  const refreshVoteWeight = () => {
+  const refreshVoteWeight = useCallback(() => {
     fetchVoteWeight();
-  };
+  }, [fetchVoteWeight]);
 
   // 格式化投票权重显示
-  const formatVoteWeight = (weight: number, showUnit: boolean = true) => {
+  const formatVoteWeight = useCallback((weight: number, showUnit: boolean = true) => {
     const formatted = weight.toLocaleString('zh-CN', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
-    return showUnit ? `${formatted} 票` : formatted;
-  };
+    return showUnit ? `${formatted} ${t("voteWeight.votes")}` : formatted;
+  }, [t]);
 
   // 检查是否有投票权限（权重大于0）
   const hasVotingPower = voteWeight > 0;
@@ -86,13 +115,14 @@ export function useVoteWeight() {
  * 用于获取其他用户的投票权重
  */
 export function useVoteWeightByAddress(ckb_addr: string) {
+  const { t } = useTranslation();
   const [voteWeight, setVoteWeight] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!ckb_addr) {
-      setError("CKB地址不能为空");
+      setError("Empty CKB address");
       return;
     }
 
@@ -106,12 +136,12 @@ export function useVoteWeightByAddress(ckb_addr: string) {
         if (response && typeof response.weight === 'number') {
           setVoteWeight(response.weight / 100000000);
         } else {
-          throw new Error("获取投票权重失败：响应数据格式错误");
+          throw new Error("Format error");
         }
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : "获取投票权重失败";
+        const errorMessage = error instanceof Error ? error.message : "Failed to get vote weight";
         setError(errorMessage);
-        console.error("获取投票权重失败:", error);
+        console.error("Failed to get vote weight:", error);
         setVoteWeight(0);
       } finally {
         setIsLoading(false);
@@ -122,13 +152,13 @@ export function useVoteWeightByAddress(ckb_addr: string) {
   }, [ckb_addr]);
 
   // 格式化投票权重显示
-  const formatVoteWeight = (weight: number, showUnit: boolean = true) => {
+  const formatVoteWeight = useCallback((weight: number, showUnit: boolean = true) => {
     const formatted = weight.toLocaleString('zh-CN', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
-    return showUnit ? `${formatted} ` : formatted;
-  };
+    return showUnit ? `${formatted} ${t("voteWeight.votes")}` : formatted;
+  }, [t]);
 
   // 检查是否有投票权限（权重大于0）
   const hasVotingPower = voteWeight > 0;

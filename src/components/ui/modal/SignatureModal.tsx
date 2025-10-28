@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Modal from './Modal';
 import { GoCopy } from 'react-icons/go';
 import CopyButton from '@/components/ui/copy/CopyButton';
+import { useI18n } from '@/contexts/I18nContext';
 
 export interface SignatureModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ export default function SignatureModal({
   message, 
   onBind 
 }: SignatureModalProps) {
+  const { messages } = useI18n();
   const [signature, setSignature] = useState('');
 
   const handleBind = () => {
@@ -33,17 +35,17 @@ export default function SignatureModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="签名信息"
+      title={messages.modal.signatureModal.title}
       size="medium"
       buttons={[
         {
-          text: '绑定',
+          text: messages.modal.signatureModal.bind,
           onClick: handleBind,
           variant: 'primary',
           disabled: !signature.trim()
         },
         {
-          text: '关闭',
+          text: messages.modal.signatureModal.close,
           onClick: onClose,
           variant: 'secondary'
         }
@@ -56,13 +58,13 @@ export default function SignatureModal({
             <CopyButton
               className="copy-button"
               text={message}
-              title="复制"
+              title={messages.modal.signatureModal.copy}
             >
               <GoCopy />
             </CopyButton>
           </div>
           <p className="message-instruction">
-            该消息将使用&quot;Nervos Message&quot;进行签名
+            {messages.modal.signatureModal.messageInstruction}
           </p>
         </div>
         
@@ -72,7 +74,7 @@ export default function SignatureModal({
             value={signature}
             onChange={(e) => setSignature(e.target.value)}
             className="signature-input"
-            placeholder="请输入签名"
+            placeholder={messages.modal.signatureModal.signaturePlaceholder}
           />
         </div>
       </div>

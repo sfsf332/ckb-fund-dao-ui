@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { MdClose } from "react-icons/md";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { SignatureModal, SuccessModal } from "../ui/modal";
@@ -11,27 +10,29 @@ import { useWalletBalance } from "../../hooks/useWalletBalance";
 import { BindInfo, BindInfoWithSig } from "../../utils/molecules";
 import { ccc, hexFrom } from "@ckb-ccc/core";
 import { useWallet } from "@/provider/WalletProvider";
-import { useVoteWeightByAddress } from "@/hooks/useVoteWeight";
+import { useTranslation } from "@/utils/i18n";
+import { useVoteWeight } from "@/hooks/useVoteWeight";
 
 interface WalletDaoCardProps {
   className?: string;
 }
 
 export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
+  const { t } = useTranslation();
   const { walletAddress, isLoadingAddress, isConnected } = useWalletAddress();
   const { walletBalance, isLoadingBalance, formatBalance } = useWalletBalance();
   const { signer } = useWallet();
-  const { voteWeight, isLoading: isLoadingVoteWeight, formatVoteWeight } = useVoteWeightByAddress(walletAddress || "");
+  const { voteWeight, isLoading: isLoadingVoteWeight, formatVoteWeight } = useVoteWeight();
 
   // 自定义地址格式化函数：前7个字符...后4个字符
   const formatWalletAddress = (address: string) => {
-    if (!address) return "获取地址中...";
+    if (!address) return t("wallet.gettingAddress");
     if (address.length <= 11) return address;
     return `${address.slice(0, 7)}...${address.slice(-4)}`;
   };
 
   const [showNeuronDropdown, setShowNeuronDropdown] = useState(false);
-  const [neuronWallets, setNeuronWallets] = useState([
+  const [neuronWallets] = useState([
  
   ]);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
@@ -69,7 +70,7 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
         if (/^[0-9a-fA-F]+$/.test(hexString)) {
           return hexString.toLowerCase();
         }
-        throw new Error("无效的十六进制签名");
+        throw new Error(t("wallet.invalidHexSignature"));
       }
       
       // 否则按base64处理
@@ -82,7 +83,7 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
         .map(byte => byte.charCodeAt(0).toString(16).padStart(2, '0'))
         .join('');
     } catch (error) {
-      console.error('签名转换失败:', error);
+      console.error(t('wallet.signatureConversionFailed'), error);
       return '';
     }
   };
@@ -99,7 +100,7 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
 
   const handleStakeCKB = () => {
     // 处理质押CKB逻辑
-    console.log("质押CKB");
+    console.log(t("wallet.stakeCKB"));
   };
 
   const handleBindNeuron = () => {
@@ -113,12 +114,12 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
 
   const handleSignatureBind = async(signature: string) => {
     if (!signer) {
-      console.error("签名器未连接");
+      console.error(t("wallet.signerNotConnected"));
       return;
     }
 
     if (!bindInfo) {
-      console.error("绑定信息未生成");
+      console.error(t("wallet.bindInfoNotGenerated"));
       return;
     }
 
@@ -131,7 +132,7 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
     // 将签名转换为十六进制（兼容base64和0x格式）
     const signatureHex = convertSignatureToHex(signature);
     if (!signatureHex) {
-      console.error("签名转换失败");
+      console.error(t("wallet.signatureConversionFailed"));
       return;
     }
 
@@ -141,8 +142,6 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
     })
   
     const bindInfoWithSigBytes = bindInfoWithSig.toBytes();
-  
-    const bindInfoWithSigHex = ccc.hexFrom(bindInfoWithSigBytes);
   
     // 修正: 确保 WitnessArgs 已正确定义且 imported，并使用 const
     const witnessArgs = ccc.WitnessArgs.from({
@@ -190,46 +189,46 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
 
   return (
     <div className={`wallet-dao-card ${className}`}>
-      <h3 className="card-title">钱包及 Nervos DAO</h3>
+      <h3 className="card-title">{t("wallet.title")}</h3>
 
       <div className="voting-power-section">
         <div className="voting-power-header">
           <h4 className="voting-power-label">
-            我的投票权
+            {t("wallet.myVotingPower")}
             <IoMdInformationCircleOutline
               data-tooltip-id="my-tooltip"
-              data-tooltip-content="投票权的解释"
+              data-tooltip-content={t("wallet.votingPowerExplanation")}
             />
           </h4>
         </div>
         <div className="voting-power-amount">
-          {isLoadingVoteWeight ? "获取中..." : formatVoteWeight(voteWeight)} CKB
+          {isLoadingVoteWeight ? t("wallet.loading") : formatVoteWeight(voteWeight)} CKB
         </div>
       </div>
 
       <div className="wallet-section">
         <div className="wallet-address-group">
-          <label className="wallet-label">当前连接钱包</label>
+          <label className="wallet-label">{t("wallet.currentConnectedWallet")}</label>
           <div className="wallet-address-row">
             <span className="wallet-address">
               {isLoadingAddress
-                ? "获取地址中..."
+                ? t("wallet.gettingAddress")
                 : isConnected
                 ? formatWalletAddress(walletAddress)
-                : "未连接钱包"}
+                : t("wallet.notConnected")}
             </span>
           </div>
         </div>
 
         <div className="wallet-balances">
           <div className="balance-item">
-            <span className="balance-label">钱包余额:</span>
+            <span className="balance-label">{t("wallet.walletBalance")}:</span>
             <span className="balance-value">
               {isLoadingBalance
-                ? "获取余额中..."
+                ? t("wallet.gettingBalance")
                 : isConnected
                 ? formatBalance(walletBalance, true)
-                : "未连接钱包"}
+                : t("wallet.notConnected")}
             </span>
           </div>
           {/* <div className="balance-item">
@@ -252,7 +251,7 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
             height={16}
             className="button-icon"
           />
-          质押CKB
+          {t("wallet.stakeCKB")}
         </button>
 
         <div className="neuron-dropdown-container" ref={dropdownRef}>
@@ -261,7 +260,7 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
             onClick={handleBindNeuron}
           >
             <MdOutlineAccountBalanceWallet />
-            绑定 Neuron 钱包地址
+            {t("wallet.bindNeuronWallet")}
           </button>
 
           {showNeuronDropdown && (
@@ -270,7 +269,7 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
                 className="neuron-dropdown-item"
                 onClick={handleBindNewWallet}
               >
-                绑定新钱包地址
+                {t("wallet.bindNewWallet")}
               </div>
               {neuronWallets.map((wallet, index) => (
                 <div key={index} className="neuron-wallet-item">
@@ -300,7 +299,7 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
       <SuccessModal
         isOpen={showSuccessModal}
         onClose={handleSuccessClose}
-        message="绑定成功,链上数据确认可能需要几分钟时间,请稍后刷新页面!"
+        message={t("wallet.bindSuccessMessage")}
       />
     </div>
   );

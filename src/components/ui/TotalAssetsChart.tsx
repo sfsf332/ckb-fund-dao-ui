@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import * as echarts from "echarts";
+import { useI18n } from "@/contexts/I18nContext";
 
 type TotalAssetsChartProps = {
   height?: number;
@@ -15,6 +16,7 @@ export default function TotalAssetsChart({
   data = [3.4, 0.8, 1.6, 1.0, 2.0, 0.5, 2.8, 0.7, 2.8, 2.6, 4.8, 2.1],
   yearLabel = "2025",
 }: TotalAssetsChartProps) {
+  const { messages } = useI18n();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<echarts.EChartsType | null>(null);
 
@@ -34,7 +36,7 @@ export default function TotalAssetsChart({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         formatter: (params: any) => {
           const p = Array.isArray(params) ? params[0] : params;
-          return `${p.axisValue}<br/>${p.value}B`;
+          return `${p.axisValue}<br/>${p.value}${messages.chart.totalAssetsChart.tooltip.unit}`;
         },
       },
       grid: { left: 40, right: 20, top: 20, bottom: 40 },
@@ -42,18 +44,18 @@ export default function TotalAssetsChart({
         type: "category",
         boundaryGap: false,
         data: [
-          "1月",
-          "2月",
-          "3月",
-          "4月",
-          "5月",
-          "6月",
-          "7月",
-          "8月",
-          "9月",
-          "10月",
-          "11月",
-          "12月",
+          messages.chart.totalAssetsChart.months.january,
+          messages.chart.totalAssetsChart.months.february,
+          messages.chart.totalAssetsChart.months.march,
+          messages.chart.totalAssetsChart.months.april,
+          messages.chart.totalAssetsChart.months.may,
+          messages.chart.totalAssetsChart.months.june,
+          messages.chart.totalAssetsChart.months.july,
+          messages.chart.totalAssetsChart.months.august,
+          messages.chart.totalAssetsChart.months.september,
+          messages.chart.totalAssetsChart.months.october,
+          messages.chart.totalAssetsChart.months.november,
+          messages.chart.totalAssetsChart.months.december,
         ],
         axisLine: { lineStyle: { color: "#4C525C" } },
         axisLabel: { color: "#9AA3AF" },
@@ -66,7 +68,7 @@ export default function TotalAssetsChart({
         interval: 1,
         axisLabel: {
           color: "#9AA3AF",
-          formatter: (v: number) => `${v}B`,
+          formatter: (v: number) => `${v}${messages.chart.totalAssetsChart.yAxis.unit}`,
         },
         axisLine: { show: false },
         splitLine: { lineStyle: { color: "#3A3F49", type: "dashed" } },
@@ -107,7 +109,7 @@ export default function TotalAssetsChart({
       chart.dispose();
       chartRef.current = null;
     };
-  }, [data, yearLabel]);
+  }, [data, yearLabel, messages.chart.totalAssetsChart]);
 
   return (
     <div

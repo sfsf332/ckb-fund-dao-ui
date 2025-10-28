@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useI18n } from "@/contexts/I18nContext";
 
 import "./comment.css";
 import CommentItem from "./CommentItem";
@@ -18,6 +19,7 @@ export default function CommentSection({
   error,
   quotedText = ""
 }: CommentSectionProps) {
+  const { messages } = useI18n();
   console.log('CommentSection rendered with quotedText:', quotedText);
   const handleAddComment = (content: string, parentId?: string) => {
     onAddComment(content, parentId);
@@ -43,7 +45,7 @@ export default function CommentSection({
      <div className="comment-section">
         <div className="comment-header">
           <h3 className="comment-title">
-            {loading ? '加载中...' : error ? `加载评论失败: ${error}` : `${comments.length}条评论`}
+            {loading ? messages.comment.loading : error ? `${messages.comment.loadFailed} ${error}` : `${comments.length}${messages.comment.commentsCount}`}
           </h3>
         </div>
         <div className="comment-content">
@@ -64,14 +66,14 @@ export default function CommentSection({
               textAlign: 'center', 
               color: '#999' 
             }}>
-              暂无评论，快来发表第一条评论吧！
+              {messages.comment.noComments}
             </div>
           ) : null}
         </div>
         <div className="comment-quote-section">
           <CommentQuote 
             onSubmit={handleAddComment}
-            placeholder="请填写评论"
+            placeholder={messages.comment.placeholder}
             quotedText={quotedText}
           />
         </div>

@@ -12,6 +12,7 @@
     "@atproto/common-web": "^0.4.3",
     "@atproto/crypto": "^0.4.4",
     "@atproto/repo": "^0.8.10",
+    "@babel/runtime": "^7.28.4",
     "@ckb-ccc/ccc": "^1.1.16",
     "@ckb-ccc/connector-react": "1.0.28",
     "@ckb-ccc/core": "^1.12.2",

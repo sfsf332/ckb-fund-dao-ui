@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactQuill from 'react-quill-new';
 import DatePicker from 'react-datepicker';
+import { useI18n } from '@/contexts/I18nContext';
 import 'react-datepicker/dist/react-datepicker.css';
 
 interface Milestone {
@@ -39,10 +40,12 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
   quillModules,
   quillFormats,
 }) => {
+  const { messages } = useI18n();
+  
   return (
     <div className="form-fields">
       <div>
-        <label className="form-label">项目里程碑:</label>
+        <label className="form-label">{messages.proposalSteps.projectMilestones.title}</label>
 
         <div className="milestones-tabs-container">
           <div className="milestones-tabs">
@@ -62,7 +65,7 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
                   type="button"
                   onClick={() => removeMilestone(milestone.id)}
                   className="milestone-remove-btn"
-                  title="删除里程碑"
+                  title={messages.proposalSteps.projectMilestones.removeMilestone}
                 >
                   <svg
                     width="16"
@@ -82,7 +85,7 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
               type="button"
               onClick={addMilestone}
               className="milestone-add-btn"
-              title="添加新里程碑"
+              title={messages.proposalSteps.projectMilestones.addMilestone}
             >
               <svg
                 width="16"
@@ -101,7 +104,7 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
 
         {formData.milestones.length === 0 ? (
           <div className="milestones-empty">
-            <p>还没有添加任何里程碑，点击+按钮开始添加。</p>
+            <p>{messages.proposalSteps.projectMilestones.emptyMessage}</p>
           </div>
         ) : (
           <div className="milestones-content">
@@ -115,7 +118,7 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
                     <div className="milestone-panel-fields">
                       <div className="milestone-field">
                         <label className="form-label">
-                          里程碑标题:
+                          {messages.proposalSteps.projectMilestones.milestoneTitle}
                         </label>
                         <input
                           type="text"
@@ -128,21 +131,21 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
                             )
                           }
                           className="form-input"
-                          placeholder="例如：项目启动、第一阶段完成、产品发布等"
+                          placeholder={messages.proposalSteps.projectMilestones.milestonePlaceholder}
                           required
                         />
                       </div>
 
                       <div className="milestone-field">
                         <label className="form-label">
-                          预计完成日期:
+                          {messages.proposalSteps.projectMilestones.expectedDate}
                         </label>
                         <div className="input-container">
                           <DatePicker
                             selected={milestone.date ? new Date(milestone.date) : null}
                             onChange={(date) => onMilestoneDateChange(milestone.id, date)}
                             dateFormat="yyyy-MM-dd"
-                            placeholderText="请选择预计完成日期"
+                            placeholderText={messages.proposalSteps.projectMilestones.datePlaceholder}
                             minDate={new Date()}
                             className="form-input"
                             showPopperArrow={false}
@@ -162,7 +165,7 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
                     </div>
 
                     <div className="milestone-field">
-                      <label className="form-label">详细描述:</label>
+                      <label className="form-label">{messages.proposalSteps.projectMilestones.description}</label>
                       <div className="editor-container">
                         {isClient ? (
                           <div className="quill-wrapper">
@@ -178,7 +181,7 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
                               }
                               modules={quillModules}
                               formats={quillFormats}
-                              placeholder="请详细描述这个里程碑的具体内容、交付物和验收标准"
+                              placeholder={messages.proposalSteps.projectMilestones.descriptionPlaceholder}
                               style={{
                                 height: "200px",
                                 marginBottom: "20px",
@@ -200,7 +203,7 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
                               justifyContent: "center",
                             }}
                           >
-                            编辑器加载中...
+                            {messages.proposalSteps.projectMilestones.editorLoading}
                           </div>
                         )}
                       </div>

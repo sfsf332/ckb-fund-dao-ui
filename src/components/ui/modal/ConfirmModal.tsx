@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Modal from './Modal';
+import { useI18n } from '@/contexts/I18nContext';
 
 export interface ConfirmModalProps {
   isOpen: boolean;
@@ -19,11 +20,13 @@ export default function ConfirmModal({
   onClose,
   message,
   onConfirm,
-  confirmText = '确认',
-  cancelText = '取消',
+  confirmText,
+  cancelText,
   variant = 'info',
-  title = '确认操作'
+  title
 }: ConfirmModalProps) {
+  const { messages } = useI18n();
+  
   const handleConfirm = () => {
     onConfirm();
     onClose();
@@ -33,16 +36,16 @@ export default function ConfirmModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={title}
+      title={title || messages.modal.confirmModal.defaultTitle}
       size="small"
       buttons={[
         {
-          text: cancelText,
+          text: cancelText || messages.modal.confirmModal.defaultCancel,
           onClick: onClose,
           variant: 'secondary'
         },
         {
-          text: confirmText,
+          text: confirmText || messages.modal.confirmModal.defaultConfirm,
           onClick: handleConfirm,
           variant: variant === 'danger' ? 'danger' : 'primary'
         }

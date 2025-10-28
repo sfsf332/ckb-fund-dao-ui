@@ -14,11 +14,6 @@
     "contact": "联系",
     "userCenter": "用户中心"
   },
-  "footer": {
-    "learn": "学习",
-    "examples": "示例",
-    "goToNextjs": "前往 nextjs.org →"
-  },
   "userCenter": {
     "title": "用户中心",
     "profile": {
@@ -38,17 +33,6 @@
       "enabled": "启用",
       "automatic": "自动"
     },
-    "wallet": {
-      "title": "钱包及 Nervos DAO",
-      "votingPower": "我的投票权",
-      "currentWallet": "当前连接钱包",
-      "switchWallet": "切换",
-      "walletBalance": "钱包余额",
-      "depositedInDao": "已存入Nervos DAO",
-      "redeeming": "赎回中",
-      "stakeCKB": "质押CKB",
-      "bindNeuron": "绑定 Neuron 钱包地址"
-    },
     "records": {
       "proposals": "提案记录",
       "voting": "投票纪录",
@@ -64,5 +48,708 @@
       "deliverMilestone": "里程碑交付",
       "rectificationCompleted": "整改完成"
     }
+  },
+  "taskModal": {
+    "title": "任务处理",
+    "proposalInfo": "提案信息",
+    "taskInfo": "任务信息",
+    "taskType": "任务类型",
+    "deadline": "截止时间",
+    "meetingTime": "会议时间",
+    "meetingLink": "会议链接",
+    "remarks": "备注信息",
+    "meetingMinutes": "会议纪要",
+    "milestoneAmount": "拨款金额",
+    "milestoneDescription": "里程碑描述",
+    "verificationResult": "核查结果",
+    "verificationNotes": "核查备注",
+    "rectificationStatus": "整改状态",
+    "rectificationNotes": "整改备注",
+    "recoveryAmount": "回收金额",
+    "recoveryReason": "回收原因",
+    "projectSummary": "项目总结",
+    "finalReport": "结项报告",
+    "voteType": "投票类型",
+    "voteDuration": "投票持续时间",
+    "customVoteTime": "自定义投票时间",
+    "voteStartTime": "投票开始时间",
+    "voteEndTime": "投票结束时间",
+    "timePreview": {
+      "startTime": "投票开始时间",
+      "endTime": "投票结束时间"
+    },
+    "voteTypes": {
+      "communityReview": "社区审议投票",
+      "formal": "正式投票",
+      "milestone": "里程碑投票"
+    },
+    "durations": {
+      "1day": "1天",
+      "3days": "3天",
+      "7days": "7天",
+      "14days": "14天"
+    },
+    "verificationResults": {
+      "pass": "通过",
+      "fail": "不通过",
+      "needRectification": "需要整改"
+    },
+    "rectificationStatuses": {
+      "completed": "已完成",
+      "inProgress": "进行中",
+      "notStarted": "未开始"
+    },
+    "buttons": {
+      "complete": "完成任务",
+      "cancel": "取消",
+      "process": "处理",
+      "createVote": "创建投票"
+    },
+    "placeholders": {
+      "selectDate": "请选择日期",
+      "selectVoteStartTime": "请选择投票开始时间",
+      "selectVoteEndTime": "请选择投票结束时间",
+      "enterMeetingLink": "请输入会议链接",
+      "enterRemarks": "请输入备注信息",
+      "enterMeetingMinutes": "请输入会议纪要",
+      "enterAmount": "请输入金额",
+      "enterDescription": "请输入描述",
+      "enterNotes": "请输入备注",
+      "enterReason": "请输入原因",
+      "enterSummary": "请输入总结",
+      "enterReport": "请输入报告",
+      "enterFinalReport": "请输入结项报告内容",
+      "selectMeetingTime": "请选择会议时间",
+      "enterAllocationAmount": "请输入分配金额",
+      "enterAllocationDescription": "请输入分配描述",
+      "selectVerificationResult": "请选择验证结果",
+      "enterVerificationNotes": "请输入验证备注",
+      "selectRectificationStatus": "请选择整改状态",
+      "enterRectificationNotes": "请输入整改备注",
+      "enterRecoveryAmount": "请输入回收金额",
+      "enterRecoveryReason": "请输入回收原因",
+      "enterProjectSummary": "请输入项目总结"
+    },
+    "errors": {
+      "insufficientPermissions": "权限不足：您不是管理员，无法创建投票",
+      "systemError": "系统错误：管理员权限配置异常，请联系技术支持",
+      "userNotLoggedIn": "用户未登录或登录已过期，请重新登录",
+      "signatureFailed": "签名生成失败，请检查网络连接后重试",
+      "createVoteFailed": "创建投票元数据失败"
+    },
+    "required": "必填"
+  },
+  "management": {
+    "title": "管理中心",
+    "proposalManagement": "提案管理",
+    "filterByStatus": "按状态筛选",
+    "allStatuses": "全部状态",
+    "draft": "草稿",
+    "review": "社区审议",
+    "vote": "投票中",
+    "milestone": "里程碑",
+    "approved": "已通过",
+    "rejected": "已拒绝",
+    "ended": "已结束",
+    "proposalTitle": "提案标题",
+    "applicant": "申请人",
+    "budget": "申请预算",
+    "status": "状态",
+    "deadline": "截止时间",
+    "actions": "操作",
+    "noData": "暂无数据"
+  },
+  "header": {
+    "governanceHome": "治理主页",
+    "treasury": "金库",
+    "propertyInfo": "物业信息",
+    "userCenter": "用户中心",
+    "governanceRules": "治理规则",
+    "createProposal": "发起提案",
+    "login": "登录"
+  },
+  "taskTypes": {
+    "organizeMeeting": "组织会议",
+    "organizeAMA": "组织AMA",
+    "publishMinutes": "发布会议纪要",
+    "milestoneAllocation": "里程碑拨款",
+    "milestoneVerification": "里程碑核查",
+    "projectRectification": "项目整改核查",
+    "recoverFunds": "回收项目资金",
+    "publishReport": "发布结项报告",
+    "createVote": "创建投票"
+  },
+  "proposalStatus": {
+    "draft": "草稿",
+    "communityReview": "社区审议中",
+    "voting": "投票中",
+    "milestoneDelivery": "里程碑交付中",
+    "approved": "已通过",
+    "rejected": "已拒绝",
+    "ended": "结束",
+    "unknown": "未知状态"
+  },
+  "proposalInfo": {
+    "proposalName": "提案名称",
+    "proposalId": "提案ID",
+    "proposalType": "提案类型",
+    "proposalPhase": "提案阶段",
+    "budget": "申请预算",
+    "proposalUri": "提案URI",
+    "unknownProposal": "未知提案",
+    "unknownId": "未知ID",
+    "unknownType": "未知类型",
+    "unknownStatus": "未知状态",
+    "unknownBudget": "未知预算",
+    "unknownUri": "未知URI",
+    "pending": "待定"
+  },
+  "formLabels": {
+    "meetingTime": "会议时间",
+    "meetingLink": "会议链接",
+    "meetingMinutes": "会议纪要",
+    "allocationAmount": "拨款金额",
+    "allocationDescription": "拨款说明",
+    "verificationResult": "核查结果",
+    "verificationNotes": "核查意见",
+    "rectificationStatus": "整改状态",
+    "rectificationNotes": "整改说明",
+    "recoveryAmount": "回收金额",
+    "recoveryReason": "回收原因",
+    "projectSummary": "项目总结",
+    "finalReport": "结项报告"
+  },
+  "editor": {
+    "loading": "编辑器加载中..."
+  },
+  "alerts": {
+    "selectVoteTime": "请选择投票开始和结束时间",
+    "createVoteFailed": "创建投票失败"
+  },
+  "managementPage": {
+    "title": "物业团队公示",
+    "description": "第一届 CKB Community Fund DAO Web5 Track 物业团队，由 CKB Eco Fund 负责组建，任期一年。",
+    "futureDescription": "物业团队运行一年后，将开启完全社区化的选举，每届物业团队任期为半年。",
+    "daoManager": "DAO 物业经理",
+    "positionMission": "定位与使命",
+    "positionMissionDesc": "DAO 物业是一个由社区信任、受 DAO 资助、并向全体投票人负责的程序型服务与促进团队。作为中立的服务提供者和流程促进者，为社区治理提供高质量的运营、监督和技术支持。",
+    "coreResponsibilities": "核心职责",
+    "coreResponsibilitiesDesc": "按照 DAO 物业的定位与使命，其核心职责围绕其程序性权力展开。",
+    "proposalLifecycle": "提案生命周期管理:",
+    "proposalGuidance": "提案辅导与标准化： 提供清晰的提案模板，协助申请人完善提案。",
+    "communityInquiry": "组织社区质询： 在提案进入投票前，负责组织社区 AMA 或公开辩论。",
+    "supervisionReporting": "监督与报告:",
+    "milestoneVerification": "里程碑核查： 对已通过拨款的提案，负责核查其里程碑交付物。",
+    "verificationReport": "发布核查报告： 在每个里程碑节点，向社区公开发布核查报告。",
+    "transparencyCommunication": "透明化与沟通:",
+    "treasuryTransparency": "金库资产透明化： 负责运营和维护基于 UTXO Global 多签钱包的资产看板。",
+    "informationReach": "信息触达： 确保所有重要的治理信息有效触达社区成员。",
+    "powerBoundaries": "权力边界",
+    "powerBoundariesDesc": "物业成员不拥有提案的审核通过权，也不拥有任何投票决策权。其所有行动目标，是保障治理过程的公平、透明和高效，并将最完整、最中立的信息呈现给社区决策者。",
+    "noDecisionRights": "无决策权： DAO 物业团队不拥有提案的审核通过权，也不拥有任何投票决策权。他们是社区决策、治理的\"服务员\"，而非\"审批官\"。",
+    "noInterpretationRights": "无释法权： DAO 物业团队无权解释或仲裁规则争议，只能严格按照社区已通过的成文规则执行程序。",
+    "fundResponsibilities": "资金权责： 物业团队无自主财政权。其与资金相关的职责仅限于：",
+    "budgetAllocation": "在社区投票批准一个项目后，按流程通知主金库多签人，将项目总预算划拨至对应的项目执行钱包。",
+    "milestonePayment": "作为项目执行钱包的多签人，在每个里程碑经社区投票确认通过后，与其他多签人一起，履行签名支付的程序性义务。",
+    "votingRights": "投票权利： 作为社区一员，物业成员保留依据其所持有的投票权重，对所有提案行使个人投票的权利。"
+  },
+  "managementCenter": {
+    "newProposals": "新提案",
+    "all": "全部",
+    "organizeAMA": "组织AMA",
+    "milestoneReview": "里程碑审核",
+    "pendingAllocation": "待拨款",
+    "pendingCompletion": "待结项",
+    "searchProposals": "搜索提案",
+    "loading": "加载中...",
+    "loadFailed": "加载失败",
+    "retry": "重试",
+    "type": "类型",
+    "taskType": "任务类型",
+    "budget": "预算",
+    "deadline": "截止时间",
+    "actions": "操作",
+    "process": "处理",
+    "createVote": "创建投票"
+  },
+  "wallet": {
+    "gettingAddress": "获取地址中...",
+    "notConnected": "未连接钱包",
+    "gettingBalance": "获取余额中...",
+    "bindSuccessMessage": "绑定成功,链上数据确认可能需要几分钟时间,请稍后刷新页面!",
+    "stakeCKB": "质押CKB",
+    "bindNeuronWallet": "绑定 Neuron 钱包地址",
+    "bindNewWallet": "绑定新钱包地址",
+    "signatureInfo": "签名信息",
+    "bindSuccessTitle": "绑定成功",
+    "invalidHexSignature": "无效的十六进制签名",
+    "signatureConversionFailed": "签名转换失败",
+    "signerNotConnected": "签名器未连接",
+    "bindInfoNotGenerated": "绑定信息未生成",
+    "title": "钱包及 Nervos DAO",
+    "myVotingPower": "我的投票权",
+    "votingPowerExplanation": "投票权的解释",
+    "loading": "获取中...",
+    "currentConnectedWallet": "当前连接钱包",
+    "walletBalance": "钱包余额"
+  },
+  "voteWeight": {
+    "noCKBAddress": "未找到CKB地址，请先连接钱包",
+    "getVoteWeightFailed": "获取投票权重失败",
+    "responseDataError": "获取投票权重失败：响应数据格式错误",
+    "emptyCKBAddress": "CKB地址不能为空",
+    "formatError": "获取投票权重失败：响应数据格式错误",
+    "votes": "票"
+  },
+  "voteMeta": {
+    "createVoteMetaFailed": "生成signed_bytes失败",
+    "userSignKeyNotExists": "用户签名密钥不存在",
+    "signatureGenerationFailed": "生成签名失败",
+    "createVoteMetaError": "创建投票元数据失败",
+    "communityReviewVote": "社区审议投票",
+    "threeDaysLater": "3天后结束投票"
+  },
+  "verificationResults": {
+    "pass": "通过",
+    "fail": "不通过",
+    "needRectification": "需要整改"
+  },
+  "rectificationStatuses": {
+    "completed": "已完成",
+    "inProgress": "进行中",
+    "notStarted": "未开始"
+  },
+  "placeholders": {
+    "enterFinalReport": "请输入结项报告内容"
+  },
+  "validation": {
+    "onlyLettersNumbersHyphens": "仅支持输入字母、数字和连字符（-）",
+    "noUnderscore": "不支持下划线（_）",
+    "noHyphenStartEnd": "不能以连字符（-）开头或结尾",
+    "lengthRequirement": "长度需为4~18个字符",
+    "accountNameUnavailable": "账号名称不可用"
+  },
+  "copy": {
+    "success": "已复制到剪贴板",
+    "addressSuccess": "地址已复制到剪贴板",
+    "textSuccess": "文本已复制到剪贴板",
+    "failed": "复制失败，请重试"
+  },
+  "web5": {
+    "title": "Web5 身份",
+    "did": "去中心化身份(DID)",
+    "pds": "个人数据存储(PDS)",
+    "privacyControl": "隐私控制",
+    "dataEncryption": "数据加密:",
+    "anonymousBrowsing": "匿名浏览:",
+    "dataBackup": "数据备份:",
+    "enabled": "启用",
+    "automatic": "自动",
+    "openLink": "打开链接",
+    "getPDSFailed": "获取 PDS 地址失败:"
+  },
+  "userProfile": {
+    "connectWithNervosTalk": "连接 Nervos Talk",
+    "connectWithX": "连接 X",
+    "connectWithDiscord": "连接 Discord",
+    "connectWithTelegram": "连接 Telegram",
+    "joinedOn": "加入于{date}",
+    "unbindAccount": "解绑账号",
+    "connect": "连接",
+    "connectLog": "连接 {connectionId}",
+    "unbindLog": "解绑 {connectionId}"
+  },
+  "footer": {
+    "companyName": "CKB Community Fund DAO",
+    "twitter": "Twitter",
+    "telegram": "Telegram",
+    "discord": "Discord",
+    "medium": "Medium",
+    "support": "支持",
+    "privacyPolicy": "隐私政策",
+    "termsAndConditions": "条款和条件",
+    "mediaKit": "媒体包",
+    "link": "链接",
+    "docs": "文档",
+    "nervos": "Nervos",
+    "download": "下载"
+  },
+  "proposalItem": {
+    "budgetApplication": "申请预算",
+    "approve": "赞成",
+    "oppose": "反对",
+    "progress": "进度",
+    "milestone": "里程碑"
+  },
+  "loginStep1": {
+    "createWeb5Account": "创建您的个人Web5 DID账号,获得:",
+    "benefit1": "存储于CKB链的数据档案库",
+    "benefit2": "发布提案和参与回帖讨论的权限",
+    "benefit3": "专属域名(如alice.ckb.xyz)",
+    "walletConnected": "钱包已连接",
+    "clickToCopyAddress": "点击复制完整地址",
+    "wallet": "钱包",
+    "disconnect": "断开连接",
+    "whatIsWeb5": "什么是Web5?",
+    "web5Explanation": "web5的含义"
+  },
+  "loginStep2": {
+    "setAccountName": "设置您的Web5 DID账号名称:",
+    "namePlaceholder": "支持由数字、字母或特殊字符'-'组成的名称",
+    "validating": "正在验证...",
+    "nameAvailable": "✓ 账号名称可用",
+    "pleaseEnterName": "请输入账号名称"
+  },
+  "loginModal": {
+    "createAccount": "创建账号",
+    "connectWalletFailed": "连接钱包失败:",
+    "disconnectWalletFailed": "断开钱包连接失败:",
+    "balanceCheckPassed": "余额检查通过，开始创建账户...",
+    "insufficientBalance": "CKB余额不足:",
+    "balanceCheckError": "检查CKB余额时发生错误:",
+    "signerNotFound": "未找到签名器信息",
+    "recheckBalancePassed": "重新检查余额通过，开始创建账户...",
+    "stillInsufficientBalance": "CKB余额仍然不足:",
+    "recheckBalanceError": "重新检查CKB余额时发生错误:"
+  },
+  "homepage": {
+    "proposalList": "提案列表",
+    "all": "全部",
+    "communityReview": "社区审议中",
+    "voting": "投票中",
+    "milestoneDelivery": "里程碑交付中",
+    "approved": "已通过",
+    "rejected": "已拒绝",
+    "ended": "结束",
+    "loadFailed": "加载失败:",
+    "loading": "加载中...",
+    "noProposals": "暂无提案",
+    "loadMore": "加载更多"
+  },
+  "userGovernance": {
+    "title": "我的治理",
+    "notLoggedIn": "未登录",
+    "walletAddressDid": "钱包地址/DID",
+    "myVotingRights": "我的投票权",
+    "votingRightsExplanation": "投票权的解释",
+    "stakeCKB": "质押CKB",
+    "pending": "待处理",
+    "ckbUtxoGameEngine": "CKB-UTXO 全链游戏引擎"
+  },
+  "treasuryOverview": {
+    "title": "金库概览",
+    "mainTreasuryBalance": "主金库余额",
+    "viewTreasuryDetails": "查看金库详细"
+  },
+  "projectWalletsTable": {
+    "title": "项目执行钱包",
+    "titleTooltip": "项目有执行钱包的解释",
+    "searchPlaceholder": "搜索钱包或项目",
+    "project": "项目",
+    "currentBalance": "当前余额（CKB）",
+    "multisigSigners": "2/3 多签人",
+    "walletAddress": "钱包地址",
+    "sampleProjectName": "Web5 DID 身份协议栈开发"
+  },
+  "treasuryPage": {
+    "treasuryInfo": "金库信息",
+    "mainTreasuryAddress": "主金库地址",
+    "multisigSigners": "多签人",
+    "treasuryAssets": "金库资产",
+    "totalAssets": "总资产（CKB）",
+    "allocatedFunds": "已分配资金（CKB）",
+    "availableFunds": "可用资金（CKB）",
+    "totalAssetsStatistics": "总资产统计"
+  },
+  "proposalDetail": {
+    "loading": "加载中...",
+    "proposalNotFound": "提案不存在",
+    "governanceHome": "治理主页",
+    "proposalDetails": "提案详情",
+    "communityDiscussion": "社区讨论",
+    "projectBackground": "项目背景",
+    "projectGoals": "项目目标",
+    "teamIntroduction": "团队介绍",
+    "projectBudget": "项目预算",
+    "milestones": "里程碑",
+    "budgetAmount": "预算金额 (CKB):",
+    "notFilled": "未填写",
+    "currentMilestone": "当前里程碑:",
+    "progress": "进度:",
+    "noMilestoneInfo": "暂无里程碑信息",
+    "liking": "点赞中...",
+    "share": "分享",
+    "proposalTypes": {
+      "funding": "资金申请",
+      "governance": "治理提案",
+      "technical": "技术提案",
+      "community": "社区提案",
+      "development": "开发项目",
+      "ecosystem": "生态建设",
+      "research": "研究项目",
+      "infrastructure": "基础设施",
+      "unknown": "未知类型"
+    },
+    "stepDescriptions": {
+      "projectBackground": "项目背景介绍",
+      "projectGoals": "项目目标规划",
+      "teamIntroduction": "团队信息介绍",
+      "projectBudget": "预算规划设置",
+      "milestones": "项目里程碑规划"
+    }
+  },
+  "comment": {
+    "loading": "加载中...",
+    "loadFailed": "加载评论失败:",
+    "commentsCount": "条评论",
+    "noComments": "暂无评论，快来发表第一条评论吧！",
+    "placeholder": "请填写评论",
+    "publish": "发布",
+    "reply": "回复",
+    "liking": "点赞中",
+    "share": "分享",
+    "quote": "引用",
+    "quoteTitle": "引用此段文字",
+    "editorLoading": "编辑器加载中...",
+    "timeAgo": {
+      "justNow": "刚刚",
+      "minutesAgo": "分钟前",
+      "hoursAgo": "小时前",
+      "daysAgo": "天前"
+    }
+  },
+  "proposalPhase": {
+    "milestoneTracking": {
+      "title": "里程碑追踪",
+      "status": {
+        "completed": "已完成",
+        "inProgress": "进行中",
+        "cancelled": "已取消",
+        "pending": "待开始"
+      }
+    },
+    "proposalVoting": {
+      "title": "提案投票",
+      "deadline": "截至:",
+      "totalVotes": "总票数:",
+      "approve": "赞成",
+      "reject": "反对",
+      "myVotingPower": "我的投票权:",
+      "conditions": {
+        "title": "通过条件",
+        "minTotalVotes": "最低投票总数",
+        "approveRate": "赞成票数占比"
+      },
+      "timeLeft": {
+        "days": "天",
+        "hours": "小时",
+        "minutes": "分钟",
+        "ended": "投票已结束"
+      }
+    },
+    "milestoneVoting": {
+      "confirmVoting": "确认投票",
+      "deadline": "截至:",
+      "totalVotes": "总票数:",
+      "approve": "赞成",
+      "reject": "反对",
+      "approveFunding": "赞成拨款",
+      "rejectFunding": "反对拨款",
+      "myVotingPower": "我的投票权:",
+      "requirements": {
+        "title": "通过条件",
+        "minTotalVotes": "最低投票总数",
+        "approveRate": "赞成票数占比"
+      },
+      "timeLeft": {
+        "days": "天",
+        "hours": "小时",
+        "minutes": "分钟",
+        "ended": "投票已结束"
+      }
+    },
+    "proposalTimeline": {
+      "title": "提案时间线"
+    }
+  },
+  "proposalSteps": {
+    "projectMilestones": {
+      "title": "项目里程碑:",
+      "milestoneTitle": "里程碑标题:",
+      "expectedDate": "预计完成日期:",
+      "description": "详细描述:",
+      "addMilestone": "添加新里程碑",
+      "removeMilestone": "删除里程碑",
+      "milestonePlaceholder": "例如：项目启动、第一阶段完成、产品发布等",
+      "datePlaceholder": "请选择预计完成日期",
+      "descriptionPlaceholder": "请详细描述这个里程碑的具体内容、交付物和验收标准",
+      "emptyMessage": "还没有添加任何里程碑，点击+按钮开始添加。",
+      "editorLoading": "编辑器加载中..."
+    },
+    "proposalSettings": {
+      "proposalType": "提案类型 :",
+      "proposalTitle": "提案标题 :",
+      "releaseDate": "发布日期 :",
+      "selectType": "请选择提案类型",
+      "titlePlaceholder": "请输入提案标题",
+      "datePlaceholder": "请选择发布日期",
+      "types": {
+        "funding": "资金申请",
+        "governance": "治理提案",
+        "technical": "技术提案",
+        "community": "社区提案"
+      }
+    },
+    "teamIntroduction": {
+      "title": "团队介绍:",
+      "placeholder": "请介绍团队成员、技能背景和相关经验",
+      "editorLoading": "编辑器加载中..."
+    },
+    "projectGoals": {
+      "title": "项目目标:",
+      "placeholder": "请详细描述项目的目标、预期成果和成功指标",
+      "editorLoading": "编辑器加载中..."
+    },
+    "projectBackground": {
+      "title": "项目背景 *",
+      "placeholder": "请详细描述项目的背景、现状和需求",
+      "editorLoading": "编辑器加载中..."
+    },
+    "projectBudget": {
+      "title": "项目预算 (CKB):",
+      "placeholder": "请输入项目预算金额"
+    }
+  },
+  "modal": {
+    "signatureModal": {
+      "title": "签名信息",
+      "bind": "绑定",
+      "close": "关闭",
+      "copy": "复制",
+      "signaturePlaceholder": "请输入签名",
+      "messageInstruction": "该消息将使用\"Nervos Message\"进行签名"
+    },
+    "confirmModal": {
+      "defaultTitle": "确认操作",
+      "defaultConfirm": "确认",
+      "defaultCancel": "取消"
+    },
+    "successModal": {
+      "defaultMessage": "操作成功!",
+      "close": "关闭"
+    }
+  },
+  "chart": {
+    "totalAssetsChart": {
+      "months": {
+        "january": "1月",
+        "february": "2月",
+        "march": "3月",
+        "april": "4月",
+        "may": "5月",
+        "june": "6月",
+        "july": "7月",
+        "august": "8月",
+        "september": "9月",
+        "october": "10月",
+        "november": "11月",
+        "december": "12月"
+      },
+      "tooltip": {
+        "unit": "B"
+      },
+      "yAxis": {
+        "unit": "B"
+      }
+    }
+  },
+  "discussionRecords": {
+    "proposalReference": "在提案",
+    "commentIn": "中评论:"
+  },
+  "recordsTable": {
+    "tabs": {
+      "proposals": "提案记录",
+      "voting": "投票纪录",
+      "discussion": "讨论记录"
+    },
+    "tableHeaders": {
+      "proposal": "提案",
+      "type": "类型",
+      "budget": "申请预算",
+      "status": "提案状态",
+      "publishDate": "发布日期",
+      "actions": "操作"
+    },
+    "proposalTypes": {
+      "budgetApplication": "项目预算申请"
+    },
+    "proposalStatuses": {
+      "underReview": "社区审议中",
+      "voting": "投票中",
+      "milestoneDelivery": "里程碑交付中",
+      "approved": "已通过",
+      "rejected": "已拒绝",
+      "ended": "结束",
+      "draft": "草稿",
+      "projectReview": "项目复核",
+      "terminated": "终止",
+      "completed": "结项"
+    },
+    "actions": {
+      "edit": "编辑",
+      "startVoting": "开启投票",
+      "milestoneDelivery": "里程碑交付",
+      "rectificationComplete": "整改完成"
+    },
+    "sampleData": {
+      "proposalName1": "提案名称1",
+      "proposalName2": "提案名称2",
+      "proposalName3": "提案名称3",
+      "proposalName4": "提案名称4",
+      "proposalName5": "提案名称5"
+    }
+  },
+  "votingRecords": {
+    "tableHeaders": {
+      "proposal": "提案",
+      "votingStage": "投票阶段",
+      "myChoice": "我的选择",
+      "voteQuantity": "投票数量",
+      "voteDate": "投票日期"
+    },
+    "votingStages": {
+      "milestoneDelivery": "里程碑交付-里程碑1",
+      "projectReview": "项目复核投票",
+      "finalDecision": "最终裁决投票"
+    },
+    "choices": {
+      "approve": "赞成",
+      "against": "反对",
+      "abstain": "弃权"
+    },
+    "sampleData": {
+      "proposalName1": "提案名称1",
+      "proposalName2": "提案名称2",
+      "proposalName3": "提案名称3"
+    }
+  },
+  "previewModal": {
+    "basicInfo": "基本信息",
+    "projectBackground": "项目背景",
+    "projectGoals": "项目目标",
+    "teamIntroduction": "团队介绍",
+    "projectBudget": "项目预算",
+    "projectMilestones": "项目里程碑",
+    "proposalType": "提案类型:",
+    "releaseDate": "发布日期:",
+    "budgetAmount": "预算金额 (CKB):",
+    "expectedCompletionDate": "预计完成日期:",
+    "detailedDescription": "详细描述:",
+    "milestone": "里程碑",
+    "notFilled": "未填写",
+    "notSet": "未设置",
+    "notNamed": "未命名",
+    "noMilestonesAdded": "未添加任何里程碑"
   }
 }

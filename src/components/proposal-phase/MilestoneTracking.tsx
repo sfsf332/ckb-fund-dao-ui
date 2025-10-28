@@ -3,6 +3,7 @@
 import { MilestoneTrackingProps, MilestoneStatus } from '../../types/milestone';
 import MilestoneVoting from './MilestoneVoting';
 import { MilestoneVoteOption } from '../../types/milestoneVoting';
+import { useI18n } from '@/contexts/I18nContext';
 import './milestone.css';
 
 export default function MilestoneTracking({ 
@@ -11,6 +12,7 @@ export default function MilestoneTracking({
   totalMilestones, // eslint-disable-line @typescript-eslint/no-unused-vars
   className = '' 
 }: MilestoneTrackingProps) {
+  const { messages } = useI18n();
 
   // 处理里程碑投票
   const handleMilestoneVote = (milestoneId: string, option: MilestoneVoteOption) => {
@@ -36,13 +38,13 @@ export default function MilestoneTracking({
   const getMilestoneStatusText = (status: MilestoneStatus) => {
     switch (status) {
       case MilestoneStatus.COMPLETED:
-        return '已完成';
+        return messages.proposalPhase.milestoneTracking.status.completed;
       case MilestoneStatus.IN_PROGRESS:
-        return '进行中';
+        return messages.proposalPhase.milestoneTracking.status.inProgress;
       case MilestoneStatus.CANCELLED:
-        return '已取消';
+        return messages.proposalPhase.milestoneTracking.status.cancelled;
       default:
-        return '待开始';
+        return messages.proposalPhase.milestoneTracking.status.pending;
     }
   };
 
@@ -62,7 +64,7 @@ export default function MilestoneTracking({
 
   return (
     <div className={`milestone-tracking-card ${className}`}>
-      <h3 className="milestone-title">里程碑追踪</h3>
+      <h3 className="milestone-title">{messages.proposalPhase.milestoneTracking.title}</h3>
       <div className="milestone-list">
         {milestones.map((milestone) => (
           <div 

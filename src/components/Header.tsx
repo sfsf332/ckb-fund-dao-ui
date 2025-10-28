@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import LanguageSwitcher from "./LanguageSwitcher";
 import Link from "next/link";
 import { CiCirclePlus } from "react-icons/ci";
 import { usePathname } from "next/navigation";
 import { useI18n } from "@/contexts/I18nContext";
+import { useTranslation } from "@/utils/i18n";
 import { LoginModal } from "./user-login";
 import useUserInfoStore from "@/store/userInfo";
 import "./user-login/LoginModal.css";
@@ -15,8 +16,9 @@ import "./user-login/LoginModal.css";
 export default function Header() {
     const pathname = usePathname();
     const { locale } = useI18n();
+    const { t } = useTranslation();
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-    const { userInfo, logout } = useUserInfoStore();
+    const { userInfo } = useUserInfoStore();
     
     // 提取 handle 第一个 . 前面的部分
     const getUserDisplayName = () => {
@@ -50,25 +52,25 @@ export default function Header() {
       </div>
       <ul className="navs">
         <li>
-          <Link href={homeHref} className={isActive(homeHref) ? "active" : ""}>治理主页</Link>
+          <Link href={homeHref} className={isActive(homeHref) ? "active" : ""}>{t("header.governanceHome")}</Link>
         </li>
         <li>
-          <Link href={treasuryHref} className={isActive(treasuryHref) ? "active" : ""}>金库</Link>
+          <Link href={treasuryHref} className={isActive(treasuryHref) ? "active" : ""}>{t("header.treasury")}</Link>
         </li>
         <li>
-          <Link href={managementHref} className={isActive(managementHref) ? "active" : ""}>物业信息</Link>
+          <Link href={managementHref} className={isActive(managementHref) ? "active" : ""}>{t("header.propertyInfo")}</Link>
         </li>
         <li>
-          <Link href={userCenterHref} className={isActive(userCenterHref) ? "active" : ""}>用户中心</Link>
+          <Link href={userCenterHref} className={isActive(userCenterHref) ? "active" : ""}>{t("header.userCenter")}</Link>
         </li>
         <li>
-          <Link href={ruleHref}  className={isActive(ruleHref) ? "active" : ""}>治理规则</Link>
+          <Link href={ruleHref}  className={isActive(ruleHref) ? "active" : ""}>{t("header.governanceRules")}</Link>
         </li>
       </ul>
       <div className="header-actions">
         <LanguageSwitcher />
         <Link href={`${homeHref}/proposal/create`} className="button-secondary">
-          <CiCirclePlus /> 发起提案
+          <CiCirclePlus /> {t("header.createProposal")}
         </Link>
         {userInfo ? (
           <div 
@@ -84,7 +86,7 @@ export default function Header() {
            
           </div>
         ) : (
-          <button onClick={() => setIsLoginModalOpen(true)} className="button-normal">Login</button>
+          <button onClick={() => setIsLoginModalOpen(true)} className="button-normal">{t("header.login")}</button>
         )}
         {/* <button
           onClick={open}

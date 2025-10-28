@@ -1,5 +1,7 @@
 'use client';
 
+import { useI18n } from '@/contexts/I18nContext';
+
 interface DiscussionRecord {
   id: string;
   commentDate: string;
@@ -16,6 +18,8 @@ interface DiscussionRecordsTableProps {
 }
 
 export default function DiscussionRecordsTable({ className = '' }: DiscussionRecordsTableProps) {
+  const { messages } = useI18n();
+  
   // 模拟讨论记录数据，基于设计图中的内容
   const discussionRecords: DiscussionRecord[] = [
     {
@@ -65,7 +69,7 @@ export default function DiscussionRecordsTable({ className = '' }: DiscussionRec
             <div className="discussion-header">
               <span className="comment-date">{record.commentDate}</span>
               <span className="proposal-reference">
-                在提案 <span className="proposal-link">{record.proposalName}</span> 中评论:
+                {messages.discussionRecords.proposalReference} <span className="proposal-link">{record.proposalName}</span>{messages.discussionRecords.commentIn}
               </span>
             </div>
             <div className="discussion-content">

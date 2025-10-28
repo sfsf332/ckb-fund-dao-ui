@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from 'next/navigation';
 import { useTranslation } from "../../../../utils/i18n";
+import { useI18n } from "@/contexts/I18nContext";
 import { FaHeart, FaShare } from "react-icons/fa";
 import Image from "next/image";
 import { RingLoader } from "react-spinners";
@@ -82,19 +83,20 @@ const adaptCommentItem = (item: CommentItem, currentUserDid?: string): Comment =
   };
 };
 
-const steps = [
-  { id: 2, name: "项目背景", description: "项目背景介绍" },
-  { id: 3, name: "项目目标", description: "项目目标规划" },
-  { id: 4, name: "团队介绍", description: "团队信息介绍" },
-  { id: 5, name: "项目预算", description: "预算规划设置" },
-  { id: 6, name: "里程碑", description: "项目里程碑规划" },
-];
-
 export default function ProposalDetail() {
   useTranslation();
+  const { messages } = useI18n();
   const params = useParams();
   const uri = params?.uri as string;
   const { userInfo, userProfile } = useUserInfoStore();
+
+  const steps = [
+    { id: 2, name: messages.proposalDetail.projectBackground, description: messages.proposalDetail.stepDescriptions.projectBackground },
+    { id: 3, name: messages.proposalDetail.projectGoals, description: messages.proposalDetail.stepDescriptions.projectGoals },
+    { id: 4, name: messages.proposalDetail.teamIntroduction, description: messages.proposalDetail.stepDescriptions.teamIntroduction },
+    { id: 5, name: messages.proposalDetail.projectBudget, description: messages.proposalDetail.stepDescriptions.projectBudget },
+    { id: 6, name: messages.proposalDetail.milestones, description: messages.proposalDetail.stepDescriptions.milestones },
+  ];
 
   // 使用真实API接口获取提案详情
   const { proposal, loading, error } = useProposalDetail(uri);
@@ -515,16 +517,16 @@ export default function ProposalDetail() {
  
   const getProposalTypeText = (type: string) => {
     const types: { [key: string]: string } = {
-      funding: "资金申请",
-      governance: "治理提案",
-      technical: "技术提案",
-      community: "社区提案",
-      development: "开发项目",
-      ecosystem: "生态建设",
-      research: "研究项目",
-      infrastructure: "基础设施",
+      funding: messages.proposalDetail.proposalTypes.funding,
+      governance: messages.proposalDetail.proposalTypes.governance,
+      technical: messages.proposalDetail.proposalTypes.technical,
+      community: messages.proposalDetail.proposalTypes.community,
+      development: messages.proposalDetail.proposalTypes.development,
+      ecosystem: messages.proposalDetail.proposalTypes.ecosystem,
+      research: messages.proposalDetail.proposalTypes.research,
+      infrastructure: messages.proposalDetail.proposalTypes.infrastructure,
     };
-    return types[type] || "未知类型";
+    return types[type] || messages.proposalDetail.proposalTypes.unknown;
   };
 
 
@@ -535,7 +537,7 @@ export default function ProposalDetail() {
           <div className="main-content">
             <div className="step-container">
               <div className="loading-state">
-                <div className="loading-text">加载中...</div>
+                <div className="loading-text">{messages.proposalDetail.loading}</div>
               </div>
             </div>
           </div>
@@ -567,7 +569,7 @@ export default function ProposalDetail() {
           <div className="main-content">
             <div className="step-container">
               <div className="flex justify-center items-center h-64">
-                <div className="text-white">提案不存在</div>
+                <div className="text-white">{messages.proposalDetail.proposalNotFound}</div>
               </div>
             </div>
           </div>
@@ -582,7 +584,7 @@ export default function ProposalDetail() {
         <div className="proposal-detail-layout">
           {/* 面包屑导航 */}
           <div className="breadcrumb">
-            <span>治理主页</span>
+            <span>{messages.proposalDetail.governanceHome}</span>
             <span className="breadcrumb-separator">&gt;</span>
             <span>{proposal.record.data.title}</span>
           </div>
@@ -653,14 +655,14 @@ export default function ProposalDetail() {
                         className="action-btn secondary-btn"
                       >
                         <IoDocumentTextOutline />
-                        提案详情
+                        {messages.proposalDetail.proposalDetails}
                       </a>
                       <a 
                         href="#comment-section"
                         className="action-btn secondary-btn"
                       >
                         <AiOutlineComment />
-                        社区讨论 ({comments.length})
+                        {messages.proposalDetail.communityDiscussion} ({comments.length})
                       </a>
                     </div>
                   </div>
@@ -683,7 +685,7 @@ export default function ProposalDetail() {
                                 <div
                                   className="proposal-html-content"
                                   dangerouslySetInnerHTML={{
-                                    __html: proposal.record.data.background || "未填写",
+                                    __html: proposal.record.data.background || messages.proposalDetail.notFilled,
                                   }}
                                 />
                               </div>
@@ -695,7 +697,7 @@ export default function ProposalDetail() {
                                 <div
                                   className="proposal-html-content"
                                   dangerouslySetInnerHTML={{
-                                    __html: proposal.record.data.goals || "未填写",
+                                    __html: proposal.record.data.goals || messages.proposalDetail.notFilled,
                                   }}
                                 />
                               </div>
@@ -707,7 +709,7 @@ export default function ProposalDetail() {
                                 <div
                                   className="proposal-html-content"
                                   dangerouslySetInnerHTML={{
-                                    __html: proposal.record.data.team || "未填写",
+                                    __html: proposal.record.data.team || messages.proposalDetail.notFilled,
                                   }}
                                 />
                               </div>
@@ -718,14 +720,14 @@ export default function ProposalDetail() {
                               <div className="form-fields">
                                 <div className="proposal-field">
                                   <label className="form-label">
-                                    预算金额 (CKB):
+                                    {messages.proposalDetail.budgetAmount}
                                   </label>
                                   <span className="proposal-value">
                                     {proposal.record.data.budget
                                       ? `${Number(
                                         proposal.record.data.budget
                                         ).toLocaleString()}.000 CKB`
-                                      : "未填写"}
+                                      : messages.proposalDetail.notFilled}
                                   </span>
                                 </div>
                               </div>
@@ -737,11 +739,11 @@ export default function ProposalDetail() {
                                 <div className="proposal-milestones">
                                   {proposal.record.data.milestones ? (
                                     <div className="milestone-summary">
-                                      <p>当前里程碑: {proposal.state-1000} / {proposal.record.data.milestones.length}</p>
-                                      <p>进度: {(proposal.state-1000)/proposal.record.data.milestones.length*100}%</p>
+                                      <p>{messages.proposalDetail.currentMilestone} {proposal.state-1000} / {proposal.record.data.milestones.length}</p>
+                                      <p>{messages.proposalDetail.progress} {(proposal.state-1000)/proposal.record.data.milestones.length*100}%</p>
                                     </div>
                                   ) : (
-                                    <p>暂无里程碑信息</p>
+                                    <p>{messages.proposalDetail.noMilestoneInfo}</p>
                                   )}
                                 </div>
                               </div>
@@ -768,7 +770,7 @@ export default function ProposalDetail() {
                       {isLiking ? (
                         <>
                           <RingLoader size={16} color={isLiked ? '#ff4d6d' : '#ffffff'} />
-                          <span style={{ marginLeft: '4px' }}>点赞中...</span>
+                          <span style={{ marginLeft: '4px' }}>{messages.proposalDetail.liking}</span>
                         </>
                       ) : (
                         <>
@@ -777,7 +779,7 @@ export default function ProposalDetail() {
                       )}
                     </a>
                     <a className="button-actions">
-                      <FaShare /> 分享
+                      <FaShare /> {messages.proposalDetail.share}
                     </a>
                 </div>
                 <div id="comment-section">

@@ -4,12 +4,14 @@ import React from "react";
 import Image from "next/image";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { ccc } from "@ckb-ccc/connector-react";
+import { useTranslation } from "@/utils/i18n";
 
 interface LoginStep1Props {
   onDisconnect?: () => void;
 }
 
 export default function LoginStep1({ onDisconnect }: LoginStep1Props) {
+  const { t } = useTranslation();
   const { wallet, signerInfo } = ccc.useCcc();
   const isConnected = !!wallet && !!signerInfo;
   
@@ -45,31 +47,30 @@ export default function LoginStep1({ onDisconnect }: LoginStep1Props) {
       <div className="login-content">
         <div className="login-info-section">
           <h3 className="login-info-title">
-            创建您的个人<span className="web5-highlight">Web5</span>{" "}
-            DID账号,获得:
+            {t("loginStep1.createWeb5Account")}
           </h3>
           <ul className="login-benefits">
-            <li>存储于CKB链的数据档案库</li>
-            <li>发布提案和参与回帖讨论的权限</li>
-            <li>专属域名(如alice.ckb.xyz)</li>
+            <li>{t("loginStep1.benefit1")}</li>
+            <li>{t("loginStep1.benefit2")}</li>
+            <li>{t("loginStep1.benefit3")}</li>
           </ul>
           {isConnected && (
             <div className="wallet-status">
-              <p className="wallet-connected">✅ 钱包已连接</p>
+              <p className="wallet-connected">✅ {t("loginStep1.walletConnected")}</p>
               <p 
                 className="wallet-address" 
                 onClick={copyAddress} 
                 style={{ cursor: 'pointer' }} 
-                title="点击复制完整地址"
+                title={t("loginStep1.clickToCopyAddress")}
               >
-                钱包: {formatAddress(walletAddress)}
+                {t("loginStep1.wallet")}: {formatAddress(walletAddress)}
               </p>
               <div className="wallet-controls">
                 <button 
                   className="wallet-control-btn disconnect-btn"
                   onClick={onDisconnect}
                 >
-                  断开连接
+                  {t("loginStep1.disconnect")}
                 </button>
               
               </div>
@@ -82,10 +83,10 @@ export default function LoginStep1({ onDisconnect }: LoginStep1Props) {
       </div>
       <div>
         <a href="#" className="login-info-link">
-          什么是Web5?
+          {t("loginStep1.whatIsWeb5")}
           <IoMdInformationCircleOutline
             data-tooltip-id="my-tooltip"
-            data-tooltip-content="web5的含义"
+            data-tooltip-content={t("loginStep1.web5Explanation")}
           />
         </a>
       </div>

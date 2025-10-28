@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import getPDSClient from "@/lib/pdsClient";
 import { USER_DOMAIN } from "@/constant/Network";
 import { Secp256k1Keypair } from "@atproto/crypto";
+import { useTranslation } from "@/utils/i18n";
 
 interface ValidationResult {
   valid: boolean;
@@ -11,6 +12,7 @@ interface ValidationResult {
 }
 
 export function useAccountNameValidation() {
+  const { t } = useTranslation();
   const [isValidating, setIsValidating] = useState(false);
   const [validationResult, setValidationResult] = useState<boolean | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -19,19 +21,19 @@ export function useAccountNameValidation() {
   const validateAccountName = useCallback(async (name: string): Promise<ValidationResult> => {
     // 只允许字母、数字、连字符
     if (!/^[a-zA-Z0-9-]+$/.test(name)) {
-      return { valid: false, error: "仅支持输入字母、数字和连字符（-）" };
+      return { valid: false, error: t("validation.onlyLettersNumbersHyphens") };
     }
     // 不允许下划线
     if (name.includes("_")) {
-      return { valid: false, error: "不支持下划线（_）" };
+      return { valid: false, error: t("validation.noUnderscore") };
     }
     // 不能以连字符开头或结尾
     if (name.startsWith("-") || name.endsWith("-")) {
-      return { valid: false, error: "不能以连字符（-）开头或结尾" };
+      return { valid: false, error: t("validation.noHyphenStartEnd") };
     }
     // 长度校验
     if (name.length < 4 || name.length > 18) {
-      return { valid: false, error: "长度需为4~18个字符" };
+      return { valid: false, error: t("validation.lengthRequirement") };
     }
     
     try {
@@ -47,9 +49,9 @@ export function useAccountNameValidation() {
       return { valid: true, error: null };
     } catch (error) {
       console.error('Validation error:', error);
-      return { valid: false, error: "账号名称不可用" };
+      return { valid: false, error: t("validation.accountNameUnavailable") };
     }
-  }, []);
+  }, [t]);
 
   const debouncedValidateAccountName = useCallback((name: string) => {
     // Clear existing timer

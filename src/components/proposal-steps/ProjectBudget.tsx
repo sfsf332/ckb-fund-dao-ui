@@ -1,4 +1,5 @@
 import React from 'react';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface ProjectBudgetProps {
   formData: {
@@ -8,11 +9,13 @@ interface ProjectBudgetProps {
 }
 
 const ProjectBudget: React.FC<ProjectBudgetProps> = ({ formData, onInputChange }) => {
+  const { messages } = useI18n();
+  
   return (
     <div className="form-fields">
       <div>
         <label htmlFor="budget" className="form-label">
-          项目预算 (CKB):
+          {messages.proposalSteps.projectBudget.title}
         </label>
         <input
           type="number"
@@ -21,7 +24,7 @@ const ProjectBudget: React.FC<ProjectBudgetProps> = ({ formData, onInputChange }
           value={formData.budget}
           onChange={onInputChange}
           className="form-input"
-          placeholder="请输入项目预算金额"
+          placeholder={messages.proposalSteps.projectBudget.placeholder}
           min="0"
           step="0.01"
         />

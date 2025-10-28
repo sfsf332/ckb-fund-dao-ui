@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactQuill from 'react-quill-new';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface TeamIntroductionProps {
   formData: {
@@ -19,11 +20,13 @@ const TeamIntroduction: React.FC<TeamIntroductionProps> = ({
   quillModules, 
   quillFormats 
 }) => {
+  const { messages } = useI18n();
+  
   return (
     <div className="form-fields">
       <div>
         <label htmlFor="team" className="form-label">
-          团队介绍:
+          {messages.proposalSteps.teamIntroduction.title}
         </label>
         <div className="editor-container">
           {isClient ? (
@@ -34,7 +37,7 @@ const TeamIntroduction: React.FC<TeamIntroductionProps> = ({
                 onChange={onInputChange}
                 modules={quillModules}
                 formats={quillFormats}
-                placeholder="请介绍团队成员、技能背景和相关经验"
+                placeholder={messages.proposalSteps.teamIntroduction.placeholder}
                 style={{
                   height: "300px",
                   marginBottom: "10px",
@@ -56,7 +59,7 @@ const TeamIntroduction: React.FC<TeamIntroductionProps> = ({
                 justifyContent: "center",
               }}
             >
-              编辑器加载中...
+              {messages.proposalSteps.teamIntroduction.editorLoading}
             </div>
           )}
         </div>

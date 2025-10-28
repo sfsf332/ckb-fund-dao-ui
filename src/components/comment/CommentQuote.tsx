@@ -8,6 +8,7 @@ import "./comment.css";
 import "react-quill-new/dist/quill.snow.css";
 import { getAvatarByDid } from "@/utils/avatarUtils";
 import useUserInfoStore from "@/store/userInfo";
+import { useI18n } from "@/contexts/I18nContext";
 
 // 动态导入ReactQuill，禁用SSR
 const ReactQuill = dynamic(() => import("react-quill-new"), {
@@ -27,18 +28,19 @@ const ReactQuill = dynamic(() => import("react-quill-new"), {
         justifyContent: "center",
       }}
     >
-      编辑器加载中...
+      {/* 这里会在组件内部使用国际化文本 */}
     </div>
   ),
 });
 
 export default function CommentQuote({
   onSubmit,
-  placeholder = "请填写评论",
+  placeholder,
   parentId,
   isReply = false,
   quotedText = ""
 }: CommentQuoteProps) {
+  const { messages } = useI18n();
   const { userInfo } = useUserInfoStore();
   const [content, setContent] = useState(quotedText);
   const [isClient, setIsClient] = useState(false);
@@ -118,7 +120,7 @@ export default function CommentQuote({
                 onChange={setContent}
                 modules={quillModules}
                 formats={quillFormats}
-                placeholder={placeholder}
+                placeholder={placeholder || messages.comment.placeholder}
               />
             </div>
           ) : (
@@ -133,7 +135,7 @@ export default function CommentQuote({
                 justifyContent: "center",
               }}
             >
-              编辑器加载中...
+              {messages.comment.editorLoading}
             </div>
           )}
         </div>
@@ -143,7 +145,7 @@ export default function CommentQuote({
             className="comment-quote-submit"
             disabled={!content.trim()}
           >
-            发布
+            {messages.comment.publish}
           </button>
         </div>
       </div>

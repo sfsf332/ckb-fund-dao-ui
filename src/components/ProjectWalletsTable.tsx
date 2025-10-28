@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { AiOutlineExport } from "react-icons/ai";
 import CopyButton from "@/components/ui/copy/CopyButton";
 import { IoMdInformationCircleOutline } from "react-icons/io";
+import { useI18n } from "@/contexts/I18nContext";
 
 export type ProjectWallet = {
   id: string;
@@ -31,6 +32,7 @@ export default function ProjectWalletsTable({
   wallets,
   pageSize = 5,
 }: ProjectWalletsTableProps) {
+  const { messages } = useI18n();
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
 
@@ -39,7 +41,7 @@ export default function ProjectWalletsTable({
       wallets ?? [
         {
           id: "1",
-          projectName: "Web5 DID 身份协议栈开发",
+          projectName: messages.projectWalletsTable.sampleProjectName,
           balanceCkb: 0,
           signers: [
             "did:ckb:Hanssen.xyz",
@@ -50,7 +52,7 @@ export default function ProjectWalletsTable({
         },
         {
           id: "2",
-          projectName: "Web5 DID 身份协议栈开发",
+          projectName: messages.projectWalletsTable.sampleProjectName,
           balanceCkb: 4_000_000,
           signers: [
             "did:ckb:Hanssen.xyz",
@@ -61,7 +63,7 @@ export default function ProjectWalletsTable({
         },
         {
           id: "3",
-          projectName: "Web5 DID 身份协议栈开发",
+          projectName: messages.projectWalletsTable.sampleProjectName,
           balanceCkb: 4_000_000,
           signers: [
             "did:ckb:Hanssen.xyz",
@@ -72,7 +74,7 @@ export default function ProjectWalletsTable({
         },
         {
           id: "4",
-          projectName: "Web5 DID 身份协议栈开发",
+          projectName: messages.projectWalletsTable.sampleProjectName,
           balanceCkb: 4_000_000,
           signers: [
             "did:ckb:Hanssen.xyz",
@@ -83,7 +85,7 @@ export default function ProjectWalletsTable({
         },
         {
           id: "5",
-          projectName: "Web5 DID 身份协议栈开发",
+          projectName: messages.projectWalletsTable.sampleProjectName,
           balanceCkb: 4_000_000,
           signers: [
             "did:ckb:Hanssen.xyz",
@@ -94,7 +96,7 @@ export default function ProjectWalletsTable({
         },
         {
           id: "6",
-          projectName: "Web5 DID 身份协议栈开发",
+          projectName: messages.projectWalletsTable.sampleProjectName,
           balanceCkb: 4_000_000,
           signers: [
             "did:ckb:Hanssen.xyz",
@@ -104,7 +106,7 @@ export default function ProjectWalletsTable({
           address: "ckb1qzda0cr08m...jhxnjffgtqvnjpckb1234567890abcde6",
         },
       ],
-    [wallets]
+    [wallets, messages.projectWalletsTable.sampleProjectName]
   );
 
   const filtered = useMemo(() => {
@@ -127,11 +129,11 @@ export default function ProjectWalletsTable({
     <div className="wallets_table_container">
 
       <div className="wallets_table_toolbar">
-      <h4 className="wallets_table_h4">项目执行钱包 <IoMdInformationCircleOutline data-tooltip-id="my-tooltip" data-tooltip-content="项目有执行钱包的解释" /></h4>
+      <h4 className="wallets_table_h4">{messages.projectWalletsTable.title} <IoMdInformationCircleOutline data-tooltip-id="my-tooltip" data-tooltip-content={messages.projectWalletsTable.titleTooltip} /></h4>
 
         <input
           type="search"
-          placeholder="搜索钱包或项目"
+          placeholder={messages.projectWalletsTable.searchPlaceholder}
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -141,10 +143,10 @@ export default function ProjectWalletsTable({
       </div>
       <div className="wallets_table">
         <div className="wallets_table_head">
-          <div>项目</div>
-          <div>当前余额（CKB）</div>
-          <div>2/3 多签人</div>
-          <div>钱包地址</div>
+          <div>{messages.projectWalletsTable.project}</div>
+          <div>{messages.projectWalletsTable.currentBalance}</div>
+          <div>{messages.projectWalletsTable.multisigSigners}</div>
+          <div>{messages.projectWalletsTable.walletAddress}</div>
         </div>
         <div className="wallets_table_body">
           {visible.map((w) => (

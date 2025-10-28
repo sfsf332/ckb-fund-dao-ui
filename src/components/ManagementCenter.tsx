@@ -7,6 +7,7 @@ import Tag from "./ui/tag/Tag";
 import { useProposalList } from "@/hooks/useProposalList";
 import { ProposalListItem } from "@/server/proposal";
 import useUserInfoStore from "@/store/userInfo";
+import { useTranslation } from "@/utils/i18n";
 
 interface ProposalItem {
   id: string;
@@ -22,27 +23,27 @@ interface ProposalItem {
 }
 
 // 根据提案状态和类型确定任务类型
-const getTaskTypeByStatus = (status: ProposalStatus, proposalType: string): TaskType => {
+const getTaskTypeByStatus = (status: ProposalStatus, proposalType: string, t: (key: string) => string): TaskType => {
   switch (status) {
     case ProposalStatus.REVIEW:
       if (proposalType === "项目预算申请") {
-        return "组织AMA";
+        return t("taskTypes.organizeAMA") as TaskType;
       }
-      return "组织会议";
+      return t("taskTypes.organizeMeeting") as TaskType;
     case ProposalStatus.VOTE:
-      return "发布会议纪要";
+      return t("taskTypes.publishMinutes") as TaskType;
     case ProposalStatus.MILESTONE:
       // 根据里程碑状态确定具体任务
-      return "里程碑核查";
+      return t("taskTypes.milestoneVerification") as TaskType;
     case ProposalStatus.APPROVED:
-      return "里程碑拨款";
+      return t("taskTypes.milestoneAllocation") as TaskType;
     default:
-      return "组织会议";
+      return t("taskTypes.organizeMeeting") as TaskType;
   }
 };
 
 // 根据提案状态确定截止日期
-const getDeadlineByStatus = (status: ProposalStatus, createdAt: string): string => {
+const getDeadlineByStatus = (status: ProposalStatus, createdAt: string, t: (key: string) => string): string => {
   const createdDate = new Date(createdAt);
   
   switch (status) {
@@ -80,12 +81,12 @@ const getDeadlineByStatus = (status: ProposalStatus, createdAt: string): string 
         timeZone: 'Asia/Shanghai'
       }) + ' (UTC+8)';
     default:
-      return "待定";
+      return t("proposalInfo.pending");
   }
 };
 
 // 将API数据转换为ManagementCenter需要的格式
-const adaptProposalData = (proposal: ProposalListItem): ProposalItem => {
+const adaptProposalData = (proposal: ProposalListItem, t: (key: string) => string): ProposalItem => {
   const status = proposal.state as ProposalStatus;
   const proposalType = proposal.record.data.proposalType;
   
@@ -94,24 +95,25 @@ const adaptProposalData = (proposal: ProposalListItem): ProposalItem => {
     name: proposal.record.data.title,
     type: proposalType,
     status: status,
-    taskType: getTaskTypeByStatus(status, proposalType),
-    deadline: getDeadlineByStatus(status, proposal.record.created),
+    taskType: getTaskTypeByStatus(status, proposalType, t),
+    deadline: getDeadlineByStatus(status, proposal.record.created, t),
     isNew: false, // 可以根据创建时间判断是否为新提案
     uri: proposal.uri,
     budget: parseFloat(proposal.record.data.budget) || 0, // 添加预算字段
   };
 };
 
-const filterOptions = [
-  { key: "all", label: "全部", count: 0 },
-  { key: "ama", label: "组织AMA", count: 0 },
-  { key: "milestone", label: "里程碑审核", count: 0 },
-  { key: "allocation", label: "待拨款", count: 0 },
-  { key: "completion", label: "待结项", count: 0 },
+const getFilterOptions = (t: (key: string) => string) => [
+  { key: "all", label: t("managementCenter.all"), count: 0 },
+  { key: "ama", label: t("managementCenter.organizeAMA"), count: 0 },
+  { key: "milestone", label: t("managementCenter.milestoneReview"), count: 0 },
+  { key: "allocation", label: t("managementCenter.pendingAllocation"), count: 0 },
+  { key: "completion", label: t("managementCenter.pendingCompletion"), count: 0 },
 ];
 
 export default function ManagementCenter() {
   const { userInfo } = useUserInfoStore();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("pending");
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -127,24 +129,24 @@ export default function ManagementCenter() {
 
   // 转换数据格式
   const proposals = useMemo(() => {
-    return rawProposals.map(adaptProposalData);
-  }, [rawProposals]);
+    return rawProposals.map(proposal => adaptProposalData(proposal, t));
+  }, [rawProposals, t]);
 
   // 计算筛选选项的计数
   const filterCounts = useMemo(() => {
     const counts = {
       all: proposals.length,
-      ama: proposals.filter(p => p.taskType === "组织AMA").length,
-      milestone: proposals.filter(p => p.taskType === "里程碑核查").length,
-      allocation: proposals.filter(p => p.taskType === "里程碑拨款").length,
-      completion: proposals.filter(p => p.taskType === "发布结项报告").length,
+      ama: proposals.filter(p => p.taskType === t("taskTypes.organizeAMA")).length,
+      milestone: proposals.filter(p => p.taskType === t("taskTypes.milestoneVerification")).length,
+      allocation: proposals.filter(p => p.taskType === t("taskTypes.milestoneAllocation")).length,
+      completion: proposals.filter(p => p.taskType === t("taskTypes.publishReport")).length,
     };
     
-    return filterOptions.map(option => ({
+    return getFilterOptions(t).map(option => ({
       ...option,
       count: counts[option.key as keyof typeof counts] || 0
     }));
-  }, [proposals]);
+  }, [proposals, t]);
 
   // 根据筛选条件过滤提案
   const filteredProposals = useMemo(() => {
@@ -165,16 +167,16 @@ export default function ManagementCenter() {
     if (activeFilter !== "all") {
       switch (activeFilter) {
         case "ama":
-          filtered = filtered.filter(p => p.taskType === "组织AMA");
+          filtered = filtered.filter(p => p.taskType === t("taskTypes.organizeAMA"));
           break;
         case "milestone":
-          filtered = filtered.filter(p => p.taskType === "里程碑核查");
+          filtered = filtered.filter(p => p.taskType === t("taskTypes.milestoneVerification"));
           break;
         case "allocation":
-          filtered = filtered.filter(p => p.taskType === "里程碑拨款");
+          filtered = filtered.filter(p => p.taskType === t("taskTypes.milestoneAllocation"));
           break;
         case "completion":
-          filtered = filtered.filter(p => p.taskType === "发布结项报告");
+          filtered = filtered.filter(p => p.taskType === t("taskTypes.publishReport"));
           break;
       }
     }
@@ -190,7 +192,7 @@ export default function ManagementCenter() {
     }
 
     return filtered;
-  }, [proposals, activeTab, activeFilter, searchQuery]);
+  }, [proposals, activeTab, activeFilter, searchQuery, t]);
 
   // 标记新提案（创建时间在24小时内的）
   useEffect(() => {
@@ -210,7 +212,7 @@ export default function ManagementCenter() {
   };
 
   const handleCreateVote = (proposal: ProposalItem) => {
-    setSelectedProposal({ ...proposal, taskType: "创建投票" });
+    setSelectedProposal({ ...proposal, taskType: t("taskTypes.createVote") });
     setShowTaskModal(true);
   };
 
@@ -218,7 +220,7 @@ export default function ManagementCenter() {
     console.log("任务完成数据:", data);
     
     // 如果是投票创建任务，刷新提案列表
-    if (selectedProposal?.taskType === "创建投票") {
+    if (selectedProposal?.taskType === t("taskTypes.createVote")) {
       console.log("投票创建成功，刷新提案列表");
       refetch();
     }
@@ -240,13 +242,13 @@ export default function ManagementCenter() {
           className={`tab-button ${activeTab === "pending" ? "active" : ""}`}
           onClick={() => setActiveTab("pending")}
         >
-          待处理
+          {t("managementCenter.newProposals")}
         </button>
         <button
           className={`tab-button ${activeTab === "new" ? "active" : ""}`}
           onClick={() => setActiveTab("new")}
         >
-          新提案
+          {t("managementCenter.newProposals")}
           <span className="badge">{proposals.filter(p => p.isNew).length}</span>
         </button>
       </div>
@@ -271,7 +273,7 @@ export default function ManagementCenter() {
         <div className="search-section">
           <input
             type="search"
-            placeholder="搜索提案"
+            placeholder={t("managementCenter.searchProposals")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="management-search-input"
@@ -283,30 +285,30 @@ export default function ManagementCenter() {
       <div className="proposals-table">
         {loading ? (
           <div className="loading-state">
-            <p>加载中...</p>
+            <p>{t("managementCenter.loading")}</p>
           </div>
         ) : error ? (
           <div className="error-state">
-            <p>加载失败: {error}</p>
-            <button onClick={() => refetch()}>重试</button>
+            <p>{t("managementCenter.loadFailed")}: {error}</p>
+            <button onClick={() => refetch()}>{t("managementCenter.retry")}</button>
           </div>
         ) : (
           <table>
             <thead>
               <tr>
-                <th>提案名称</th>
-                <th>类型</th>
-                <th>提案状态</th>
-                <th>任务类型</th>
-                <th>截止日期</th>
-                <th>操作</th>
+                <th>{t("management.proposalTitle")}</th>
+                <th>{t("managementCenter.type")}</th>
+                <th>{t("management.status")}</th>
+                <th>{t("managementCenter.taskType")}</th>
+                <th>{t("management.deadline")}</th>
+                <th>{t("management.actions")}</th>
               </tr>
             </thead>
             <tbody>
               {filteredProposals.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="no-data">
-                    暂无数据
+                    {t("management.noData")}
                   </td>
                 </tr>
               ) : (
@@ -329,18 +331,18 @@ export default function ManagementCenter() {
                     <td>{proposal.deadline}</td>
                     <td>
                       <div className="action-buttons">
-                        <button 
+                        <button
                           className="task-action-button"
                           onClick={() => handleTaskProcess(proposal)}
                         >
-                          处理
+                          {t("taskModal.buttons.process")}
                         </button>
                         {proposal.status === ProposalStatus.REVIEW && (
                           <button 
                             className="vote-action-button"
                             onClick={() => handleCreateVote(proposal)}
                           >
-                            创建投票
+                            {t("taskModal.buttons.createVote")}
                           </button>
                         )}
                       </div>

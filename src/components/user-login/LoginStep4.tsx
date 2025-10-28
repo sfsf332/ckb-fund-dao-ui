@@ -5,19 +5,20 @@ import Image from "next/image";
 import { useWalletAddress } from "@/hooks/useWalletAddress";
 import { handleCopy } from "@/utils/common";
 import CopyButton from "../ui/copy/CopyButton";
+import { useTranslation } from "@/utils/i18n";
 
 interface LoginStep4Props {
   accountName: string;
 }
 
 export default function LoginStep4({ accountName }: LoginStep4Props) {
-  
+  const { t } = useTranslation();
   const { walletAddress, isLoadingAddress, formatAddress } = useWalletAddress();
 
   // 复制地址到剪贴板
   const handleCopyAddress = () => {
     if (walletAddress) {
-      handleCopy(walletAddress);
+      handleCopy(walletAddress, t("copy.addressSuccess"));
     }
   };
   return (

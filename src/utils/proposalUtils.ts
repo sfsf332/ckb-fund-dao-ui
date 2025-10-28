@@ -1,7 +1,7 @@
 
 // 格式化数字显示
-export const formatNumber = (num: number) => {
-  return num.toLocaleString('zh-CN');
+export const formatNumber = (num: number, locale: string = 'en-US') => {
+  return num.toLocaleString(locale);
 };
 // 提案状态枚举
 export enum ProposalStatus {
@@ -69,28 +69,6 @@ export const getStatusClass = (status: ProposalStatus) => {
   }
 };
 
-// 获取状态显示文本
-export const getStatusText = (status: ProposalStatus) => {
-  switch (status) {
-    case ProposalStatus.VOTE:
-      return '投票中';
-    case ProposalStatus.REVIEW:
-      return '社区审议中';
-    case ProposalStatus.MILESTONE:
-      return '里程碑交付中';
-    case ProposalStatus.ENDED:
-      return '结束';
-    case ProposalStatus.APPROVED:
-      return '已通过';
-    case ProposalStatus.REJECTED:
-      return '已拒绝';
-    case ProposalStatus.DRAFT:
-      return '草稿';
-    default:
-      return '未知';
-  }
-};
-
 // 基于设计稿的 Tag 颜色类名（与 Tag.css 中的 -- 修饰类一致）
 export const getStatusTagClass = (status: ProposalStatus) => {
   switch (status) {
@@ -114,6 +92,6 @@ export const getStatusTagClass = (status: ProposalStatus) => {
 };
 
 // 格式化日期显示
-export const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('zh-CN');
+export const formatDate = (dateString: string, locale: string = 'en-US') => {
+  return new Date(dateString).toLocaleDateString(locale);
 };

@@ -13,9 +13,704 @@
     "about": "About",
     "contact": "Contact"
   },
+  "taskModal": {
+    "title": "Task Processing",
+    "proposalInfo": "Proposal Information",
+    "taskInfo": "Task Information",
+    "taskType": "Task Type",
+    "deadline": "Deadline",
+    "meetingTime": "Meeting Time",
+    "meetingLink": "Meeting Link",
+    "remarks": "Remarks",
+    "meetingMinutes": "Meeting Minutes",
+    "milestoneAmount": "Milestone Amount",
+    "milestoneDescription": "Milestone Description",
+    "verificationResult": "Verification Result",
+    "verificationNotes": "Verification Notes",
+    "rectificationStatus": "Rectification Status",
+    "rectificationNotes": "Rectification Notes",
+    "recoveryAmount": "Recovery Amount",
+    "recoveryReason": "Recovery Reason",
+    "projectSummary": "Project Summary",
+    "finalReport": "Final Report",
+    "voteType": "Vote Type",
+    "voteDuration": "Vote Duration",
+    "customVoteTime": "Custom Vote Time",
+    "voteStartTime": "Vote Start Time",
+    "voteEndTime": "Vote End Time",
+    "timePreview": {
+      "startTime": "Vote Start Time",
+      "endTime": "Vote End Time"
+    },
+    "voteTypes": {
+      "communityReview": "Community Review Vote",
+      "formal": "Formal Vote",
+      "milestone": "Milestone Vote"
+    },
+    "durations": {
+      "1day": "1 day",
+      "3days": "3 days",
+      "7days": "7 days",
+      "14days": "14 days"
+    },
+    "verificationResults": {
+      "pass": "Pass",
+      "fail": "Fail",
+      "needRectification": "Need Rectification"
+    },
+    "rectificationStatuses": {
+      "completed": "Completed",
+      "inProgress": "In Progress",
+      "notStarted": "Not Started"
+    },
+    "buttons": {
+      "complete": "Complete Task",
+      "cancel": "Cancel",
+      "process": "Process",
+      "createVote": "Create Vote"
+    },
+    "placeholders": {
+      "selectDate": "Please select date",
+      "selectVoteStartTime": "Please select vote start time",
+      "selectVoteEndTime": "Please select vote end time",
+      "enterMeetingLink": "Please enter meeting link",
+      "enterRemarks": "Please enter remarks",
+      "enterMeetingMinutes": "Please enter meeting minutes",
+      "enterAmount": "Please enter amount",
+      "enterDescription": "Please enter description",
+      "enterNotes": "Please enter notes",
+      "enterReason": "Please enter reason",
+      "enterSummary": "Please enter summary",
+      "enterReport": "Please enter report",
+      "enterFinalReport": "Please enter final report content",
+      "selectMeetingTime": "Please select meeting time",
+      "enterAllocationAmount": "Please enter allocation amount",
+      "enterAllocationDescription": "Please enter allocation description",
+      "selectVerificationResult": "Please select verification result",
+      "enterVerificationNotes": "Please enter verification notes",
+      "selectRectificationStatus": "Please select rectification status",
+      "enterRectificationNotes": "Please enter rectification notes",
+      "enterRecoveryAmount": "Please enter recovery amount",
+      "enterRecoveryReason": "Please enter recovery reason",
+      "enterProjectSummary": "Please enter project summary"
+    },
+    "errors": {
+      "insufficientPermissions": "Insufficient permissions: You are not an administrator and cannot create votes",
+      "systemError": "System error: Administrator permission configuration is abnormal, please contact technical support",
+      "userNotLoggedIn": "User not logged in or login expired, please log in again",
+      "signatureFailed": "Signature generation failed, please check network connection and try again",
+      "createVoteFailed": "Failed to create vote metadata"
+    },
+    "required": "Required"
+  },
+  "management": {
+    "title": "Management Center",
+    "proposalManagement": "Proposal Management",
+    "filterByStatus": "Filter by Status",
+    "allStatuses": "All Statuses",
+    "draft": "Draft",
+    "review": "Community Review",
+    "vote": "Voting",
+    "milestone": "Milestone",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "ended": "Ended",
+    "proposalTitle": "Proposal Title",
+    "applicant": "Applicant",
+    "budget": "Budget",
+    "status": "Status",
+    "deadline": "Deadline",
+    "actions": "Actions",
+    "noData": "No Data"
+  },
+  "header": {
+    "governanceHome": "Governance Home",
+    "treasury": "Treasury",
+    "propertyInfo": "Property Info",
+    "userCenter": "User Center",
+    "governanceRules": "Governance Rules",
+    "createProposal": "Create Proposal",
+    "login": "Login"
+  },
+  "taskTypes": {
+    "organizeMeeting": "Organize Meeting",
+    "organizeAMA": "Organize AMA",
+    "publishMinutes": "Publish Minutes",
+    "milestoneAllocation": "Milestone Allocation",
+    "milestoneVerification": "Milestone Verification",
+    "projectRectification": "Project Rectification",
+    "recoverFunds": "Recover Funds",
+    "publishReport": "Publish Report",
+    "createVote": "Create Vote"
+  },
+  "proposalStatus": {
+    "draft": "Draft",
+    "communityReview": "Community Review",
+    "voting": "Voting",
+    "milestoneDelivery": "Milestone Delivery",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "ended": "Ended",
+    "unknown": "Unknown Status"
+  },
+  "proposalInfo": {
+    "proposalName": "Proposal Name",
+    "proposalId": "Proposal ID",
+    "proposalType": "Proposal Type",
+    "proposalPhase": "Proposal Phase",
+    "budget": "Budget",
+    "proposalUri": "Proposal URI",
+    "unknownProposal": "Unknown Proposal",
+    "unknownId": "Unknown ID",
+    "unknownType": "Unknown Type",
+    "unknownStatus": "Unknown Status",
+    "unknownBudget": "Unknown Budget",
+    "unknownUri": "Unknown URI",
+    "pending": "Pending"
+  },
+  "formLabels": {
+    "meetingTime": "Meeting Time",
+    "meetingLink": "Meeting Link",
+    "meetingMinutes": "Meeting Minutes",
+    "allocationAmount": "Allocation Amount",
+    "allocationDescription": "Allocation Description",
+    "verificationResult": "Verification Result",
+    "verificationNotes": "Verification Notes",
+    "rectificationStatus": "Rectification Status",
+    "rectificationNotes": "Rectification Notes",
+    "recoveryAmount": "Recovery Amount",
+    "recoveryReason": "Recovery Reason",
+    "projectSummary": "Project Summary",
+    "finalReport": "Final Report"
+  },
+  "editor": {
+    "loading": "Editor loading..."
+  },
+  "alerts": {
+    "selectVoteTime": "Please select vote start and end time",
+    "createVoteFailed": "Failed to create vote"
+  },
+  "managementPage": {
+    "title": "Property Team Announcement",
+    "description": "The first CKB Community Fund DAO Web5 Track property team, organized by CKB Eco Fund, serves for one year.",
+    "futureDescription": "After the property team runs for one year, fully community-based elections will be opened, with each property team serving for half a year.",
+    "daoManager": "DAO Property Manager",
+    "positionMission": "Position and Mission",
+    "positionMissionDesc": "DAO Property is a procedural service and facilitation team trusted by the community, funded by DAO, and accountable to all voters. As a neutral service provider and process facilitator, it provides high-quality operations, supervision, and technical support for community governance.",
+    "coreResponsibilities": "Core Responsibilities",
+    "coreResponsibilitiesDesc": "According to the position and mission of DAO Property, its core responsibilities revolve around its procedural powers.",
+    "proposalLifecycle": "Proposal Lifecycle Management:",
+    "proposalGuidance": "Proposal Guidance and Standardization: Provide clear proposal templates and assist applicants in improving proposals.",
+    "communityInquiry": "Organize Community Inquiry: Before proposals enter voting, responsible for organizing community AMAs or public debates.",
+    "supervisionReporting": "Supervision and Reporting:",
+    "milestoneVerification": "Milestone Verification: For proposals that have received funding, responsible for verifying their milestone deliverables.",
+    "verificationReport": "Publish Verification Reports: At each milestone node, publicly publish verification reports to the community.",
+    "transparencyCommunication": "Transparency and Communication:",
+    "treasuryTransparency": "Treasury Asset Transparency: Responsible for operating and maintaining asset dashboards based on UTXO Global multi-signature wallets.",
+    "informationReach": "Information Reach: Ensure all important governance information effectively reaches community members.",
+    "powerBoundaries": "Power Boundaries",
+    "powerBoundariesDesc": "Property team members do not have the authority to approve proposals or any voting decision-making power. All their actions aim to ensure fairness, transparency, and efficiency in the governance process, and present the most complete and neutral information to community decision-makers.",
+    "noDecisionRights": "No Decision Rights: DAO Property team does not have the authority to approve proposals or any voting decision-making power. They are 'servants' of community decision-making and governance, not 'approvers'.",
+    "noInterpretationRights": "No Interpretation Rights: DAO Property team has no authority to interpret or arbitrate rule disputes, and can only strictly execute procedures according to written rules passed by the community.",
+    "fundResponsibilities": "Fund Responsibilities: Property team has no autonomous financial authority. Their fund-related responsibilities are limited to:",
+    "budgetAllocation": "After community voting approves a project, notify the main treasury multi-signers according to procedures to allocate the total project budget to the corresponding project execution wallet.",
+    "milestonePayment": "As multi-signers of project execution wallets, after each milestone is confirmed by community voting, fulfill the procedural obligation of signature payment together with other multi-signers.",
+    "votingRights": "Voting Rights: As community members, property team members retain the right to exercise personal voting on all proposals based on their voting weight."
+  },
+  "managementCenter": {
+    "newProposals": "New Proposals",
+    "all": "All",
+    "organizeAMA": "Organize AMA",
+    "milestoneReview": "Milestone Review",
+    "pendingAllocation": "Pending Allocation",
+    "pendingCompletion": "Pending Completion",
+    "searchProposals": "Search Proposals",
+    "loading": "Loading...",
+    "loadFailed": "Load Failed",
+    "retry": "Retry",
+    "type": "Type",
+    "taskType": "Task Type",
+    "budget": "Budget",
+    "deadline": "Deadline",
+    "actions": "Actions",
+    "process": "Process",
+    "createVote": "Create Vote"
+  },
+  "wallet": {
+    "gettingAddress": "Getting address...",
+    "notConnected": "Wallet not connected",
+    "gettingBalance": "Getting balance...",
+    "bindSuccessMessage": "Binding successful, on-chain data confirmation may take a few minutes, please refresh the page later!",
+    "stakeCKB": "Stake CKB",
+    "bindNeuronWallet": "Bind Neuron Wallet Address",
+    "bindNewWallet": "Bind New Wallet Address",
+    "signatureInfo": "Signature Information",
+    "bindSuccessTitle": "Binding Successful",
+    "invalidHexSignature": "Invalid hexadecimal signature",
+    "signatureConversionFailed": "Signature conversion failed",
+    "signerNotConnected": "Signer not connected",
+    "bindInfoNotGenerated": "Bind info not generated",
+    "title": "Wallet & Nervos DAO",
+    "myVotingPower": "My Voting Power",
+    "votingPowerExplanation": "Explanation of voting power",
+    "loading": "Loading...",
+    "currentConnectedWallet": "Currently Connected Wallet",
+    "walletBalance": "Wallet Balance"
+  },
+  "voteWeight": {
+    "noCKBAddress": "CKB address not found, please connect wallet first",
+    "getVoteWeightFailed": "Failed to get vote weight",
+    "responseDataError": "Failed to get vote weight: response data format error",
+    "emptyCKBAddress": "CKB address cannot be empty",
+    "formatError": "Failed to get vote weight: response data format error",
+    "votes": "votes"
+  },
+  "voteMeta": {
+    "createVoteMetaFailed": "Failed to generate signed_bytes",
+    "userSignKeyNotExists": "User signature key does not exist",
+    "signatureGenerationFailed": "Signature generation failed",
+    "createVoteMetaError": "Failed to create vote metadata",
+    "communityReviewVote": "Community Review Vote",
+    "threeDaysLater": "Voting ends in 3 days"
+  },
+  "verificationResults": {
+    "pass": "Pass",
+    "fail": "Fail",
+    "needRectification": "Need Rectification"
+  },
+  "rectificationStatuses": {
+    "completed": "Completed",
+    "inProgress": "In Progress",
+    "notStarted": "Not Started"
+  },
+  "validation": {
+    "onlyLettersNumbersHyphens": "Only letters, numbers and hyphens (-) are allowed",
+    "noUnderscore": "Underscores (_) are not supported",
+    "noHyphenStartEnd": "Cannot start or end with hyphens (-)",
+    "lengthRequirement": "Length must be 4-18 characters",
+    "accountNameUnavailable": "Account name is not available"
+  },
+  "copy": {
+    "success": "Copied to clipboard",
+    "addressSuccess": "Address copied to clipboard",
+    "textSuccess": "Text copied to clipboard",
+    "failed": "Copy failed, please try again"
+  },
+  "web5": {
+    "title": "Web5 Identity",
+    "did": "Decentralized Identity (DID)",
+    "pds": "Personal Data Storage (PDS)",
+    "privacyControl": "Privacy Control",
+    "dataEncryption": "Data Encryption:",
+    "anonymousBrowsing": "Anonymous Browsing:",
+    "dataBackup": "Data Backup:",
+    "enabled": "Enabled",
+    "automatic": "Automatic",
+    "openLink": "Open Link",
+    "getPDSFailed": "Failed to get PDS address:"
+  },
+  "userProfile": {
+    "connectWithNervosTalk": "Connect With Nervos Talk",
+    "connectWithX": "Connect With X",
+    "connectWithDiscord": "Connect With Discord",
+    "connectWithTelegram": "Connect With Telegram",
+    "joinedOn": "Joined on {date}",
+    "unbindAccount": "Unbind Account",
+    "connect": "Connect",
+    "connectLog": "Connect {connectionId}",
+    "unbindLog": "Unbind {connectionId}"
+  },
   "footer": {
-    "learn": "Learn",
-    "examples": "Examples",
-    "goToNextjs": "Go to nextjs.org →"
+    "companyName": "CKB Community Fund DAO",
+    "twitter": "Twitter",
+    "telegram": "Telegram",
+    "discord": "Discord",
+    "medium": "Medium",
+    "support": "Support",
+    "privacyPolicy": "Privacy Policy",
+    "termsAndConditions": "Terms and Conditions",
+    "mediaKit": "Media Kit",
+    "link": "Link",
+    "docs": "Docs",
+    "nervos": "Nervos",
+    "download": "Download"
+  },
+  "proposalItem": {
+    "budgetApplication": "Budget Application",
+    "approve": "Approve",
+    "oppose": "Oppose",
+    "progress": "Progress",
+    "milestone": "Milestone"
+  },
+  "loginStep1": {
+    "createWeb5Account": "Create your personal Web5 DID account and get:",
+    "benefit1": "Data archive stored on CKB chain",
+    "benefit2": "Permission to publish proposals and participate in discussions",
+    "benefit3": "Exclusive domain (e.g., alice.ckb.xyz)",
+    "walletConnected": "Wallet Connected",
+    "clickToCopyAddress": "Click to copy full address",
+    "wallet": "Wallet",
+    "disconnect": "Disconnect",
+    "whatIsWeb5": "What is Web5?",
+    "web5Explanation": "Explanation of Web5"
+  },
+  "loginStep2": {
+    "setAccountName": "Set your Web5 DID account name:",
+    "namePlaceholder": "Supports names composed of numbers, letters, or special character '-'",
+    "validating": "Validating...",
+    "nameAvailable": "✓ Account name available",
+    "pleaseEnterName": "Please enter account name"
+  },
+  "loginModal": {
+    "createAccount": "Create Account",
+    "connectWalletFailed": "Failed to connect wallet:",
+    "disconnectWalletFailed": "Failed to disconnect wallet:",
+    "balanceCheckPassed": "Balance check passed, starting account creation...",
+    "insufficientBalance": "Insufficient CKB balance:",
+    "balanceCheckError": "Error occurred while checking CKB balance:",
+    "signerNotFound": "Signer information not found",
+    "recheckBalancePassed": "Recheck balance passed, starting account creation...",
+    "stillInsufficientBalance": "CKB balance still insufficient:",
+    "recheckBalanceError": "Error occurred while rechecking CKB balance:"
+  },
+  "homepage": {
+    "proposalList": "Proposal List",
+    "all": "All",
+    "communityReview": "Community Review",
+    "voting": "Voting",
+    "milestoneDelivery": "Milestone Delivery",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "ended": "Ended",
+    "loadFailed": "Load Failed:",
+    "loading": "Loading...",
+    "noProposals": "No Proposals",
+    "loadMore": "Load More"
+  },
+  "userGovernance": {
+    "title": "My Governance",
+    "notLoggedIn": "Not Logged In",
+    "walletAddressDid": "Wallet Address/DID",
+    "myVotingRights": "My Voting Rights",
+    "votingRightsExplanation": "Explanation of voting rights",
+    "stakeCKB": "Stake CKB",
+    "pending": "Pending",
+    "ckbUtxoGameEngine": "CKB-UTXO Full-Chain Game Engine"
+  },
+  "treasuryOverview": {
+    "title": "Treasury Overview",
+    "mainTreasuryBalance": "Main Treasury Balance",
+    "viewTreasuryDetails": "View Treasury Details"
+  },
+  "projectWalletsTable": {
+    "title": "Project Execution Wallets",
+    "titleTooltip": "Explanation of project execution wallets",
+    "searchPlaceholder": "Search wallets or projects",
+    "project": "Project",
+    "currentBalance": "Current Balance (CKB)",
+    "multisigSigners": "2/3 Multisig Signers",
+    "walletAddress": "Wallet Address",
+    "sampleProjectName": "Web5 DID Identity Protocol Stack Development"
+  },
+  "treasuryPage": {
+    "treasuryInfo": "Treasury Information",
+    "mainTreasuryAddress": "Main Treasury Address",
+    "multisigSigners": "Multisig Signers",
+    "treasuryAssets": "Treasury Assets",
+    "totalAssets": "Total Assets (CKB)",
+    "allocatedFunds": "Allocated Funds (CKB)",
+    "availableFunds": "Available Funds (CKB)",
+    "totalAssetsStatistics": "Total Assets Statistics"
+  },
+  "proposalDetail": {
+    "loading": "Loading...",
+    "proposalNotFound": "Proposal Not Found",
+    "governanceHome": "Governance Home",
+    "proposalDetails": "Proposal Details",
+    "communityDiscussion": "Community Discussion",
+    "projectBackground": "Project Background",
+    "projectGoals": "Project Goals",
+    "teamIntroduction": "Team Introduction",
+    "projectBudget": "Project Budget",
+    "milestones": "Milestones",
+    "budgetAmount": "Budget Amount (CKB):",
+    "notFilled": "Not Filled",
+    "currentMilestone": "Current Milestone:",
+    "progress": "Progress:",
+    "noMilestoneInfo": "No Milestone Information",
+    "liking": "Liking...",
+    "share": "Share",
+    "proposalTypes": {
+      "funding": "Funding Request",
+      "governance": "Governance Proposal",
+      "technical": "Technical Proposal",
+      "community": "Community Proposal",
+      "development": "Development Project",
+      "ecosystem": "Ecosystem Building",
+      "research": "Research Project",
+      "infrastructure": "Infrastructure",
+      "unknown": "Unknown Type"
+    },
+    "stepDescriptions": {
+      "projectBackground": "Project background introduction",
+      "projectGoals": "Project goals planning",
+      "teamIntroduction": "Team information introduction",
+      "projectBudget": "Budget planning setup",
+      "milestones": "Project milestone planning"
+    }
+  },
+  "comment": {
+    "loading": "Loading...",
+    "loadFailed": "Failed to load comments:",
+    "commentsCount": "comments",
+    "noComments": "No comments yet, be the first to comment!",
+    "placeholder": "Please enter your comment",
+    "publish": "Publish",
+    "reply": "Reply",
+    "liking": "Liking",
+    "share": "Share",
+    "quote": "Quote",
+    "quoteTitle": "Quote this text",
+    "editorLoading": "Editor loading...",
+    "timeAgo": {
+      "justNow": "Just now",
+      "minutesAgo": "minutes ago",
+      "hoursAgo": "hours ago",
+      "daysAgo": "days ago"
+    }
+  },
+  "proposalPhase": {
+    "milestoneTracking": {
+      "title": "Milestone Tracking",
+      "status": {
+        "completed": "Completed",
+        "inProgress": "In Progress",
+        "cancelled": "Cancelled",
+        "pending": "Pending"
+      }
+    },
+    "proposalVoting": {
+      "title": "Proposal Voting",
+      "deadline": "Deadline:",
+      "totalVotes": "Total Votes:",
+      "approve": "Approve",
+      "reject": "Reject",
+      "myVotingPower": "My Voting Power:",
+      "conditions": {
+        "title": "Passing Conditions",
+        "minTotalVotes": "Minimum Total Votes",
+        "approveRate": "Approval Rate"
+      },
+      "timeLeft": {
+        "days": "days",
+        "hours": "hours",
+        "minutes": "minutes",
+        "ended": "Voting Ended"
+      }
+    },
+    "milestoneVoting": {
+      "confirmVoting": "Confirmation Voting",
+      "deadline": "Deadline:",
+      "totalVotes": "Total Votes:",
+      "approve": "Approve",
+      "reject": "Reject",
+      "approveFunding": "Approve Funding",
+      "rejectFunding": "Reject Funding",
+      "myVotingPower": "My Voting Power:",
+      "requirements": {
+        "title": "Passing Requirements",
+        "minTotalVotes": "Minimum Total Votes",
+        "approveRate": "Approval Rate"
+      },
+      "timeLeft": {
+        "days": "days",
+        "hours": "hours",
+        "minutes": "minutes",
+        "ended": "Voting Ended"
+      }
+    },
+    "proposalTimeline": {
+      "title": "Proposal Timeline"
+    }
+  },
+  "proposalSteps": {
+    "projectMilestones": {
+      "title": "Project Milestones:",
+      "milestoneTitle": "Milestone Title:",
+      "expectedDate": "Expected Completion Date:",
+      "description": "Detailed Description:",
+      "addMilestone": "Add New Milestone",
+      "removeMilestone": "Remove Milestone",
+      "milestonePlaceholder": "e.g.: Project Launch, Phase 1 Completion, Product Release, etc.",
+      "datePlaceholder": "Please select expected completion date",
+      "descriptionPlaceholder": "Please describe in detail the specific content, deliverables and acceptance criteria for this milestone",
+      "emptyMessage": "No milestones have been added yet, click the + button to start adding.",
+      "editorLoading": "Editor loading..."
+    },
+    "proposalSettings": {
+      "proposalType": "Proposal Type :",
+      "proposalTitle": "Proposal Title :",
+      "releaseDate": "Release Date :",
+      "selectType": "Please select proposal type",
+      "titlePlaceholder": "Please enter proposal title",
+      "datePlaceholder": "Please select release date",
+      "types": {
+        "funding": "Funding Request",
+        "governance": "Governance Proposal",
+        "technical": "Technical Proposal",
+        "community": "Community Proposal"
+      }
+    },
+    "teamIntroduction": {
+      "title": "Team Introduction:",
+      "placeholder": "Please introduce team members, skills background and relevant experience",
+      "editorLoading": "Editor loading..."
+    },
+    "projectGoals": {
+      "title": "Project Goals:",
+      "placeholder": "Please describe in detail the project goals, expected outcomes and success metrics",
+      "editorLoading": "Editor loading..."
+    },
+    "projectBackground": {
+      "title": "Project Background *",
+      "placeholder": "Please describe in detail the project background, current situation and needs",
+      "editorLoading": "Editor loading..."
+    },
+    "projectBudget": {
+      "title": "Project Budget (CKB):",
+      "placeholder": "Please enter project budget amount"
+    }
+  },
+  "modal": {
+    "signatureModal": {
+      "title": "Signature Information",
+      "bind": "Bind",
+      "close": "Close",
+      "copy": "Copy",
+      "signaturePlaceholder": "Please enter signature",
+      "messageInstruction": "This message will be signed using \"Nervos Message\""
+    },
+    "confirmModal": {
+      "defaultTitle": "Confirm Operation",
+      "defaultConfirm": "Confirm",
+      "defaultCancel": "Cancel"
+    },
+    "successModal": {
+      "defaultMessage": "Operation successful!",
+      "close": "Close"
+    }
+  },
+  "chart": {
+    "totalAssetsChart": {
+      "months": {
+        "january": "Jan",
+        "february": "Feb",
+        "march": "Mar",
+        "april": "Apr",
+        "may": "May",
+        "june": "Jun",
+        "july": "Jul",
+        "august": "Aug",
+        "september": "Sep",
+        "october": "Oct",
+        "november": "Nov",
+        "december": "Dec"
+      },
+      "tooltip": {
+        "unit": "B"
+      },
+      "yAxis": {
+        "unit": "B"
+      }
+    }
+  },
+  "discussionRecords": {
+    "proposalReference": "Commented in proposal",
+    "commentIn": ":"
+  },
+  "recordsTable": {
+    "tabs": {
+      "proposals": "Proposal Records",
+      "voting": "Voting Records",
+      "discussion": "Discussion Records"
+    },
+    "tableHeaders": {
+      "proposal": "Proposal",
+      "type": "Type",
+      "budget": "Budget Request",
+      "status": "Proposal Status",
+      "publishDate": "Publish Date",
+      "actions": "Actions"
+    },
+    "proposalTypes": {
+      "budgetApplication": "Project Budget Application"
+    },
+    "proposalStatuses": {
+      "underReview": "Under Community Review",
+      "voting": "Voting",
+      "milestoneDelivery": "Milestone Delivery",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "ended": "Ended",
+      "draft": "Draft",
+      "projectReview": "Project Review",
+      "terminated": "Terminated",
+      "completed": "Completed"
+    },
+    "actions": {
+      "edit": "Edit",
+      "startVoting": "Start Voting",
+      "milestoneDelivery": "Milestone Delivery",
+      "rectificationComplete": "Rectification Complete"
+    },
+    "sampleData": {
+      "proposalName1": "Proposal Name 1",
+      "proposalName2": "Proposal Name 2",
+      "proposalName3": "Proposal Name 3",
+      "proposalName4": "Proposal Name 4",
+      "proposalName5": "Proposal Name 5"
+    }
+  },
+  "votingRecords": {
+    "tableHeaders": {
+      "proposal": "Proposal",
+      "votingStage": "Voting Stage",
+      "myChoice": "My Choice",
+      "voteQuantity": "Vote Quantity",
+      "voteDate": "Vote Date"
+    },
+    "votingStages": {
+      "milestoneDelivery": "Milestone Delivery-Milestone 1",
+      "projectReview": "Project Review Vote",
+      "finalDecision": "Final Decision Vote"
+    },
+    "choices": {
+      "approve": "Approve",
+      "against": "Against",
+      "abstain": "Abstain"
+    },
+    "sampleData": {
+      "proposalName1": "Proposal Name 1",
+      "proposalName2": "Proposal Name 2",
+      "proposalName3": "Proposal Name 3"
+    }
+  },
+  "previewModal": {
+    "basicInfo": "Basic Information",
+    "projectBackground": "Project Background",
+    "projectGoals": "Project Goals",
+    "teamIntroduction": "Team Introduction",
+    "projectBudget": "Project Budget",
+    "projectMilestones": "Project Milestones",
+    "proposalType": "Proposal Type:",
+    "releaseDate": "Release Date:",
+    "budgetAmount": "Budget Amount (CKB):",
+    "expectedCompletionDate": "Expected Completion Date:",
+    "detailedDescription": "Detailed Description:",
+    "milestone": "Milestone",
+    "notFilled": "Not filled",
+    "notSet": "Not set",
+    "notNamed": "Not named",
+    "noMilestonesAdded": "No milestones added"
   }
 }

@@ -2,9 +2,11 @@
 
 import { TimelineEventStatus, ProposalTimelineProps } from '../../types/timeline';
 import { formatDate } from '../../utils/proposalUtils';
+import { useI18n } from '@/contexts/I18nContext';
 import './timeline.css';
 
 export default function ProposalTimeline({ events, className = '' }: ProposalTimelineProps) {
+  const { messages } = useI18n();
 
   // 获取事件状态样式
   const getEventStatusClass = (status: TimelineEventStatus) => {
@@ -28,7 +30,7 @@ export default function ProposalTimeline({ events, className = '' }: ProposalTim
 
   return (
     <div className={`timeline-card ${className}`}>
-      <h3 className="timeline-title">提案时间线</h3>
+      <h3 className="timeline-title">{messages.proposalPhase.proposalTimeline.title}</h3>
       <div className="timeline">
         {sortedEvents.map((event) => (
           <div 

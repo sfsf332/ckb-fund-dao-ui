@@ -7,12 +7,14 @@ import { FaDiscord,FaTelegramPlane   } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { getAvatarByDid } from "@/utils/avatarUtils";
 import useUserInfoStore from "@/store/userInfo";
+import { useTranslation } from "@/utils/i18n";
 
 interface UserProfileCardProps {
   className?: string;
 }
 
 export default function UserProfileCard({ className = '' }: UserProfileCardProps) {
+  const { t } = useTranslation();
   const { userInfo } = useUserInfoStore();
   const [isEditing, setIsEditing] = useState(false);
   const [userName, setUserName] = useState('Alice');
@@ -28,28 +30,28 @@ export default function UserProfileCard({ className = '' }: UserProfileCardProps
   const socialConnections = [
     { 
       id: 'nervos-talk',
-      name: 'Connect With Nervos Talk', 
+      name: t('userProfile.connectWithNervosTalk'), 
       icon: nervosTalk, 
       connected: false,
       username: null
     },
     { 
       id: 'x-twitter',
-      name: 'Connect With X', 
+      name: t('userProfile.connectWithX'), 
       icon: <FaXTwitter />, 
       connected: false,
       username: null
     },
     { 
       id: 'discord',
-      name: 'Connect With Discord', 
+      name: t('userProfile.connectWithDiscord'), 
       icon: <FaDiscord color='#5865F2' />, 
       connected: true,
       username: '0xalice'
     },
     { 
       id: 'telegram',
-      name: 'Connect With Telegram', 
+      name: t('userProfile.connectWithTelegram'), 
       icon: <FaTelegramPlane color='#0088cc' />, 
       connected: false,
       username: null
@@ -65,13 +67,13 @@ export default function UserProfileCard({ className = '' }: UserProfileCardProps
   };
 
   const handleConnect = (connectionId: string) => {
-    console.log(`连接 ${connectionId}`);
+    console.log(t('userProfile.connectLog', { connectionId }));
     // 这里可以添加实际的连接逻辑
     setExpandedConnection(null);
   };
 
   const handleUnbind = (connectionId: string) => {
-    console.log(`解绑 ${connectionId}`);
+    console.log(t('userProfile.unbindLog', { connectionId }));
     // 这里可以添加实际的解绑逻辑
     setExpandedConnection(null);
   };
@@ -128,7 +130,7 @@ export default function UserProfileCard({ className = '' }: UserProfileCardProps
               {userName}
             </h2>
           )}
-          <p className="join-date">加入于{joinDate}</p>
+          <p className="join-date">{t('userProfile.joinedOn', { date: joinDate })}</p>
         </div>
         
        
@@ -160,7 +162,7 @@ export default function UserProfileCard({ className = '' }: UserProfileCardProps
                         handleUnbind(connection.id);
                       }}
                     >
-                      解绑账号
+                      {t('userProfile.unbindAccount')}
                     </button>
                   ) : (
                     <button
@@ -170,7 +172,7 @@ export default function UserProfileCard({ className = '' }: UserProfileCardProps
                         handleConnect(connection.id);
                       }}
                     >
-                      连接
+                      {t('userProfile.connect')}
                     </button>
                   )}
                 </div>

@@ -5,6 +5,7 @@ import Tag from "@/components/ui/tag/Tag";
 import { ProposalStatus } from "@/utils/proposalUtils";
 import VotingRecordsTable from './VotingRecordsTable';
 import DiscussionRecordsTable from './DiscussionRecordsTable';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface RecordsTableProps {
   activeTab: string;
@@ -23,25 +24,26 @@ interface ProposalRecord {
 }
 
 export default function RecordsTable({ activeTab, setActiveTab, className = '' }: RecordsTableProps) {
+  const { messages } = useI18n();
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 1;
 
   // 将字符串状态转换为ProposalStatus枚举
   const getStatusFromString = (status: string): ProposalStatus => {
     switch (status) {
-      case '社区审议中':
+      case messages.recordsTable.proposalStatuses.underReview:
         return ProposalStatus.REVIEW;
-      case '投票中':
+      case messages.recordsTable.proposalStatuses.voting:
         return ProposalStatus.VOTE;
-      case '里程碑交付中':
+      case messages.recordsTable.proposalStatuses.milestoneDelivery:
         return ProposalStatus.MILESTONE;
-      case '已通过':
+      case messages.recordsTable.proposalStatuses.approved:
         return ProposalStatus.APPROVED;
-      case '已拒绝':
+      case messages.recordsTable.proposalStatuses.rejected:
         return ProposalStatus.REJECTED;
-      case '结束':
+      case messages.recordsTable.proposalStatuses.ended:
         return ProposalStatus.ENDED;
-      case '草稿':
+      case messages.recordsTable.proposalStatuses.draft:
         return ProposalStatus.DRAFT;
       default:
         return ProposalStatus.REVIEW;
@@ -52,55 +54,55 @@ export default function RecordsTable({ activeTab, setActiveTab, className = '' }
   const proposalRecords: ProposalRecord[] = [
     {
       id: '1',
-      name: '提案名称1',
-      type: '项目预算申请',
+      name: messages.recordsTable.sampleData.proposalName1,
+      type: messages.recordsTable.proposalTypes.budgetApplication,
       budget: '2,000,000 CKB',
-      status: '社区审议中',
+      status: messages.recordsTable.proposalStatuses.underReview,
       publishDate: '2025/09/18 00:00 (UTC+8)',
-      actions: ['编辑', '开启投票']
+      actions: [messages.recordsTable.actions.edit, messages.recordsTable.actions.startVoting]
     },
     {
       id: '2',
-      name: '提案名称2',
-      type: '项目预算申请',
+      name: messages.recordsTable.sampleData.proposalName2,
+      type: messages.recordsTable.proposalTypes.budgetApplication,
       budget: '5,000,000 CKB',
-      status: '里程碑交付中',
+      status: messages.recordsTable.proposalStatuses.milestoneDelivery,
       publishDate: '2025/09/18 00:00 (UTC+8)',
-      actions: ['里程碑交付']
+      actions: [messages.recordsTable.actions.milestoneDelivery]
     },
     {
       id: '3',
-      name: '提案名称3',
-      type: '项目预算申请',
+      name: messages.recordsTable.sampleData.proposalName3,
+      type: messages.recordsTable.proposalTypes.budgetApplication,
       budget: '5,000,000 CKB',
-      status: '项目复核',
+      status: messages.recordsTable.proposalStatuses.projectReview,
       publishDate: '2025/09/18 00:00 (UTC+8)',
-      actions: ['整改完成']
+      actions: [messages.recordsTable.actions.rectificationComplete]
     },
     {
       id: '4',
-      name: '提案名称4',
-      type: '项目预算申请',
+      name: messages.recordsTable.sampleData.proposalName4,
+      type: messages.recordsTable.proposalTypes.budgetApplication,
       budget: '5,000,000 CKB',
-      status: '终止',
+      status: messages.recordsTable.proposalStatuses.terminated,
       publishDate: '2025/09/18 00:00 (UTC+8)',
       actions: []
     },
     {
       id: '5',
-      name: '提案名称5',
-      type: '项目预算申请',
+      name: messages.recordsTable.sampleData.proposalName5,
+      type: messages.recordsTable.proposalTypes.budgetApplication,
       budget: '5,000,000 CKB',
-      status: '结项',
+      status: messages.recordsTable.proposalStatuses.completed,
       publishDate: '2025/09/18 00:00 (UTC+8)',
       actions: []
     }
   ];
 
   const tabs = [
-    { key: 'proposals', label: '提案记录' },
-    { key: 'voting', label: '投票纪录' },
-    { key: 'discussion', label: '讨论记录' }
+    { key: 'proposals', label: messages.recordsTable.tabs.proposals },
+    { key: 'voting', label: messages.recordsTable.tabs.voting },
+    { key: 'discussion', label: messages.recordsTable.tabs.discussion }
   ];
 
   
@@ -123,12 +125,12 @@ export default function RecordsTable({ activeTab, setActiveTab, className = '' }
               <table className="records-table">
                 <thead>
                   <tr>
-                    <th>提案</th>
-                    <th>类型</th>
-                    <th>申请预算</th>
-                    <th>提案状态</th>
-                    <th>发布日期</th>
-                    <th>操作</th>
+                    <th>{messages.recordsTable.tableHeaders.proposal}</th>
+                    <th>{messages.recordsTable.tableHeaders.type}</th>
+                    <th>{messages.recordsTable.tableHeaders.budget}</th>
+                    <th>{messages.recordsTable.tableHeaders.status}</th>
+                    <th>{messages.recordsTable.tableHeaders.publishDate}</th>
+                    <th>{messages.recordsTable.tableHeaders.actions}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -145,7 +147,7 @@ export default function RecordsTable({ activeTab, setActiveTab, className = '' }
                         {record.actions.map((action, index) => (
                           <button
                             key={index}
-                            className={`action-button ${action === '整改完成' ? 'filled' : 'outlined'}`}
+                            className={`action-button ${action === messages.recordsTable.actions.rectificationComplete ? 'filled' : 'outlined'}`}
                             onClick={() => handleAction(action, record.id)}
                           >
                             {action}

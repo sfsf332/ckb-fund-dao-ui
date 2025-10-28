@@ -3,15 +3,16 @@
 import { useState, useEffect } from 'react';
 import { ProposalVotingProps, VoteOption, VotingStatus } from '../../types/voting';
 import { formatNumber } from '../../utils/proposalUtils';
+import { useI18n } from '@/contexts/I18nContext';
 import './voting.css';
 import { 
   IoThumbsUpOutline, 
   IoThumbsDownOutline, 
-  IoCheckmarkCircleOutline,
-  IoTimeOutline 
+  IoCheckmarkCircleOutline
 } from 'react-icons/io5';
 
 export default function ProposalVoting({ votingInfo, onVote, className = '' }: ProposalVotingProps) {
+  const { messages } = useI18n();
   const [timeLeft, setTimeLeft] = useState('');
   const [userVote, setUserVote] = useState<VoteOption | undefined>(votingInfo?.userVote);
 
@@ -29,9 +30,9 @@ export default function ProposalVoting({ votingInfo, onVote, className = '' }: P
         const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         
-        setTimeLeft(`${days}天 ${hours}小时 ${minutes}分钟`);
+        setTimeLeft(`${days}${messages.proposalPhase.proposalVoting.timeLeft.days} ${hours}${messages.proposalPhase.proposalVoting.timeLeft.hours} ${minutes}${messages.proposalPhase.proposalVoting.timeLeft.minutes}`);
       } else {
-        setTimeLeft('投票已结束');
+        setTimeLeft(messages.proposalPhase.proposalVoting.timeLeft.ended);
       }
     };
 
@@ -39,7 +40,7 @@ export default function ProposalVoting({ votingInfo, onVote, className = '' }: P
     const timer = setInterval(calculateTimeLeft, 60000); // 每分钟更新一次
 
     return () => clearInterval(timer);
-  }, [votingInfo]);
+  }, [votingInfo, messages.proposalPhase.proposalVoting.timeLeft]);
 
   // 处理投票
   const handleVote = (option: VoteOption) => {
@@ -66,16 +67,16 @@ export default function ProposalVoting({ votingInfo, onVote, className = '' }: P
     <div className={`proposal-voting-card ${className}`}>
       {/* 标题和倒计时 */}
       <div className="voting-header">
-        <h3 className="voting-title">提案投票</h3>
+        <h3 className="voting-title">{messages.proposalPhase.proposalVoting.title}</h3>
         <div className="voting-countdown">
-          <span>截至: {timeLeft}</span>
+          <span>{messages.proposalPhase.proposalVoting.deadline} {timeLeft}</span>
         </div>
       </div>
 
       {/* 投票统计 */}
       <div className="voting-stats">
         <div className="voting-total">
-          <span>总票数: {formatNumber(votingInfo.totalVotes)}</span>
+          <span>{messages.proposalPhase.proposalVoting.totalVotes} {formatNumber(votingInfo.totalVotes)}</span>
         </div>
         
         {/* 进度条 */}
@@ -95,11 +96,11 @@ export default function ProposalVoting({ votingInfo, onVote, className = '' }: P
         {/* 投票结果 */}
         <div className="voting-results">
           <div className="vote-result approve">
-            <span className="vote-label">赞成 {approveRate.toFixed(1)}%</span>
+            <span className="vote-label">{messages.proposalPhase.proposalVoting.approve} {approveRate.toFixed(1)}%</span>
             <span className="vote-count">({formatNumber(votingInfo.approveVotes)})</span>
           </div>
           <div className="vote-result reject">
-            <span className="vote-label">反对 {rejectRate.toFixed(1)}%</span>
+            <span className="vote-label">{messages.proposalPhase.proposalVoting.reject} {rejectRate.toFixed(1)}%</span>
             <span className="vote-count">({formatNumber(votingInfo.rejectVotes)})</span>
           </div>
         </div>
@@ -113,14 +114,14 @@ export default function ProposalVoting({ votingInfo, onVote, className = '' }: P
             onClick={() => handleVote(VoteOption.APPROVE)}
           >
             <IoThumbsUpOutline size={14} />
-            赞成
+            {messages.proposalPhase.proposalVoting.approve}
           </button>
           <button
             className={`vote-button reject ${userVote === VoteOption.REJECT ? 'selected' : ''}`}
             onClick={() => handleVote(VoteOption.REJECT)}
           >
             <IoThumbsDownOutline size={14} />
-            反对
+            {messages.proposalPhase.proposalVoting.reject}
           </button>
         </div>
       )}
@@ -128,7 +129,7 @@ export default function ProposalVoting({ votingInfo, onVote, className = '' }: P
 
       {/* 我的投票权 */}
     
-        <span>我的投票权: </span>
+        <span>{messages.proposalPhase.proposalVoting.myVotingPower} </span>
         <span className="power-amount">{formatNumber(votingInfo.userVotingPower)} CKB</span>
       
 
@@ -137,10 +138,10 @@ export default function ProposalVoting({ votingInfo, onVote, className = '' }: P
 
       {/* 通过条件 */}
       <div className="voting-conditions">
-        <h4 className="conditions-title">通过条件</h4>
+        <h4 className="conditions-title">{messages.proposalPhase.proposalVoting.conditions.title}</h4>
         
         <div className="condition-item">
-            <span>最低投票总数</span>
+            <span>{messages.proposalPhase.proposalVoting.conditions.minTotalVotes}</span>
             <span className="condition-values">
               {formatNumber(votingInfo.totalVotes)} / {formatNumber(votingInfo.conditions.minTotalVotes)}
             </span>
@@ -152,7 +153,7 @@ export default function ProposalVoting({ votingInfo, onVote, className = '' }: P
 
         <div className="condition-item">
           
-            <span>赞成票数占比</span>
+            <span>{messages.proposalPhase.proposalVoting.conditions.approveRate}</span>
             <span className="condition-values">
               {approveRate.toFixed(1)}% / {votingInfo.conditions.minApprovalRate}%
             </span>

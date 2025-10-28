@@ -5,6 +5,7 @@ import Link from "next/link";
 import CopyButton from "@/components/ui/copy/CopyButton";
 import { Modal } from "./ui/modal";
 import { getAvatarByDid } from "@/utils/avatarUtils";
+import { useI18n } from '@/contexts/I18nContext';
 interface Milestone {
   id: string;
   index: number;
@@ -35,6 +36,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
   onClose,
   formData,
 }) => {
+  const { messages } = useI18n();
   console.log(formData)
   
   return (
@@ -71,73 +73,73 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
 
         <div className="proposal-content">
           <div className="proposal-section">
-            <h3>基本信息</h3>
+            <h3>{messages.previewModal.basicInfo}</h3>
             <div className="proposal-field">
-              <label>提案类型:</label>
-              <span>{formData.proposalType || "未填写"}</span>
+              <label>{messages.previewModal.proposalType}</label>
+              <span>{formData.proposalType || messages.previewModal.notFilled}</span>
             </div>
 
             <div className="proposal-field">
-              <label>发布日期:</label>
-              <span>{formData.releaseDate || "未填写"}</span>
+              <label>{messages.previewModal.releaseDate}</label>
+              <span>{formData.releaseDate || messages.previewModal.notFilled}</span>
             </div>
           </div>
 
           <div className="proposal-section">
-            <h3>项目背景</h3>
+            <h3>{messages.previewModal.projectBackground}</h3>
             <div
               className="proposal-html-content"
               dangerouslySetInnerHTML={{
-                __html: formData.background || "未填写",
+                __html: formData.background || messages.previewModal.notFilled,
               }}
             />
           </div>
 
           <div className="proposal-section">
-            <h3>项目目标</h3>
+            <h3>{messages.previewModal.projectGoals}</h3>
             <div
               className="proposal-html-content"
-              dangerouslySetInnerHTML={{ __html: formData.goals || "未填写" }}
+              dangerouslySetInnerHTML={{ __html: formData.goals || messages.previewModal.notFilled }}
             />
           </div>
 
           <div className="proposal-section">
-            <h3>团队介绍</h3>
+            <h3>{messages.previewModal.teamIntroduction}</h3>
             <div
               className="proposal-html-content"
-              dangerouslySetInnerHTML={{ __html: formData.team || "未填写" }}
+              dangerouslySetInnerHTML={{ __html: formData.team || messages.previewModal.notFilled }}
             />
           </div>
 
           <div className="proposal-section">
-            <h3>项目预算</h3>
+            <h3>{messages.previewModal.projectBudget}</h3>
             <div className="proposal-field">
-              <label>预算金额 (CKB):</label>
-              <span>{formData.budget || "未填写"}</span>
+              <label>{messages.previewModal.budgetAmount}</label>
+              <span>{formData.budget || messages.previewModal.notFilled}</span>
             </div>
           </div>
 
           <div className="proposal-section">
-            <h3>项目里程碑</h3>
+            <h3>{messages.previewModal.projectMilestones}</h3>
             {formData.milestones.length === 0 ? (
-              <p>未添加任何里程碑</p>
+              <p>{messages.previewModal.noMilestonesAdded}</p>
             ) : (
               <div className="proposal-milestones">
                 {formData.milestones.map((milestone, index) => (
                   <div key={milestone.id} className="proposal-milestone">
                     <h4>
-                      里程碑 {index + 1}: {milestone.title || "未命名"}
+                      {messages.previewModal.milestone} {index + 1}: {milestone.title || messages.previewModal.notNamed}
                     </h4>
                     <div className="proposal-field">
-                      <label>预计完成日期:</label>
-                      <span>{milestone.date || "未设置"}</span>
+                      <label>{messages.previewModal.expectedCompletionDate}</label>
+                      <span>{milestone.date || messages.previewModal.notSet}</span>
                     </div>
                     <div className="proposal-field">
-                      <label>详细描述:</label>
+                      <label>{messages.previewModal.detailedDescription}</label>
                       <div
                         className="proposal-html-content"
                         dangerouslySetInnerHTML={{
-                          __html: milestone.description || "未填写",
+                          __html: milestone.description || messages.previewModal.notFilled,
                         }}
                       />
                     </div>

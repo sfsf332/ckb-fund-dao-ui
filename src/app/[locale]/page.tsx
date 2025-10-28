@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import 'react-tooltip/dist/react-tooltip.css'
+import "react-tooltip/dist/react-tooltip.css";
 import ProposalItem from "../../components/ProposalItem";
 import { useProposalList } from "../../hooks/useProposalList";
 import useUserInfoStore from "@/store/userInfo";
@@ -8,29 +8,41 @@ import { useEffect, useRef, useState } from "react";
 import { ProposalStatus } from "@/utils/proposalUtils";
 import UserGovernance from "@/components/UserGovernance";
 import TreasuryOverview from "@/components/TreasuryOverview";
+import { useI18n } from "@/contexts/I18nContext";
 
 export default function Treasury() {
   const { userInfo } = useUserInfoStore();
+  const { messages } = useI18n();
   // 使用hooks获取提案列表
-  const { proposals, loading: proposalsLoading, error: proposalsError, refetch, loadMore, hasMore } = useProposalList({
+  const {
+    proposals,
+    loading: proposalsLoading,
+    error: proposalsError,
+    refetch,
+    loadMore,
+    hasMore,
+  } = useProposalList({
     cursor: null,
     limit: 2,
     viewer: userInfo?.did || null,
   });
 
-  const [selectedStatus, setSelectedStatus] = useState<string>('');
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!loadMoreRef.current) return;
     const sentinel = loadMoreRef.current;
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        if (hasMore && !proposalsLoading) {
-          loadMore();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          if (hasMore && !proposalsLoading) {
+            loadMore();
+          }
         }
-      }
-    }, { rootMargin: '200px 0px' });
+      },
+      { rootMargin: "200px 0px" }
+    );
     observer.observe(sentinel);
     return () => observer.unobserve(sentinel);
   }, [hasMore, proposalsLoading, loadMore]);
@@ -59,72 +71,98 @@ export default function Treasury() {
           </li>
         </ul> */}
         <div className="proposal_list_container">
-        <section className="proposal_list">
-          <nav>
-            <h3>提案列表</h3>
-            <div className="nav-controls">
-              {/* <input type="search" placeholder="搜索提案" /> */}
-              <select
-                name="proposal-status-filter"
-                id="proposal-status-filter"
-                value={selectedStatus}
-                onChange={async (e) => {
-                  const value = e.target.value;
-                  setSelectedStatus(value);
-                  await refetch({
-                    cursor: null,
-                    limit: 20,
-                    viewer: userInfo?.did || null,
-                  });
-                }}
-              >
-                <option value="">全部</option>
-                <option value={String(ProposalStatus.REVIEW)}>社区审议中</option>
-                <option value={String(ProposalStatus.VOTE)}>投票中</option>
-                <option value={String(ProposalStatus.MILESTONE)}>里程碑交付中</option>
-                <option value={String(ProposalStatus.APPROVED)}>已通过</option>
-                <option value={String(ProposalStatus.REJECTED)}>已拒绝</option>
-                <option value={String(ProposalStatus.ENDED)}>结束</option>
-              </select>
-            </div>
-          </nav>
-          
-          <ul className="proposal_list_content">
-            {proposalsError ? (
-              <li style={{ textAlign: 'center', padding: '20px', color: 'red' }}>
-                加载失败: {proposalsError}
-              </li>
-            ) : proposals.length > 0 ? (
-              proposals.map((proposal) => (
-                <ProposalItem key={proposal.uri} proposal={proposal} />
-              ))
-            ) : proposalsLoading ? (
-              <li style={{ textAlign: 'center', padding: '20px', color: '#8A949E' }}>
-                加载中...
-              </li>
-            ) : (
-              <li style={{ textAlign: 'center', padding: '20px', color: '#888' }}>
-                暂无提案
-              </li>
-            )}
-          </ul>
-          <div ref={loadMoreRef} style={{ height: 1 }} />
-          {!proposalsLoading && hasMore && (
-            <div style={{ textAlign: 'center', padding: '12px' }}>
-              <button className="view_treasury_button" onClick={() => loadMore()}>加载更多</button>
-            </div>
-          )}
-        </section>
-        <div className="my_info">
-          {/* 我的治理部分 - 组件化并固定显示 */}
-          <UserGovernance />
+          <section className="proposal_list">
+            <nav>
+              <h3>{messages.homepage.proposalList}</h3>
+              <div className="nav-controls">
+                {/* <input type="search" placeholder="搜索提案" /> */}
+                <select
+                  name="proposal-status-filter"
+                  id="proposal-status-filter"
+                  value={selectedStatus}
+                  onChange={async (e) => {
+                    const value = e.target.value;
+                    setSelectedStatus(value);
+                    await refetch({
+                      cursor: null,
+                      limit: 20,
+                      viewer: userInfo?.did || null,
+                    });
+                  }}
+                >
+                  <option value="">{messages.homepage.all}</option>
+                  <option value={String(ProposalStatus.REVIEW)}>
+                    {messages.homepage.communityReview}
+                  </option>
+                  <option value={String(ProposalStatus.VOTE)}>{messages.homepage.voting}</option>
+                  <option value={String(ProposalStatus.MILESTONE)}>
+                    {messages.homepage.milestoneDelivery}
+                  </option>
+                  <option value={String(ProposalStatus.APPROVED)}>
+                    {messages.homepage.approved}
+                  </option>
+                  <option value={String(ProposalStatus.REJECTED)}>
+                    {messages.homepage.rejected}
+                  </option>
+                  <option value={String(ProposalStatus.ENDED)}>{messages.homepage.ended}</option>
+                </select>
+              </div>
+            </nav>
 
-          {/* 金库概览部分 - 组件化并固定显示 */}
-          <TreasuryOverview />
-        </div>
+            <ul className="proposal_list_content">
+              {proposalsError ? (
+                <li
+                  style={{ textAlign: "center", padding: "20px", color: "red" }}
+                >
+                  {messages.homepage.loadFailed} {proposalsError}
+                </li>
+              ) : proposals.length > 0 ? (
+                proposals.map((proposal) => (
+                  <ProposalItem key={proposal.uri} proposal={proposal} />
+                ))
+              ) : proposalsLoading ? (
+                <li
+                  style={{
+                    textAlign: "center",
+                    padding: "20px",
+                    color: "#8A949E",
+                  }}
+                >
+                  {messages.homepage.loading}
+                </li>
+              ) : (
+                <li
+                  style={{
+                    textAlign: "center",
+                    padding: "20px",
+                    color: "#888",
+                  }}
+                >
+                  {messages.homepage.noProposals}
+                </li>
+              )}
+            </ul>
+            <div ref={loadMoreRef} style={{ height: 1 }} />
+            {!proposalsLoading && hasMore && (
+              <div style={{ textAlign: "center", padding: "12px" }}>
+                <button
+                  className="view_treasury_button"
+                  onClick={() => loadMore()}
+                >
+                  {messages.homepage.loadMore}
+                </button>
+              </div>
+            )}
+          </section>
+          <div className="my_info">
+            {/* 我的治理部分 - 组件化并固定显示 */}
+            <UserGovernance />
+
+            {/* 金库概览部分 - 组件化并固定显示 */}
+            <TreasuryOverview />
+          </div>
         </div>
       </main>
-      
     </div>
   );
 }

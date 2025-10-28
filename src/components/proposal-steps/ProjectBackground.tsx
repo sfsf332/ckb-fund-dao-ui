@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactQuill from 'react-quill-new';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface ProjectBackgroundProps {
   formData: {
@@ -19,11 +20,13 @@ const ProjectBackground: React.FC<ProjectBackgroundProps> = ({
   quillModules, 
   quillFormats 
 }) => {
+  const { messages } = useI18n();
+  
   return (
     <div className="form-fields">
       <div>
         <label htmlFor="background" className="form-label">
-          项目背景 *
+          {messages.proposalSteps.projectBackground.title}
         </label>
         <div className="editor-container">
           {isClient ? (
@@ -34,7 +37,7 @@ const ProjectBackground: React.FC<ProjectBackgroundProps> = ({
                 onChange={onInputChange}
                 modules={quillModules}
                 formats={quillFormats}
-                placeholder="请详细描述项目的背景、现状和需求"
+                placeholder={messages.proposalSteps.projectBackground.placeholder}
                 style={{
                   height: "300px",
                   marginBottom: "10px",
@@ -56,7 +59,7 @@ const ProjectBackground: React.FC<ProjectBackgroundProps> = ({
                 justifyContent: "center",
               }}
             >
-              编辑器加载中...
+              {messages.proposalSteps.projectBackground.editorLoading}
             </div>
           )}
         </div>

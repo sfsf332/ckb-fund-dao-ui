@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { ProposalStatus } from "@/utils/proposalUtils";
 import { formatNumber } from "@/utils/proposalUtils";
 import { useCreateVoteMeta } from "@/hooks/useCreateVoteMeta";
+import { useTranslation } from "@/utils/i18n";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ReactQuill from 'react-quill-new';
@@ -59,36 +60,38 @@ interface TaskFormData {
   useCustomTime: boolean;
 }
 
-export type TaskType = 
-  | "组织会议"
-  | "组织AMA"
-  | "发布会议纪要" 
-  | "里程碑拨款"
-  | "里程碑核查"
-  | "项目整改核查"
-  | "回收项目资金"
-  | "发布结项报告"
-  | "创建投票";
+export type TaskType = string;
+
+// 获取任务类型翻译文本
+const getTaskTypeText = (taskType: TaskType): string => {
+  // 直接返回翻译后的文本，因为 taskType 现在已经是翻译后的文本
+  return taskType;
+};
+
+// 检查任务类型是否匹配
+const isTaskType = (currentTaskType: TaskType, targetTaskType: string, t: (key: string) => string): boolean => {
+  return currentTaskType === t(targetTaskType);
+};
 
 // 提案状态映射函数
-const getStatusText = (status: ProposalStatus): string => {
+const getStatusText = (status: ProposalStatus, t: (key: string) => string): string => {
   switch (status) {
     case ProposalStatus.DRAFT:
-      return "草稿";
+      return t("proposalStatus.draft");
     case ProposalStatus.REVIEW:
-      return "社区审议中";
+      return t("proposalStatus.communityReview");
     case ProposalStatus.VOTE:
-      return "投票中";
+      return t("proposalStatus.voting");
     case ProposalStatus.MILESTONE:
-      return "里程碑交付中";
+      return t("proposalStatus.milestoneDelivery");
     case ProposalStatus.APPROVED:
-      return "已通过";
+      return t("proposalStatus.approved");
     case ProposalStatus.REJECTED:
-      return "已拒绝";
+      return t("proposalStatus.rejected");
     case ProposalStatus.ENDED:
-      return "结束";
+      return t("proposalStatus.ended");
     default:
-      return "未知状态";
+      return t("proposalStatus.unknown");
   }
 };
 
@@ -96,11 +99,12 @@ export default function TaskProcessingModal({
   isOpen, 
   onClose, 
   onComplete,
-  taskType = "组织会议",
+  taskType = "",
   proposal
 }: TaskProcessingModalProps) {
   const [isClient, setIsClient] = useState(false);
   const { createReviewVote, error: voteError } = useCreateVoteMeta();
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<TaskFormData>({
     meetingTime: null, // 改为null
     meetingLink: "",
@@ -185,11 +189,11 @@ export default function TaskProcessingModal({
   };
 
   const handleComplete = async () => {
-    if (taskType === "创建投票" && proposal) {
+    if (isTaskType(taskType, "taskTypes.createVote", t) && proposal) {
       // 处理投票创建
       if (formData.useCustomTime) {
         if (!formData.customStartTime || !formData.customEndTime) {
-          alert("请选择投票开始和结束时间");
+          alert(t("alerts.selectVoteTime"));
           return;
         }
       }
@@ -200,7 +204,7 @@ export default function TaskProcessingModal({
         onComplete(formData);
         onClose();
       } else {
-        alert(`创建投票失败: ${result.error}`);
+        alert(`${t("alerts.createVoteFailed")}: ${result.error}`);
       }
     } else {
       // 处理其他任务类型
@@ -242,71 +246,71 @@ export default function TaskProcessingModal({
       <div className="task-processing-modal">
         {/* Modal标题 */}
         <div className="modal-header">
-          <h2 className="modal-title">任务处理</h2>
+          <h2 className="modal-title">{t("taskModal.title")}</h2>
         </div>
 
         {/* Modal内容 */}
         <div className="modal-content" style={{ maxHeight: 'calc(90vh - 120px)', overflowY: 'auto' }}>
           {/* 提案信息 */}
           <div className="proposal-info-section">
-            <h3 className="section-title">提案信息</h3>
+            <h3 className="section-title">{t("taskModal.proposalInfo")}</h3>
             <div className="info-grid">
               <div className="info-item">
-                <span className="info-label">提案名称:</span>
-                <span className="info-value">{proposal?.name || "未知提案"}</span>
+                <span className="info-label">{t("proposalInfo.proposalName")}:</span>
+                <span className="info-value">{proposal?.name || t("proposalInfo.unknownProposal")}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">提案ID:</span>
-                <span className="info-value">{proposal?.id || "未知ID"}</span>
+                <span className="info-label">{t("proposalInfo.proposalId")}:</span>
+                <span className="info-value">{proposal?.id || t("proposalInfo.unknownId")}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">提案类型:</span>
-                <span className="info-value">{proposal?.type || "未知类型"}</span>
+                <span className="info-label">{t("proposalInfo.proposalType")}:</span>
+                <span className="info-value">{proposal?.type || t("proposalInfo.unknownType")}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">提案阶段:</span>
-                <span className="info-value">{proposal ? getStatusText(proposal.status) : "未知状态"}</span>
+                <span className="info-label">{t("proposalInfo.proposalPhase")}:</span>
+                <span className="info-value">{proposal ? getStatusText(proposal.status, t) : t("proposalInfo.unknownStatus")}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">申请预算:</span>
-                <span className="info-value">{proposal?.budget ? `${formatNumber(proposal.budget)} CKB` : "未知预算"}</span>
+                <span className="info-label">{t("proposalInfo.budget")}:</span>
+                <span className="info-value">{proposal?.budget ? `${formatNumber(proposal.budget)} CKB` : t("proposalInfo.unknownBudget")}</span>
               </div>
               <div className="info-item">
-                <span className="info-label">提案URI:</span>
-                <span className="info-value uri-value">{proposal?.uri || "未知URI"}</span>
+                <span className="info-label">{t("proposalInfo.proposalUri")}:</span>
+                <span className="info-value uri-value">{proposal?.uri || t("proposalInfo.unknownUri")}</span>
               </div>
             </div>
           </div>
 
           {/* 任务信息 */}
           <div className="task-info-section">
-            <h3 className="section-title">任务信息</h3>
+            <h3 className="section-title">{t("taskModal.taskInfo")}</h3>
             
             <div className="form-grid">
               {/* 任务类型和截止时间 - 两列布局 */}
               <div className="form-row">
                 <div className="form-item">
-                  <label className="form-label">任务类型</label>
-                  <div className="readonly-field">{taskType}</div>
+                  <label className="form-label">{t("taskModal.taskType")}</label>
+                  <div className="readonly-field">{getTaskTypeText(taskType)}</div>
                 </div>
                 <div className="form-item">
-                  <label className="form-label">截止时间</label>
-                  <div className="readonly-field">{proposal?.deadline || "待定"}</div>
+                  <label className="form-label">{t("taskModal.deadline")}</label>
+                  <div className="readonly-field">{proposal?.deadline || t("proposalInfo.pending")}</div>
                 </div>
               </div>
 
               {/* 根据任务类型显示不同的表单字段 */}
-              {taskType === "组织会议" && (
+              {isTaskType(taskType, "taskTypes.organizeMeeting", t) && (
                 <>
                   {/* 会议时间 */}
                   <div className="form-item">
-                    <label className="form-label required">会议时间</label>
+                    <label className="form-label required">{t("formLabels.meetingTime")}</label>
                     <div className="input-container">
                       <DatePicker
                         selected={formData.meetingTime}
                         onChange={handleDateChange}
                         dateFormat="yyyy-MM-dd"
-                        placeholderText="请选择会议时间"
+                        placeholderText={t("placeholders.selectMeetingTime")}
                         minDate={new Date()}
                         className="form-input"
                         showPopperArrow={false}
@@ -326,10 +330,10 @@ export default function TaskProcessingModal({
 
                   {/* 会议链接 */}
                   <div className="form-item full-width">
-                    <label className="form-label">会议链接</label>
+                    <label className="form-label">{t("formLabels.meetingLink")}</label>
                     <input
                       type="text"
-                      placeholder="请输入"
+                      placeholder={t("placeholders.enterMeetingLink")}
                       value={formData.meetingLink}
                       onChange={(e) => handleInputChange("meetingLink", e.target.value)}
                       className="form-input"
@@ -342,13 +346,13 @@ export default function TaskProcessingModal({
                 <>
                   {/* 会议时间 */}
                   <div className="form-item">
-                    <label className="form-label required">会议时间</label>
+                    <label className="form-label required">{t("formLabels.meetingTime")}</label>
                     <div className="input-container">
                       <DatePicker
                         selected={formData.meetingTime}
                         onChange={handleDateChange}
                         dateFormat="yyyy-MM-dd"
-                        placeholderText="请选择会议时间"
+                        placeholderText={t("placeholders.selectMeetingTime")}
                         minDate={new Date()}
                         className="form-input"
                         showPopperArrow={false}
@@ -368,10 +372,10 @@ export default function TaskProcessingModal({
 
                   {/* 会议链接 */}
                   <div className="form-item full-width">
-                    <label className="form-label">会议链接</label>
+                    <label className="form-label">{t("formLabels.meetingLink")}</label>
                     <input
                       type="text"
-                      placeholder="请输入"
+                      placeholder={t("placeholders.enterMeetingLink")}
                       value={formData.meetingLink}
                       onChange={(e) => handleInputChange("meetingLink", e.target.value)}
                       className="form-input"
@@ -380,9 +384,9 @@ export default function TaskProcessingModal({
                 </>
               )}
 
-              {taskType === "发布会议纪要" && (
+              {isTaskType(taskType, "taskTypes.publishMinutes", t) && (
                 <div className="form-item full-width">
-                  <label className="form-label required">会议纪要</label>
+                  <label className="form-label required">{t("formLabels.meetingMinutes")}</label>
                   <div className="editor-container">
                     {isClient ? (
                       <div className="quill-wrapper">
@@ -392,7 +396,7 @@ export default function TaskProcessingModal({
                           onChange={(value) => handleInputChange("meetingMinutes", value)}
                           modules={quillModules}
                           formats={quillFormats}
-                          placeholder="请输入会议纪要内容"
+                          placeholder={t("placeholders.enterMeetingMinutes")}
                           style={{
                             height: "200px",
                             marginBottom: "10px",
@@ -414,29 +418,29 @@ export default function TaskProcessingModal({
                           justifyContent: "center",
                         }}
                       >
-                        编辑器加载中...
+                        {t("editor.loading")}
                       </div>
                     )}
                   </div>
                 </div>
               )}
 
-              {taskType === "里程碑拨款" && (
+              {isTaskType(taskType, "taskTypes.milestoneAllocation", t) && (
                 <>
                   <div className="form-item">
-                    <label className="form-label required">拨款金额</label>
+                    <label className="form-label required">{t("formLabels.allocationAmount")}</label>
                     <input
                       type="text"
-                      placeholder="请输入拨款金额"
+                      placeholder={t("placeholders.enterAllocationAmount")}
                       value={formData.milestoneAmount}
                       onChange={(e) => handleInputChange("milestoneAmount", e.target.value)}
                       className="form-input"
                     />
                   </div>
                   <div className="form-item full-width">
-                    <label className="form-label required">拨款说明</label>
+                    <label className="form-label required">{t("formLabels.allocationDescription")}</label>
                     <textarea
-                      placeholder="请输入拨款说明"
+                      placeholder={t("placeholders.enterAllocationDescription")}
                       value={formData.milestoneDescription}
                       onChange={(e) => handleInputChange("milestoneDescription", e.target.value)}
                       className="form-input"
@@ -446,25 +450,25 @@ export default function TaskProcessingModal({
                 </>
               )}
 
-              {taskType === "里程碑核查" && (
+              {isTaskType(taskType, "taskTypes.milestoneVerification", t) && (
                 <>
                   <div className="form-item">
-                    <label className="form-label required">核查结果</label>
+                    <label className="form-label required">{t("formLabels.verificationResult")}</label>
                     <select
                       value={formData.verificationResult}
                       onChange={(e) => handleInputChange("verificationResult", e.target.value)}
                       className="form-select"
                     >
-                      <option value="">请选择</option>
-                      <option value="通过">通过</option>
-                      <option value="不通过">不通过</option>
-                      <option value="需要整改">需要整改</option>
+                      <option value="">{t("placeholders.selectVerificationResult")}</option>
+                      <option value={t("verificationResults.pass")}>{t("taskModal.verificationResults.pass")}</option>
+                      <option value={t("verificationResults.fail")}>{t("taskModal.verificationResults.fail")}</option>
+                      <option value={t("verificationResults.needRectification")}>{t("taskModal.verificationResults.needRectification")}</option>
                     </select>
                   </div>
                   <div className="form-item full-width">
-                    <label className="form-label required">核查意见</label>
+                    <label className="form-label required">{t("formLabels.verificationNotes")}</label>
                     <textarea
-                      placeholder="请输入核查意见"
+                      placeholder={t("placeholders.enterVerificationNotes")}
                       value={formData.verificationNotes}
                       onChange={(e) => handleInputChange("verificationNotes", e.target.value)}
                       className="form-input"
@@ -474,25 +478,25 @@ export default function TaskProcessingModal({
                 </>
               )}
 
-              {taskType === "项目整改核查" && (
+              {isTaskType(taskType, "taskTypes.projectRectification", t) && (
                 <>
                   <div className="form-item">
-                    <label className="form-label required">整改状态</label>
+                    <label className="form-label required">{t("formLabels.rectificationStatus")}</label>
                     <select
                       value={formData.rectificationStatus}
                       onChange={(e) => handleInputChange("rectificationStatus", e.target.value)}
                       className="form-select"
                     >
-                      <option value="">请选择</option>
-                      <option value="已完成">已完成</option>
-                      <option value="进行中">进行中</option>
-                      <option value="未开始">未开始</option>
+                      <option value="">{t("placeholders.selectRectificationStatus")}</option>
+                      <option value={t("rectificationStatuses.completed")}>{t("taskModal.rectificationStatuses.completed")}</option>
+                      <option value={t("rectificationStatuses.inProgress")}>{t("taskModal.rectificationStatuses.inProgress")}</option>
+                      <option value={t("rectificationStatuses.notStarted")}>{t("taskModal.rectificationStatuses.notStarted")}</option>
                     </select>
                   </div>
                   <div className="form-item full-width">
-                    <label className="form-label required">整改说明</label>
+                    <label className="form-label required">{t("formLabels.rectificationNotes")}</label>
                     <textarea
-                      placeholder="请输入整改说明"
+                      placeholder={t("placeholders.enterRectificationNotes")}
                       value={formData.rectificationNotes}
                       onChange={(e) => handleInputChange("rectificationNotes", e.target.value)}
                       className="form-input"
@@ -502,22 +506,22 @@ export default function TaskProcessingModal({
                 </>
               )}
 
-              {taskType === "回收项目资金" && (
+              {isTaskType(taskType, "taskTypes.recoverFunds", t) && (
                 <>
                   <div className="form-item">
-                    <label className="form-label required">回收金额</label>
+                    <label className="form-label required">{t("formLabels.recoveryAmount")}</label>
                     <input
                       type="text"
-                      placeholder="请输入回收金额"
+                      placeholder={t("placeholders.enterRecoveryAmount")}
                       value={formData.recoveryAmount}
                       onChange={(e) => handleInputChange("recoveryAmount", e.target.value)}
                       className="form-input"
                     />
                   </div>
                   <div className="form-item full-width">
-                    <label className="form-label required">回收原因</label>
+                    <label className="form-label required">{t("formLabels.recoveryReason")}</label>
                     <textarea
-                      placeholder="请输入回收原因"
+                      placeholder={t("placeholders.enterRecoveryReason")}
                       value={formData.recoveryReason}
                       onChange={(e) => handleInputChange("recoveryReason", e.target.value)}
                       className="form-input"
@@ -527,12 +531,12 @@ export default function TaskProcessingModal({
                 </>
               )}
 
-              {taskType === "发布结项报告" && (
+              {isTaskType(taskType, "taskTypes.publishReport", t) && (
                 <>
                   <div className="form-item full-width">
-                    <label className="form-label required">项目总结</label>
+                    <label className="form-label required">{t("formLabels.projectSummary")}</label>
                     <textarea
-                      placeholder="请输入项目总结"
+                      placeholder={t("placeholders.enterProjectSummary")}
                       value={formData.projectSummary}
                       onChange={(e) => handleInputChange("projectSummary", e.target.value)}
                       className="form-input"
@@ -540,7 +544,7 @@ export default function TaskProcessingModal({
                     />
                   </div>
                   <div className="form-item full-width">
-                    <label className="form-label required">结项报告</label>
+                    <label className="form-label required">{t("formLabels.finalReport")}</label>
                     <div className="editor-container">
                       {isClient ? (
                         <div className="quill-wrapper">
@@ -550,7 +554,7 @@ export default function TaskProcessingModal({
                             onChange={(value) => handleInputChange("finalReport", value)}
                             modules={quillModules}
                             formats={quillFormats}
-                            placeholder="请输入结项报告内容"
+                            placeholder={t("placeholders.enterFinalReport")}
                             style={{
                               height: "200px",
                               marginBottom: "10px",
@@ -572,7 +576,7 @@ export default function TaskProcessingModal({
                             justifyContent: "center",
                           }}
                         >
-                          编辑器加载中...
+                          {t("editor.loading")}
                         </div>
                       )}
                     </div>
@@ -580,34 +584,34 @@ export default function TaskProcessingModal({
                 </>
               )}
 
-              {taskType === "创建投票" && (
+              {isTaskType(taskType, "taskTypes.createVote", t) && (
                 <>
                   {/* 投票类型和投票持续时间 - 两列布局 */}
                   <div className="form-row">
                     <div className="form-item">
-                      <label className="form-label required">投票类型</label>
+                      <label className="form-label required">{t("taskModal.voteType")}</label>
                       <select
                         value={formData.voteType}
                         onChange={(e) => handleInputChange("voteType", e.target.value)}
                         className="form-select"
                       >
-                        <option value={1}>社区审议投票</option>
-                        <option value={2}>正式投票</option>
-                        <option value={3}>里程碑投票</option>
+                        <option value={1}>{t("taskModal.voteTypes.communityReview")}</option>
+                        <option value={2}>{t("taskModal.voteTypes.formal")}</option>
+                        <option value={3}>{t("taskModal.voteTypes.milestone")}</option>
                       </select>
                     </div>
                     {!formData.useCustomTime && (
                       <div className="form-item">
-                        <label className="form-label required">投票持续时间</label>
+                        <label className="form-label required">{t("taskModal.voteDuration")}</label>
                         <select
                           value={formData.voteDuration}
                           onChange={(e) => handleInputChange("voteDuration", e.target.value)}
                           className="form-select"
                         >
-                          <option value={1}>1天</option>
-                          <option value={3}>3天</option>
-                          <option value={7}>7天</option>
-                          <option value={14}>14天</option>
+                          <option value={1}>{t("taskModal.durations.1day")}</option>
+                          <option value={3}>{t("taskModal.durations.3days")}</option>
+                          <option value={7}>{t("taskModal.durations.7days")}</option>
+                          <option value={14}>{t("taskModal.durations.14days")}</option>
                         </select>
                       </div>
                     )}
@@ -622,7 +626,7 @@ export default function TaskProcessingModal({
                         onChange={(e) => handleInputChange("useCustomTime", e.target.checked.toString())}
                         style={{ marginRight: "8px" }}
                       />
-                      自定义投票时间
+                      {t("taskModal.customVoteTime")}
                     </label>
                   </div>
 
@@ -631,7 +635,7 @@ export default function TaskProcessingModal({
                     <div className="form-item full-width">
                       <div className="time-preview">
                         <p>
-                          投票开始时间: {new Date().toLocaleString('zh-CN', {
+                          {t("taskModal.timePreview.startTime")}: {new Date().toLocaleString('zh-CN', {
                             year: 'numeric',
                             month: '2-digit',
                             day: '2-digit',
@@ -641,7 +645,7 @@ export default function TaskProcessingModal({
                           })} (UTC+8)
                         </p>
                         <p>
-                          投票结束时间: {new Date(Date.now() + formData.voteDuration * 24 * 60 * 60 * 1000).toLocaleString('zh-CN', {
+                          {t("taskModal.timePreview.endTime")}: {new Date(Date.now() + formData.voteDuration * 24 * 60 * 60 * 1000).toLocaleString('zh-CN', {
                             year: 'numeric',
                             month: '2-digit',
                             day: '2-digit',
@@ -658,13 +662,13 @@ export default function TaskProcessingModal({
                   {formData.useCustomTime && (
                     <div className="form-row">
                       <div className="form-item">
-                        <label className="form-label required">投票开始时间</label>
+                        <label className="form-label required">{t("taskModal.voteStartTime")}</label>
                         <div className="input-container">
                           <DatePicker
                             selected={formData.customStartTime}
                             onChange={handleVoteStartDateChange}
                             dateFormat="yyyy-MM-dd"
-                            placeholderText="请选择投票开始时间"
+                            placeholderText={t("taskModal.placeholders.selectVoteStartTime")}
                             minDate={new Date()}
                             className="form-input"
                             showPopperArrow={false}
@@ -682,13 +686,13 @@ export default function TaskProcessingModal({
                         </div>
                       </div>
                       <div className="form-item">
-                        <label className="form-label required">投票结束时间</label>
+                        <label className="form-label required">{t("taskModal.voteEndTime")}</label>
                         <div className="input-container">
                           <DatePicker
                             selected={formData.customEndTime}
                             onChange={handleVoteEndDateChange}
                             dateFormat="yyyy-MM-dd"
-                            placeholderText="请选择投票结束时间"
+                            placeholderText={t("taskModal.placeholders.selectVoteEndTime")}
                             minDate={formData.customStartTime || new Date()}
                             className="form-input"
                             showPopperArrow={false}
@@ -718,7 +722,7 @@ export default function TaskProcessingModal({
 
               {/* 备注信息 */}
               <div className="form-item full-width">
-                <label className="form-label">备注信息</label>
+                <label className="form-label">{t("taskModal.remarks")}</label>
                 <div className="editor-container">
                   {isClient ? (
                     <div className="quill-wrapper">
@@ -728,7 +732,7 @@ export default function TaskProcessingModal({
                         onChange={(value) => handleInputChange("remarks", value)}
                         modules={quillModules}
                         formats={quillFormats}
-                        placeholder="请输入"
+                        placeholder={t("placeholders.enterMeetingLink")}
                         style={{
                           height: "150px",
                           marginBottom: "10px",
@@ -750,7 +754,7 @@ export default function TaskProcessingModal({
                         justifyContent: "center",
                       }}
                     >
-                      编辑器加载中...
+                      {t("editor.loading")}
                     </div>
                   )}
                 </div>
@@ -765,13 +769,13 @@ export default function TaskProcessingModal({
             className="btn-complete"
             onClick={handleComplete}
           >
-            完成
+            {t("taskModal.buttons.complete")}
           </button>
           <button 
             className="btn-close"
             onClick={handleClose}
           >
-            关闭
+            {t("taskModal.buttons.cancel")}
           </button>
         </div>
       </div>

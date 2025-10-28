@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 
 /**
@@ -96,12 +96,15 @@ export function useWalletAddress() {
     return `${address.slice(0, start)}...${address.slice(-end)}`;
   };
 
+  // 使用 useMemo 来稳定 isConnected 的值
+  const isConnected = useMemo(() => !!wallet && !!signerInfo, [wallet, signerInfo]);
+
   return {
     walletAddress,
     isLoadingAddress,
     error,
     copyAddress,
     formatAddress,
-    isConnected: !!wallet && !!signerInfo,
+    isConnected,
   };
 }

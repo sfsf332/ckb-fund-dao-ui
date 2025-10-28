@@ -7,12 +7,14 @@ import { MdOutlinePrivacyTip } from "react-icons/md";
 import storage from '@/lib/storage';
 import useUserInfoStore from '@/store/userInfo';
 import getPDSClient from '@/lib/pdsClient';
+import { useTranslation } from '@/utils/i18n';
 
 interface Web5IdentityCardProps {
   className?: string;
 }
 
 export default function Web5IdentityCard({ className = '' }: Web5IdentityCardProps) {
+  const { t } = useTranslation();
   const { userInfo } = useUserInfoStore();
   const [did, setDid] = useState('');
   const [pds, setPds] = useState('');
@@ -37,25 +39,25 @@ export default function Web5IdentityCard({ className = '' }: Web5IdentityCardPro
         setPds(pdsClient.serviceUrl.origin);
       }
     } catch (error) {
-      console.error('获取 PDS 地址失败:', error);
+      console.error(t('web5.getPDSFailed'), error);
     }
   }, [userInfo]);
 
   const privacySettings = [
-    { label: '数据加密:', status: '启用', enabled: true },
-    { label: '匿名浏览:', status: '启用', enabled: true },
-    { label: '数据备份:', status: '自动', enabled: true },
+    { label: t('web5.dataEncryption'), status: t('web5.enabled'), enabled: true },
+    { label: t('web5.anonymousBrowsing'), status: t('web5.enabled'), enabled: true },
+    { label: t('web5.dataBackup'), status: t('web5.automatic'), enabled: true },
   ];
 
   
 
   return (
     <div className={`web5-identity-card ${className}`}>
-      <h3 className="card-title">Web5 身份</h3>
+      <h3 className="card-title">{t('web5.title')}</h3>
       
       <div className="identity-section">
         <div className="field-group">
-          <label className="field-label">去中心化身份(DID)</label>
+          <label className="field-label">{t('web5.did')}</label>
           <div className="input-group">
             <input
               type="text"
@@ -66,7 +68,7 @@ export default function Web5IdentityCard({ className = '' }: Web5IdentityCardPro
             <CopyButton
               className="copy-button"
               text={did}
-              title="复制"
+              title={t('copy.success')}
             >
               <GoCopy />
             </CopyButton>
@@ -74,7 +76,7 @@ export default function Web5IdentityCard({ className = '' }: Web5IdentityCardPro
         </div>
 
         <div className="field-group">
-          <label className="field-label">个人数据存储(PDS)</label>
+          <label className="field-label">{t('web5.pds')}</label>
           <div className="input-group">
             <input
               type="text"
@@ -84,7 +86,7 @@ export default function Web5IdentityCard({ className = '' }: Web5IdentityCardPro
             />
             <button
               className="external-link-button"
-              title="打开链接"
+              title={t('web5.openLink')}
             >
               <GoDatabase />
             </button>
@@ -95,7 +97,7 @@ export default function Web5IdentityCard({ className = '' }: Web5IdentityCardPro
       <div className="privacy-section">
         <div className="privacy-header">
         <MdOutlinePrivacyTip />
-          <h4 className="privacy-title">隐私控制</h4>
+          <h4 className="privacy-title">{t('web5.privacyControl')}</h4>
         </div>
         
         <div className="privacy-settings">

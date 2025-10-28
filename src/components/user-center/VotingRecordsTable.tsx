@@ -1,5 +1,7 @@
 'use client';
 
+import { useI18n } from '@/contexts/I18nContext';
+
 interface VotingRecord {
   id: string;
   proposalName: string;
@@ -14,29 +16,31 @@ interface VotingRecordsTableProps {
 }
 
 export default function VotingRecordsTable({ className = '' }: VotingRecordsTableProps) {
+  const { messages } = useI18n();
+  
   // 模拟投票记录数据
   const votingRecords: VotingRecord[] = [
     {
       id: '1',
-      proposalName: '提案名称1',
-      votingStage: '里程碑交付-里程碑1',
-      myChoice: '赞成',
+      proposalName: messages.votingRecords.sampleData.proposalName1,
+      votingStage: messages.votingRecords.votingStages.milestoneDelivery,
+      myChoice: messages.votingRecords.choices.approve,
       voteQuantity: '2,000,000 CKB',
       voteDate: '2025/09/18 00:00 (UTC+8)'
     },
     {
       id: '2',
-      proposalName: '提案名称2',
-      votingStage: '项目复核投票',
-      myChoice: '赞成',
+      proposalName: messages.votingRecords.sampleData.proposalName2,
+      votingStage: messages.votingRecords.votingStages.projectReview,
+      myChoice: messages.votingRecords.choices.approve,
       voteQuantity: '5,000,000 CKB',
       voteDate: '2025/09/18 00:00 (UTC+8)'
     },
     {
       id: '3',
-      proposalName: '提案名称3',
-      votingStage: '最终裁决投票',
-      myChoice: '反对',
+      proposalName: messages.votingRecords.sampleData.proposalName3,
+      votingStage: messages.votingRecords.votingStages.finalDecision,
+      myChoice: messages.votingRecords.choices.against,
       voteQuantity: '5,000,000 CKB',
       voteDate: '2025/09/18 00:00 (UTC+8)'
     }
@@ -44,9 +48,9 @@ export default function VotingRecordsTable({ className = '' }: VotingRecordsTabl
 
   const getChoiceClass = (choice: string) => {
     const choiceMap: { [key: string]: string } = {
-      '赞成': 'choice-approve',
-      '反对': 'choice-against',
-      '弃权': 'choice-abstain'
+      [messages.votingRecords.choices.approve]: 'choice-approve',
+      [messages.votingRecords.choices.against]: 'choice-against',
+      [messages.votingRecords.choices.abstain]: 'choice-abstain'
     };
     return choiceMap[choice] || 'choice-default';
   };
@@ -57,11 +61,11 @@ export default function VotingRecordsTable({ className = '' }: VotingRecordsTabl
         <table className="records-table">
           <thead>
             <tr>
-              <th>提案</th>
-              <th>投票阶段</th>
-              <th>我的选择</th>
-              <th>投票数量</th>
-              <th>投票日期</th>
+              <th>{messages.votingRecords.tableHeaders.proposal}</th>
+              <th>{messages.votingRecords.tableHeaders.votingStage}</th>
+              <th>{messages.votingRecords.tableHeaders.myChoice}</th>
+              <th>{messages.votingRecords.tableHeaders.voteQuantity}</th>
+              <th>{messages.votingRecords.tableHeaders.voteDate}</th>
             </tr>
           </thead>
           <tbody>

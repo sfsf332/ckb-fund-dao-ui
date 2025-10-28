@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactQuill from 'react-quill-new';
+import { useI18n } from '@/contexts/I18nContext';
 
 interface ProjectGoalsProps {
   formData: {
@@ -19,11 +20,13 @@ const ProjectGoals: React.FC<ProjectGoalsProps> = ({
   quillModules, 
   quillFormats 
 }) => {
+  const { messages } = useI18n();
+  
   return (
     <div className="form-fields">
       <div>
         <label htmlFor="goals" className="form-label">
-          项目目标:
+          {messages.proposalSteps.projectGoals.title}
         </label>
         <div className="editor-container">
           {isClient ? (
@@ -34,7 +37,7 @@ const ProjectGoals: React.FC<ProjectGoalsProps> = ({
                 onChange={onInputChange}
                 modules={quillModules}
                 formats={quillFormats}
-                placeholder="请详细描述项目的目标、预期成果和成功指标"
+                placeholder={messages.proposalSteps.projectGoals.placeholder}
                 style={{
                   height: "300px",
                   marginBottom: "10px",
@@ -56,7 +59,7 @@ const ProjectGoals: React.FC<ProjectGoalsProps> = ({
                 justifyContent: "center",
               }}
             >
-              编辑器加载中...
+              {messages.proposalSteps.projectGoals.editorLoading}
             </div>
           )}
         </div>

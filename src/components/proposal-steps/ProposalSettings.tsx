@@ -1,6 +1,7 @@
 import React from 'react';
 import { IoIosArrowDown } from "react-icons/io";
 import DatePicker from 'react-datepicker';
+import { useI18n } from '@/contexts/I18nContext';
 import 'react-datepicker/dist/react-datepicker.css';
 
 interface ProposalSettingsProps {
@@ -14,11 +15,13 @@ interface ProposalSettingsProps {
 }
 
 const ProposalSettings: React.FC<ProposalSettingsProps> = ({ formData, onInputChange, onDateChange }) => {
+  const { messages } = useI18n();
+  
   return (
     <div className="form-fields">
       <div>
         <label htmlFor="proposalType" className="form-label">
-          提案类型 :
+          {messages.proposalSteps.proposalSettings.proposalType}
         </label>
         <div className="input-container">
           <select
@@ -29,11 +32,11 @@ const ProposalSettings: React.FC<ProposalSettingsProps> = ({ formData, onInputCh
             className="form-select"
             required
           >
-            <option value="">请选择提案类型</option>
-            <option value="funding">资金申请</option>
-            <option value="governance">治理提案</option>
-            <option value="technical">技术提案</option>
-            <option value="community">社区提案</option>
+            <option value="">{messages.proposalSteps.proposalSettings.selectType}</option>
+            <option value="funding">{messages.proposalSteps.proposalSettings.types.funding}</option>
+            <option value="governance">{messages.proposalSteps.proposalSettings.types.governance}</option>
+            <option value="technical">{messages.proposalSteps.proposalSettings.types.technical}</option>
+            <option value="community">{messages.proposalSteps.proposalSettings.types.community}</option>
           </select>
           <div className="select-arrow">
             <IoIosArrowDown size={16} />
@@ -43,7 +46,7 @@ const ProposalSettings: React.FC<ProposalSettingsProps> = ({ formData, onInputCh
 
       <div>
         <label htmlFor="title" className="form-label">
-          提案标题 :
+          {messages.proposalSteps.proposalSettings.proposalTitle}
         </label>
         <input
           type="text"
@@ -52,21 +55,21 @@ const ProposalSettings: React.FC<ProposalSettingsProps> = ({ formData, onInputCh
           value={formData.title}
           onChange={onInputChange}
           className="form-input"
-          placeholder="请输入提案标题"
+          placeholder={messages.proposalSteps.proposalSettings.titlePlaceholder}
           required
         />
       </div>
 
       <div>
         <label htmlFor="releaseDate" className="form-label">
-          发布日期 :
+          {messages.proposalSteps.proposalSettings.releaseDate}
         </label>
         <div className="input-container">
           <DatePicker
             selected={formData.releaseDate ? new Date(formData.releaseDate) : null}
             onChange={onDateChange}
             dateFormat="yyyy-MM-dd"
-            placeholderText="请选择发布日期"
+            placeholderText={messages.proposalSteps.proposalSettings.datePlaceholder}
             minDate={new Date()}
             className="form-input"
             showPopperArrow={false}

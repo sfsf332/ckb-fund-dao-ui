@@ -8,6 +8,7 @@ import {
 } from "react-icons/md";
 import { GrShareOption } from "react-icons/gr";
 import { RingLoader } from "react-spinners";
+import { useI18n } from "@/contexts/I18nContext";
 // import dynamic from "next/dynamic";
 
 import "./comment.css";
@@ -45,6 +46,7 @@ export default function CommentItem({
   onEdit, // 暂时屏蔽
   onDelete, // 暂时屏蔽
 }: CommentItemProps) {
+  const { messages } = useI18n();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const _unusedEdit = onEdit;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -71,12 +73,12 @@ export default function CommentItem({
     const now = new Date();
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-    if (diffInSeconds < 60) return "刚刚";
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}分钟前`;
+    if (diffInSeconds < 60) return messages.comment.timeAgo.justNow;
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}${messages.comment.timeAgo.minutesAgo}`;
     if (diffInSeconds < 86400)
-      return `${Math.floor(diffInSeconds / 3600)}小时前`;
+      return `${Math.floor(diffInSeconds / 3600)}${messages.comment.timeAgo.hoursAgo}`;
     if (diffInSeconds < 2592000)
-      return `${Math.floor(diffInSeconds / 86400)}天前`;
+      return `${Math.floor(diffInSeconds / 86400)}${messages.comment.timeAgo.daysAgo}`;
     return date.toLocaleDateString("zh-CN");
   };
 
@@ -180,7 +182,7 @@ export default function CommentItem({
         <div className="comment-item-footer">
           <button onClick={handleReply} className="comment-footer-button">
             <MdOutlineModeComment />
-            回复
+            {messages.comment.reply}
           </button>
           <button
             onClick={handleLike}
@@ -192,7 +194,7 @@ export default function CommentItem({
             {isLiking ? (
               <>
                 <RingLoader size={14} color={comment.isLiked ? '#ff4d6d' : '#ffffff'} />
-                <span style={{ marginLeft: '4px' }}>点赞中</span>
+                <span style={{ marginLeft: '4px' }}>{messages.comment.liking}</span>
               </>
             ) : (
               <>
@@ -204,7 +206,7 @@ export default function CommentItem({
 
           <button className="comment-footer-button">
             <GrShareOption />
-            分享
+            {messages.comment.share}
           </button>
         </div>
       </div>

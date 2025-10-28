@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useI18n } from "@/contexts/I18nContext";
 
 interface QuoteButtonProps {
   onQuote: (selectedText: string) => void;
 }
 
 export default function QuoteButton({ onQuote }: QuoteButtonProps) {
+  const { messages } = useI18n();
   const [isClient, setIsClient] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const [selectedText, setSelectedText] = useState("");
@@ -113,7 +115,7 @@ export default function QuoteButton({ onQuote }: QuoteButtonProps) {
               setSelectedText('');
               window.getSelection()?.removeAllRanges();
             }}
-            title="引用此段文字"
+            title={messages.comment.quoteTitle}
             style={{
               background: '#00CC9B',
               color: 'white',
@@ -129,7 +131,7 @@ export default function QuoteButton({ onQuote }: QuoteButtonProps) {
               transition: 'all 0.2s ease',
             }}
           >
-             引用
+            {messages.comment.quote}
           </button>
         </div>
       

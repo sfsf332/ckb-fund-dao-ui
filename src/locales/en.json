@@ -373,6 +373,38 @@
     "stillInsufficientBalance": "CKB balance still insufficient:",
     "recheckBalanceError": "Error occurred while rechecking CKB balance:"
   },
+  "loginStep3": {
+    "dragTitle": "Drag your planet to the Nervos galaxy to complete the on-chain operation.",
+    "description": "After authorization, your Web5 account data will be permanently stored on the blockchain and cannot be tampered with by third parties.",
+    "gettingAddress": "Getting address...",
+    "insufficientBalance": "⚠️ Insufficient Balance",
+    "requiredCapacity": "Required capacity: 355 CKB",
+    "checkingBalance": "Checking balance...",
+    "error": "Error:",
+    "insufficientFundsWarning": "At least 355 CKB is required to store information on-chain. Please add CKB or switch to a wallet with sufficient CKB.",
+    "recheckBalance": "Recheck Balance",
+    "creatingAccount": "Creating account...",
+    "pleaseWait": "Please wait, this may take a few minutes",
+    "accountCreationFailed": "Account creation failed"
+  },
+  "loginStep4": {
+    "accountCreatedSuccess": "Account Created Successfully!",
+    "successDescription": "Your Web5 DID account has been successfully created and stored on-chain. You can now participate in community governance, publish proposals, and join discussions.",
+    "gettingAddress": "Getting address..."
+  },
+  "loginFooter": {
+    "connecting": "Connecting...",
+    "connectWallet": "Connect Wallet",
+    "nextStep": "Next Step",
+    "backToPreviousStep": "Back to Previous Step",
+    "enterCommunity": "Enter Community"
+  },
+  "loginProgress": {
+    "connectWallet": "Connect Wallet",
+    "setName": "Set Name",
+    "onChainStorage": "On-Chain Storage",
+    "creationComplete": "Creation Complete"
+  },
   "homepage": {
     "proposalList": "Proposal List",
     "all": "All",

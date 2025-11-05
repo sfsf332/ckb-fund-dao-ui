@@ -2,6 +2,8 @@
 
 import React from "react";
 import { useTranslation } from "@/utils/i18n";
+import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
+import { ImSpinner2 } from "react-icons/im";
 
 interface LoginStep2Props {
   accountName: string;
@@ -38,6 +40,17 @@ export default function LoginStep2({
             placeholder={t("loginStep2.namePlaceholder")}
             className="name-input"
           />
+          {accountName && (
+            <div className="name-input-icon">
+              {isValidating ? (
+                <ImSpinner2 className="validation-icon loading" />
+              ) : validationResult === true ? (
+                <AiOutlineCheckCircle className="validation-icon success" />
+              ) : validationResult === false ? (
+                <AiOutlineCloseCircle className="validation-icon error" />
+              ) : null}
+            </div>
+          )}
         </div>
         <div className="validation-message">
           {isValidating && (

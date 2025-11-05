@@ -168,17 +168,30 @@ export interface CreateVoteMetaParams {
     end_time: number; // 投票结束时间
     proposal_uri: string; // 提案URI
     start_time: number; // 投票开始时间
-    vote_type: number; // 投票类型
   };
   signed_bytes: string; // 签名字节
   signing_key_did: string; // 签名密钥DID
 }
 
+// 投票元数据项类型
+export interface VoteMetaItem {
+  id: number; // 投票ID
+  proposal_uri: string; // 提案URI
+  candidates: unknown[]; // 候选人列表
+  start_time: string; // 投票开始时间（ISO 8601格式）
+  end_time: string; // 投票结束时间（ISO 8601格式）
+  created: string; // 创建时间（ISO 8601格式）
+  state: number; // 投票状态
+  tx_hash: string | null; // 交易哈希
+  whitelist_id?: string; // 白名单ID
+}
+
 // 投票元数据响应类型
+// 注意：由于 requestAPI 会自动提取响应中的 data 字段，
+// 所以实际返回的是以下结构，而不是包裹在 {code, data, message} 中
 export interface CreateVoteMetaResponse {
-  success: boolean;
-  message?: string;
-  vote_id?: string; // 投票ID
+  outputsData: string[]; // 输出数据数组
+  vote_meta: VoteMetaItem; // 投票元数据
 }
 
 /**
@@ -194,6 +207,41 @@ export const createVoteMeta = defineAPI<
   {
     divider: {
       body: ["did", "params", "signed_bytes", "signing_key_did"],
+    },
+  }
+);
+
+// 绑定列表查询参数类型
+export interface BindListParams {
+  did: string; // 用户DID
+}
+
+// 绑定项类型
+export interface BindItem {
+  from?: string; // 源地址（钱包地址）
+  to?: string; // 目标地址（钱包地址）
+  address?: string; // 钱包地址（备用字段名）
+  timestamp?: number | string; // 时间戳
+}
+
+// 绑定列表响应类型
+// 注意：由于 requestAPI 会自动提取响应中的 data 字段，
+// 所以实际返回的是 BindItem[] 数组，而不是包裹在对象中
+export type BindListResponse = BindItem[];
+
+/**
+ * 获取绑定列表
+ * GET /api/vote/bind_list
+ */
+export const getBindList = defineAPI<
+  BindListParams,
+  BindListResponse
+>(
+  "/vote/bind_list",
+  "GET",
+  {
+    divider: {
+      query: ["did"], // did作为查询参数
     },
   }
 );

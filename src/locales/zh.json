@@ -412,6 +412,38 @@
     "stillInsufficientBalance": "CKB余额仍然不足:",
     "recheckBalanceError": "重新检查CKB余额时发生错误:"
   },
+  "loginStep3": {
+    "dragTitle": "拖动您的小行星到 Nervos 星系,完成上链操作。",
+    "description": "授权后即可在区块链上永久存储您的Web5账号数据,不可被第三方篡改。",
+    "gettingAddress": "获取地址中...",
+    "insufficientBalance": "⚠️ 余额不足",
+    "requiredCapacity": "所需容量: 355 CKB",
+    "checkingBalance": "正在检查余额...",
+    "error": "错误:",
+    "insufficientFundsWarning": "需要至少355CKB才能上链存储信息, 请补充CKB或切换有充足CKB的钱包。",
+    "recheckBalance": "重新检查余额",
+    "creatingAccount": "正在创建账户...",
+    "pleaseWait": "请稍候，这可能需要几分钟时间",
+    "accountCreationFailed": "账户创建失败"
+  },
+  "loginStep4": {
+    "accountCreatedSuccess": "账号创建成功!",
+    "successDescription": "您的Web5 DID账号已成功创建并上链存储。现在您可以参与社区治理，发布提案和参与讨论了。",
+    "gettingAddress": "获取地址中..."
+  },
+  "loginFooter": {
+    "connecting": "连接中...",
+    "connectWallet": "连接钱包",
+    "nextStep": "下一步",
+    "backToPreviousStep": "返回上一步",
+    "enterCommunity": "进入社区"
+  },
+  "loginProgress": {
+    "connectWallet": "连接钱包",
+    "setName": "设置名称",
+    "onChainStorage": "上链存储",
+    "creationComplete": "创建完成"
+  },
   "homepage": {
     "proposalList": "提案列表",
     "all": "全部",

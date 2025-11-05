@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { ProposalStatus } from "@/utils/proposalUtils";
 import { formatNumber } from "@/utils/proposalUtils";
 import { useCreateVoteMeta } from "@/hooks/useCreateVoteMeta";
+import { useWallet } from "@/provider/WalletProvider";
 import { useTranslation } from "@/utils/i18n";
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import CustomDatePicker from '@/components/ui/DatePicker';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 
@@ -32,32 +32,10 @@ interface TaskProcessingModalProps {
 }
 
 interface TaskFormData {
-  meetingTime: Date | null; // 改为Date类型
-  meetingLink: string;
-  remarks: string;
-  // 发布会议纪要相关
-  meetingMinutes: string;
-  // 里程碑拨款相关
-  milestoneAmount: string;
-  milestoneDescription: string;
-  // 里程碑核查相关
-  verificationResult: string;
-  verificationNotes: string;
-  // 项目整改核查相关
-  rectificationStatus: string;
-  rectificationNotes: string;
-  // 回收项目资金相关
-  recoveryAmount: string;
-  recoveryReason: string;
-  // 发布结项报告相关
-  projectSummary: string;
-  finalReport: string;
-  // 创建投票相关
-  voteType: number;
-  voteDuration: number;
-  customStartTime: Date | null;
-  customEndTime: Date | null;
-  useCustomTime: boolean;
+  proposal_uri: string;
+  startTime: number; // 开始时间（Unix 时间戳，秒）
+  endTime: number; // 结束时间（Unix 时间戳，秒）
+  candidates: unknown[]; // 候选人列表，默认为空数组
 }
 
 export type TaskType = string;
@@ -103,29 +81,14 @@ export default function TaskProcessingModal({
   proposal
 }: TaskProcessingModalProps) {
   const [isClient, setIsClient] = useState(false);
-  const { createReviewVote, error: voteError } = useCreateVoteMeta();
+  const { createVoteMetaData, buildAndSendTransaction, error: voteError } = useCreateVoteMeta();
+  const { signer } = useWallet();
   const { t } = useTranslation();
   const [formData, setFormData] = useState<TaskFormData>({
-    meetingTime: null, // 改为null
-    meetingLink: "",
-    remarks: "",
-    meetingMinutes: "",
-    milestoneAmount: "",
-    milestoneDescription: "",
-    verificationResult: "",
-    verificationNotes: "",
-    rectificationStatus: "",
-    rectificationNotes: "",
-    recoveryAmount: "",
-    recoveryReason: "",
-    projectSummary: "",
-    finalReport: "",
-    // 创建投票相关
-    voteType: 1,
-    voteDuration: 3,
-    customStartTime: null,
-    customEndTime: null,
-    useCustomTime: false
+    proposal_uri: proposal?.uri || "",
+    startTime: Math.floor(Date.now() / 1000), // 默认当前时间
+    endTime: Math.floor(Date.now() / 1000) + (3 * 24 * 60 * 60), // 默认3天后
+    candidates: ["yes","no"]
   });
 
   // Quill 编辑器配置
@@ -160,49 +123,59 @@ export default function TaskProcessingModal({
     setIsClient(true);
   }, []);
 
-  const handleInputChange = (field: keyof TaskFormData, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
+  // 当 proposal 变化时，更新 proposal_uri
+  useEffect(() => {
+    if (proposal?.uri) {
+      setFormData(prev => ({
+        ...prev,
+        proposal_uri: proposal.uri
+      }));
+    }
+  }, [proposal?.uri]);
 
-  const handleDateChange = (date: Date | null) => {
-    setFormData(prev => ({
-      ...prev,
-      meetingTime: date
-    }));
-  };
+  
 
   const handleVoteStartDateChange = (date: Date | null) => {
     setFormData(prev => ({
       ...prev,
-      customStartTime: date
+      startTime: date ? Math.floor(date.getTime() / 1000) : prev.startTime
     }));
   };
 
   const handleVoteEndDateChange = (date: Date | null) => {
     setFormData(prev => ({
       ...prev,
-      customEndTime: date
+      endTime: date ? Math.floor(date.getTime() / 1000) : prev.endTime
     }));
   };
 
   const handleComplete = async () => {
     if (isTaskType(taskType, "taskTypes.createVote", t) && proposal) {
       // 处理投票创建
-      if (formData.useCustomTime) {
-        if (!formData.customStartTime || !formData.customEndTime) {
-          alert(t("alerts.selectVoteTime"));
+      // 使用 formData 中的时间，如果没有自定义时间，则使用默认值
+      const result = await createVoteMetaData({
+        proposalUri: formData.proposal_uri,
+        voteType: 1,
+        startTime: formData.startTime,
+        endTime: formData.endTime,
+        candidates: ["yes","no"]
+      });
+
+      if (result.success && result.data) {
+        if (!signer) {
+          alert(t("wallet.signerNotConnected"));
           return;
         }
-      }
-
-      const result = await createReviewVote(proposal.uri);
-      
-      if (result.success) {
-        onComplete(formData);
-        onClose();
+        try {
+          const txResult = await buildAndSendTransaction(result.data, signer);
+          if (txResult.success) {
+            onComplete(formData);
+            onClose();
+          }
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          alert(`${t("alerts.sendTransactionFailed")}: ${errorMessage}`);
+        }
       } else {
         alert(`${t("alerts.createVoteFailed")}: ${result.error}`);
       }
@@ -215,26 +188,10 @@ export default function TaskProcessingModal({
 
   const handleClose = () => {
     setFormData({
-      meetingTime: null, // 改为null
-      meetingLink: "",
-      remarks: "",
-      meetingMinutes: "",
-      milestoneAmount: "",
-      milestoneDescription: "",
-      verificationResult: "",
-      verificationNotes: "",
-      rectificationStatus: "",
-      rectificationNotes: "",
-      recoveryAmount: "",
-      recoveryReason: "",
-      projectSummary: "",
-      finalReport: "",
-      // 创建投票相关
-      voteType: 1,
-      voteDuration: 3,
-      customStartTime: null,
-      customEndTime: null,
-      useCustomTime: false
+      proposal_uri: proposal?.uri || "",
+      startTime: Math.floor(Date.now() / 1000),
+      endTime: Math.floor(Date.now() / 1000) + (3 * 24 * 60 * 60),
+      candidates: []
     });
     onClose();
   };
@@ -300,417 +257,37 @@ export default function TaskProcessingModal({
               </div>
 
               {/* 根据任务类型显示不同的表单字段 */}
-              {isTaskType(taskType, "taskTypes.organizeMeeting", t) && (
-                <>
-                  {/* 会议时间 */}
-                  <div className="form-item">
-                    <label className="form-label required">{t("formLabels.meetingTime")}</label>
-                    <div className="input-container">
-                      <DatePicker
-                        selected={formData.meetingTime}
-                        onChange={handleDateChange}
-                        dateFormat="yyyy-MM-dd"
-                        placeholderText={t("placeholders.selectMeetingTime")}
-                        minDate={new Date()}
-                        className="form-input"
-                        showPopperArrow={false}
-                        popperClassName="react-datepicker-popper"
-                        calendarClassName="react-datepicker-calendar"
-                        locale="zh-CN"
-                        autoComplete="off"
-                      />
-                      <div className="select-arrow">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M8 2V5M16 2V5M3.5 9.09H20.5M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M8 13H8.01M12 13H12.01M16 13H16.01M8 17H8.01M12 17H12.01M16 17H16.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 会议链接 */}
-                  <div className="form-item full-width">
-                    <label className="form-label">{t("formLabels.meetingLink")}</label>
-                    <input
-                      type="text"
-                      placeholder={t("placeholders.enterMeetingLink")}
-                      value={formData.meetingLink}
-                      onChange={(e) => handleInputChange("meetingLink", e.target.value)}
-                      className="form-input"
-                    />
-                  </div>
-                </>
-              )}
-
-              {taskType === "组织AMA" && (
-                <>
-                  {/* 会议时间 */}
-                  <div className="form-item">
-                    <label className="form-label required">{t("formLabels.meetingTime")}</label>
-                    <div className="input-container">
-                      <DatePicker
-                        selected={formData.meetingTime}
-                        onChange={handleDateChange}
-                        dateFormat="yyyy-MM-dd"
-                        placeholderText={t("placeholders.selectMeetingTime")}
-                        minDate={new Date()}
-                        className="form-input"
-                        showPopperArrow={false}
-                        popperClassName="react-datepicker-popper"
-                        calendarClassName="react-datepicker-calendar"
-                        locale="zh-CN"
-                        autoComplete="off"
-                      />
-                      <div className="select-arrow">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M8 2V5M16 2V5M3.5 9.09H20.5M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M8 13H8.01M12 13H12.01M16 13H16.01M8 17H8.01M12 17H12.01M16 17H16.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 会议链接 */}
-                  <div className="form-item full-width">
-                    <label className="form-label">{t("formLabels.meetingLink")}</label>
-                    <input
-                      type="text"
-                      placeholder={t("placeholders.enterMeetingLink")}
-                      value={formData.meetingLink}
-                      onChange={(e) => handleInputChange("meetingLink", e.target.value)}
-                      className="form-input"
-                    />
-                  </div>
-                </>
-              )}
-
-              {isTaskType(taskType, "taskTypes.publishMinutes", t) && (
-                <div className="form-item full-width">
-                  <label className="form-label required">{t("formLabels.meetingMinutes")}</label>
-                  <div className="editor-container">
-                    {isClient ? (
-                      <div className="quill-wrapper">
-                        <ReactQuill
-                          theme="snow"
-                          value={formData.meetingMinutes}
-                          onChange={(value) => handleInputChange("meetingMinutes", value)}
-                          modules={quillModules}
-                          formats={quillFormats}
-                          placeholder={t("placeholders.enterMeetingMinutes")}
-                          style={{
-                            height: "200px",
-                            marginBottom: "10px",
-                          }}
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        style={{
-                          height: "200px",
-                          marginBottom: "50px",
-                          border: "1px solid #4C525C",
-                          borderRadius: "6px",
-                          backgroundColor: "#262A33",
-                          padding: "12px",
-                          color: "#6b7280",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        {t("editor.loading")}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {isTaskType(taskType, "taskTypes.milestoneAllocation", t) && (
-                <>
-                  <div className="form-item">
-                    <label className="form-label required">{t("formLabels.allocationAmount")}</label>
-                    <input
-                      type="text"
-                      placeholder={t("placeholders.enterAllocationAmount")}
-                      value={formData.milestoneAmount}
-                      onChange={(e) => handleInputChange("milestoneAmount", e.target.value)}
-                      className="form-input"
-                    />
-                  </div>
-                  <div className="form-item full-width">
-                    <label className="form-label required">{t("formLabels.allocationDescription")}</label>
-                    <textarea
-                      placeholder={t("placeholders.enterAllocationDescription")}
-                      value={formData.milestoneDescription}
-                      onChange={(e) => handleInputChange("milestoneDescription", e.target.value)}
-                      className="form-input"
-                      rows={3}
-                    />
-                  </div>
-                </>
-              )}
-
-              {isTaskType(taskType, "taskTypes.milestoneVerification", t) && (
-                <>
-                  <div className="form-item">
-                    <label className="form-label required">{t("formLabels.verificationResult")}</label>
-                    <select
-                      value={formData.verificationResult}
-                      onChange={(e) => handleInputChange("verificationResult", e.target.value)}
-                      className="form-select"
-                    >
-                      <option value="">{t("placeholders.selectVerificationResult")}</option>
-                      <option value={t("verificationResults.pass")}>{t("taskModal.verificationResults.pass")}</option>
-                      <option value={t("verificationResults.fail")}>{t("taskModal.verificationResults.fail")}</option>
-                      <option value={t("verificationResults.needRectification")}>{t("taskModal.verificationResults.needRectification")}</option>
-                    </select>
-                  </div>
-                  <div className="form-item full-width">
-                    <label className="form-label required">{t("formLabels.verificationNotes")}</label>
-                    <textarea
-                      placeholder={t("placeholders.enterVerificationNotes")}
-                      value={formData.verificationNotes}
-                      onChange={(e) => handleInputChange("verificationNotes", e.target.value)}
-                      className="form-input"
-                      rows={4}
-                    />
-                  </div>
-                </>
-              )}
-
-              {isTaskType(taskType, "taskTypes.projectRectification", t) && (
-                <>
-                  <div className="form-item">
-                    <label className="form-label required">{t("formLabels.rectificationStatus")}</label>
-                    <select
-                      value={formData.rectificationStatus}
-                      onChange={(e) => handleInputChange("rectificationStatus", e.target.value)}
-                      className="form-select"
-                    >
-                      <option value="">{t("placeholders.selectRectificationStatus")}</option>
-                      <option value={t("rectificationStatuses.completed")}>{t("taskModal.rectificationStatuses.completed")}</option>
-                      <option value={t("rectificationStatuses.inProgress")}>{t("taskModal.rectificationStatuses.inProgress")}</option>
-                      <option value={t("rectificationStatuses.notStarted")}>{t("taskModal.rectificationStatuses.notStarted")}</option>
-                    </select>
-                  </div>
-                  <div className="form-item full-width">
-                    <label className="form-label required">{t("formLabels.rectificationNotes")}</label>
-                    <textarea
-                      placeholder={t("placeholders.enterRectificationNotes")}
-                      value={formData.rectificationNotes}
-                      onChange={(e) => handleInputChange("rectificationNotes", e.target.value)}
-                      className="form-input"
-                      rows={4}
-                    />
-                  </div>
-                </>
-              )}
-
-              {isTaskType(taskType, "taskTypes.recoverFunds", t) && (
-                <>
-                  <div className="form-item">
-                    <label className="form-label required">{t("formLabels.recoveryAmount")}</label>
-                    <input
-                      type="text"
-                      placeholder={t("placeholders.enterRecoveryAmount")}
-                      value={formData.recoveryAmount}
-                      onChange={(e) => handleInputChange("recoveryAmount", e.target.value)}
-                      className="form-input"
-                    />
-                  </div>
-                  <div className="form-item full-width">
-                    <label className="form-label required">{t("formLabels.recoveryReason")}</label>
-                    <textarea
-                      placeholder={t("placeholders.enterRecoveryReason")}
-                      value={formData.recoveryReason}
-                      onChange={(e) => handleInputChange("recoveryReason", e.target.value)}
-                      className="form-input"
-                      rows={4}
-                    />
-                  </div>
-                </>
-              )}
-
-              {isTaskType(taskType, "taskTypes.publishReport", t) && (
-                <>
-                  <div className="form-item full-width">
-                    <label className="form-label required">{t("formLabels.projectSummary")}</label>
-                    <textarea
-                      placeholder={t("placeholders.enterProjectSummary")}
-                      value={formData.projectSummary}
-                      onChange={(e) => handleInputChange("projectSummary", e.target.value)}
-                      className="form-input"
-                      rows={3}
-                    />
-                  </div>
-                  <div className="form-item full-width">
-                    <label className="form-label required">{t("formLabels.finalReport")}</label>
-                    <div className="editor-container">
-                      {isClient ? (
-                        <div className="quill-wrapper">
-                          <ReactQuill
-                            theme="snow"
-                            value={formData.finalReport}
-                            onChange={(value) => handleInputChange("finalReport", value)}
-                            modules={quillModules}
-                            formats={quillFormats}
-                            placeholder={t("placeholders.enterFinalReport")}
-                            style={{
-                              height: "200px",
-                              marginBottom: "10px",
-                            }}
-                          />
-                        </div>
-                      ) : (
-                        <div
-                          style={{
-                            height: "200px",
-                            marginBottom: "50px",
-                            border: "1px solid #4C525C",
-                            borderRadius: "6px",
-                            backgroundColor: "#262A33",
-                            padding: "12px",
-                            color: "#6b7280",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          {t("editor.loading")}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </>
-              )}
+              {/* 其他任务类型的 UI 已暂时移除，只保留创建投票相关的功能 */}
 
               {isTaskType(taskType, "taskTypes.createVote", t) && (
                 <>
-                  {/* 投票类型和投票持续时间 - 两列布局 */}
+                  {/* 投票开始时间和结束时间 - 两列布局 */}
                   <div className="form-row">
                     <div className="form-item">
-                      <label className="form-label required">{t("taskModal.voteType")}</label>
-                      <select
-                        value={formData.voteType}
-                        onChange={(e) => handleInputChange("voteType", e.target.value)}
-                        className="form-select"
-                      >
-                        <option value={1}>{t("taskModal.voteTypes.communityReview")}</option>
-                        <option value={2}>{t("taskModal.voteTypes.formal")}</option>
-                        <option value={3}>{t("taskModal.voteTypes.milestone")}</option>
-                      </select>
-                    </div>
-                    {!formData.useCustomTime && (
-                      <div className="form-item">
-                        <label className="form-label required">{t("taskModal.voteDuration")}</label>
-                        <select
-                          value={formData.voteDuration}
-                          onChange={(e) => handleInputChange("voteDuration", e.target.value)}
-                          className="form-select"
-                        >
-                          <option value={1}>{t("taskModal.durations.1day")}</option>
-                          <option value={3}>{t("taskModal.durations.3days")}</option>
-                          <option value={7}>{t("taskModal.durations.7days")}</option>
-                          <option value={14}>{t("taskModal.durations.14days")}</option>
-                        </select>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* 自定义时间选项 */}
-                  <div className="form-item">
-                    <label className="form-label">
-                      <input
-                        type="checkbox"
-                        checked={formData.useCustomTime}
-                        onChange={(e) => handleInputChange("useCustomTime", e.target.checked.toString())}
-                        style={{ marginRight: "8px" }}
+                      <label className="form-label required">{t("taskModal.voteStartTime")}</label>
+                      <CustomDatePicker
+                        selected={formData.startTime ? new Date(formData.startTime * 1000) : null}
+                        onChange={handleVoteStartDateChange}
+                        placeholderText={t("taskModal.placeholders.selectVoteStartTime")}
+                        minDate={new Date()}
+                        showTimeSelect={true}
+                        timeIntervals={1}
+                        timeFormat="HH:mm"
                       />
-                      {t("taskModal.customVoteTime")}
-                    </label>
+                    </div>
+                    <div className="form-item">
+                      <label className="form-label required">{t("taskModal.voteEndTime")}</label>
+                      <CustomDatePicker
+                        selected={formData.endTime ? new Date(formData.endTime * 1000) : null}
+                        onChange={handleVoteEndDateChange}
+                        placeholderText={t("taskModal.placeholders.selectVoteEndTime")}
+                        minDate={formData.startTime ? new Date(formData.startTime * 1000) : new Date()}
+                        showTimeSelect={true}
+                        timeIntervals={1}
+                        timeFormat="HH:mm"
+                      />
+                    </div>
                   </div>
-
-                  {/* 时间预览 */}
-                  {!formData.useCustomTime && (
-                    <div className="form-item full-width">
-                      <div className="time-preview">
-                        <p>
-                          {t("taskModal.timePreview.startTime")}: {new Date().toLocaleString('zh-CN', {
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            timeZone: 'Asia/Shanghai'
-                          })} (UTC+8)
-                        </p>
-                        <p>
-                          {t("taskModal.timePreview.endTime")}: {new Date(Date.now() + formData.voteDuration * 24 * 60 * 60 * 1000).toLocaleString('zh-CN', {
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            timeZone: 'Asia/Shanghai'
-                          })} (UTC+8)
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* 自定义时间输入 - 两列布局 */}
-                  {formData.useCustomTime && (
-                    <div className="form-row">
-                      <div className="form-item">
-                        <label className="form-label required">{t("taskModal.voteStartTime")}</label>
-                        <div className="input-container">
-                          <DatePicker
-                            selected={formData.customStartTime}
-                            onChange={handleVoteStartDateChange}
-                            dateFormat="yyyy-MM-dd"
-                            placeholderText={t("taskModal.placeholders.selectVoteStartTime")}
-                            minDate={new Date()}
-                            className="form-input"
-                            showPopperArrow={false}
-                            popperClassName="react-datepicker-popper"
-                            calendarClassName="react-datepicker-calendar"
-                            locale="zh-CN"
-                            autoComplete="off"
-                          />
-                          <div className="select-arrow">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M8 2V5M16 2V5M3.5 9.09H20.5M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                              <path d="M8 13H8.01M12 13H12.01M16 13H16.01M8 17H8.01M12 17H12.01M16 17H16.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="form-item">
-                        <label className="form-label required">{t("taskModal.voteEndTime")}</label>
-                        <div className="input-container">
-                          <DatePicker
-                            selected={formData.customEndTime}
-                            onChange={handleVoteEndDateChange}
-                            dateFormat="yyyy-MM-dd"
-                            placeholderText={t("taskModal.placeholders.selectVoteEndTime")}
-                            minDate={formData.customStartTime || new Date()}
-                            className="form-input"
-                            showPopperArrow={false}
-                            popperClassName="react-datepicker-popper"
-                            calendarClassName="react-datepicker-calendar"
-                            locale="zh-CN"
-                            autoComplete="off"
-                          />
-                          <div className="select-arrow">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M8 2V5M16 2V5M3.5 9.09H20.5M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                              <path d="M8 13H8.01M12 13H12.01M16 13H16.01M8 17H8.01M12 17H12.01M16 17H16.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
 
                   {voteError && (
                     <div className="error-message">
@@ -720,45 +297,7 @@ export default function TaskProcessingModal({
                 </>
               )}
 
-              {/* 备注信息 */}
-              <div className="form-item full-width">
-                <label className="form-label">{t("taskModal.remarks")}</label>
-                <div className="editor-container">
-                  {isClient ? (
-                    <div className="quill-wrapper">
-                      <ReactQuill
-                        theme="snow"
-                        value={formData.remarks}
-                        onChange={(value) => handleInputChange("remarks", value)}
-                        modules={quillModules}
-                        formats={quillFormats}
-                        placeholder={t("placeholders.enterMeetingLink")}
-                        style={{
-                          height: "150px",
-                          marginBottom: "10px",
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div
-                      style={{
-                        height: "150px",
-                        marginBottom: "50px",
-                        border: "1px solid #4C525C",
-                        borderRadius: "6px",
-                        backgroundColor: "#262A33",
-                        padding: "12px",
-                        color: "#6b7280",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {t("editor.loading")}
-                    </div>
-                  )}
-                </div>
-              </div>
+              {/* 备注信息已移除 */}
             </div>
           </div>
         </div>

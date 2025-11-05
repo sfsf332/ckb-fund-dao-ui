@@ -12,6 +12,8 @@ import { ccc, hexFrom } from "@ckb-ccc/core";
 import { useWallet } from "@/provider/WalletProvider";
 import { useTranslation } from "@/utils/i18n";
 import { useVoteWeight } from "@/hooks/useVoteWeight";
+import { getBindList } from "@/server/proposal";
+import useUserInfoStore from "@/store/userInfo";
 
 interface WalletDaoCardProps {
   className?: string;
@@ -23,6 +25,7 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
   const { walletBalance, isLoadingBalance, formatBalance } = useWalletBalance();
   const { signer } = useWallet();
   const { voteWeight, isLoading: isLoadingVoteWeight, formatVoteWeight } = useVoteWeight();
+  const { userInfo } = useUserInfoStore();
 
   // 自定义地址格式化函数：前7个字符...后4个字符
   const formatWalletAddress = (address: string) => {
@@ -31,10 +34,16 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
     return `${address.slice(0, 7)}...${address.slice(-4)}`;
   };
 
+  // 格式化绑定钱包地址：前5个字符...后4个字符
+  const formatNeuronWalletAddress = (address: string) => {
+    if (!address) return '';
+    if (address.length <= 9) return address;
+    return `${address.slice(0, 5)}...${address.slice(-4)}`;
+  };
+
   const [showNeuronDropdown, setShowNeuronDropdown] = useState(false);
-  const [neuronWallets] = useState([
- 
-  ]);
+  const [neuronWallets, setNeuronWallets] = useState<string[]>([]);
+  const [isLoadingBindList, setIsLoadingBindList] = useState(false);
   const [showSignatureModal, setShowSignatureModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
@@ -62,28 +71,63 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
 
   // 将签名转换为十六进制（兼容base64和0x格式）
   const convertSignatureToHex = (signature: string): string => {
+    if (!signature || !signature.trim()) {
+      console.error(t("wallet.signatureConversionFailed"), "签名为空");
+      return '';
+    }
+
+    const trimmedSignature = signature.trim();
+
     try {
       // 检查是否为0x开头的十六进制字符串
-      if (signature.startsWith('0x') || signature.startsWith('0X')) {
-        // 移除0x前缀并验证是否为有效的十六进制
-        const hexString = signature.slice(2);
-        if (/^[0-9a-fA-F]+$/.test(hexString)) {
+      if (trimmedSignature.startsWith('0x') || trimmedSignature.startsWith('0X')) {
+        // 移除0x前缀
+        const hexString = trimmedSignature.slice(2);
+        
+        // 如果0x后面为空，尝试按base64处理
+        if (!hexString) {
+          throw new Error("0x前缀后没有内容，尝试base64解码");
+        }
+        
+        // 验证是否为有效的十六进制（允许空字符串的情况已在上方处理）
+        if (/^[0-9a-fA-F]+$/i.test(hexString)) {
           return hexString.toLowerCase();
         }
-        throw new Error(t("wallet.invalidHexSignature"));
+        
+        // 如果不是有效的十六进制，尝试按base64处理
+        console.warn("0x格式的签名不是有效的十六进制，尝试base64解码");
       }
       
-      // 否则按base64处理
-      // 移除可能的填充字符
-      const cleanBase64 = signature.replace(/[^A-Za-z0-9+/]/g, '');
-      // 解码 base64 为字节数组
-      const bytes = atob(cleanBase64);
-      // 转换为十六进制
-      return Array.from(bytes)
-        .map(byte => byte.charCodeAt(0).toString(16).padStart(2, '0'))
-        .join('');
+      // 检查是否为纯十六进制字符串（没有0x前缀）
+      if (/^[0-9a-fA-F]+$/i.test(trimmedSignature)) {
+        return trimmedSignature.toLowerCase();
+      }
+      
+      // 尝试按base64处理
+      // 移除可能的填充字符和空格
+      const cleanBase64 = trimmedSignature.replace(/[\s\-_]/g, '').replace(/[^A-Za-z0-9+/=]/g, '');
+      
+      if (!cleanBase64) {
+        throw new Error("无法解析签名格式");
+      }
+
+      // 尝试解码 base64
+      try {
+        const bytes = atob(cleanBase64);
+        // 转换为十六进制
+        return Array.from(bytes)
+          .map(byte => byte.charCodeAt(0).toString(16).padStart(2, '0'))
+          .join('');
+      } catch (base64Error) {
+        throw new Error(`Base64解码失败: ${base64Error instanceof Error ? base64Error.message : '未知错误'}`);
+      }
     } catch (error) {
-      console.error(t('wallet.signatureConversionFailed'), error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error(t('wallet.signatureConversionFailed'), errorMessage, {
+        signatureLength: trimmedSignature.length,
+        signaturePrefix: trimmedSignature.substring(0, 20)
+      });
+      // 不抛出错误，返回空字符串让上层处理
       return '';
     }
   };
@@ -97,6 +141,43 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
       });
     }
   }, [walletAddress, isConnected, generateBindInfo]);
+
+  // 获取绑定列表
+  useEffect(() => {
+    const fetchBindList = async () => {
+      if (!userInfo?.did) {
+        setNeuronWallets([]);
+        return;
+      }
+
+      try {
+        setIsLoadingBindList(true);
+        const response = await getBindList({ did: userInfo.did });
+        
+        // API 返回格式: {code: 200, data: [{from: "...", timestamp: ...}], message: "OK"}
+        // requestAPI 会自动提取 data 字段，所以 response 应该是 BindItem[] 数组
+        // 每个元素格式: {from: "ckt1...", timestamp: 1762155209433}
+        let walletAddresses: string[] = [];
+        
+        if (Array.isArray(response)) {
+          // 从绑定项中提取钱包地址（from 字段）
+          walletAddresses = response
+            .map((item) => item?.from || item?.to || item?.address || '')
+            .filter((addr: string) => typeof addr === 'string' && addr.length > 0);
+        }
+        
+        console.log('绑定列表数据:', { response, walletAddresses });
+        setNeuronWallets(walletAddresses);
+      } catch (error) {
+        console.error("获取绑定列表失败:", error);
+        setNeuronWallets([]);
+      } finally {
+        setIsLoadingBindList(false);
+      }
+    };
+
+    fetchBindList();
+  }, [userInfo?.did]);
 
   const handleStakeCKB = () => {
     // 处理质押CKB逻辑
@@ -126,8 +207,6 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
     const tx = ccc.Transaction.default();
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await tx.completeInputsAtLeastOne(signer as any);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await tx.completeFeeBy(signer as any);
 
     // 将签名转换为十六进制（兼容base64和0x格式）
     const signatureHex = convertSignatureToHex(signature);
@@ -148,6 +227,10 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
       inputType: bindInfoWithSigBytes,
     });
     tx.setWitnessArgsAt(0, witnessArgs);
+
+    // 在设置 witness 之后重新计算费用，确保费用充足
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await tx.completeFeeBy(signer as any);
 
     await signer.signTransaction(tx);
 
@@ -273,7 +356,7 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
               </div>
               {neuronWallets.map((wallet, index) => (
                 <div key={index} className="neuron-wallet-item">
-                  <span className="wallet-address">{wallet}</span>
+                  <span className="wallet-address">{formatNeuronWalletAddress(wallet)}</span>
                   {/* <button
                     className="remove-wallet-button"
                     onClick={() => handleRemoveWallet(wallet)}

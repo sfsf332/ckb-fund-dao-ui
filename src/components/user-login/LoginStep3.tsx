@@ -51,13 +51,47 @@ export default function LoginStep3({
       handleCopy(walletAddress, t("copy.addressSuccess"));
     }
   };
+  
+  // 如果创建成功，显示成功信息
+  if (createStatus?.status === CREATE_STATUS.SUCCESS) {
+    return (
+      <div className="login-info-section">
+        <h3 className="login-info-title">{t("loginStep4.accountCreatedSuccess")}</h3>
+        <p className="success-description">
+          {t("loginStep4.successDescription")}
+        </p>
+        <div className="success-info">
+          <div className="success-card">
+            <div className="success-head">
+              <div className="card-img">
+                <Image src="/nervos-planet.png" alt="planet" width={60} height={32} />
+              </div>
+              <div className="card-name">
+                {accountName || "alice"}
+              </div>
+            </div>
+            <div className="success-details">
+              <div className="success-name">
+                {accountName || "alice"}.ckb.xyz
+              </div>
+              <div className="success-address" onClick={handleCopyAddress} style={{ cursor: 'pointer' }}>
+                {isLoadingAddress ? t("loginStep4.gettingAddress") : formatAddress(walletAddress)} 
+                <CopyButton text={walletAddress} className="copy-button" ariaLabel="copy-wallet-address" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
   return (
     <div className="login-info-section">
       <h3 className="login-info-title">
-        拖动您的小行星到 Nervos 星系,完成上链操作。
+        {t("loginStep3.dragTitle")}
       </h3>
       <p className="login-description">
-        授权后即可在区块链上永久存储您的Web5账号数据,不可被第三方篡改。
+        {t("loginStep3.description")}
       </p>
       <div className="drag-drop-container">
         <div className="drag-source">
@@ -79,7 +113,7 @@ export default function LoginStep3({
               {accountName || "alice"}
             </div>
             <div className="account-address" style={{ cursor: 'pointer' }}>
-              {isLoadingAddress ? "获取地址中..." : formatAddress(walletAddress)} 
+              {isLoadingAddress ? t("loginStep3.gettingAddress") : formatAddress(walletAddress)} 
               <CopyButton text={walletAddress} className="copy-button" ariaLabel="copy-wallet-address" />
             </div>
           </div>
@@ -96,26 +130,26 @@ export default function LoginStep3({
               color:'#333'
             }}>
               <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>
-                ⚠️ 余额不足
+                {t("loginStep3.insufficientBalance")}
               </div>
               <div>
-                所需容量: 355 CKB
+                {t("loginStep3.requiredCapacity")}
               </div>
               {balanceLoading && (
                 <div style={{ marginTop: '4px', fontStyle: 'italic' }}>
-                  正在检查余额...
+                  {t("loginStep3.checkingBalance")}
                 </div>
               )}
               {balanceError && (
                 <div style={{ marginTop: '4px', color: '#dc3545' }}>
-                  错误: {balanceError}
+                  {t("loginStep3.error")} {balanceError}
                 </div>
               )}
             </div>
           )}
           {showInsufficientFunds && (
             <div className="insufficient-funds-warning">
-              需要至少355CKB才能上链存储信息, 请补充CKB或切换有充足CKB的钱包。
+              {t("loginStep3.insufficientFundsWarning")}
               {onRecheckBalance && (
                 <button 
                   className="recheck-balance-btn" 
@@ -131,7 +165,7 @@ export default function LoginStep3({
                     cursor: 'pointer'
                   }}
                 >
-                  重新检查余额
+                  {t("loginStep3.recheckBalance")}
                 </button>
               )}
             </div>
@@ -139,33 +173,18 @@ export default function LoginStep3({
 
           {/* 创建账户状态显示 */}
           {createLoading && (
-            <div className="create-account-loading" style={{ 
-              marginTop: '8px', 
-              padding: '8px', 
-              backgroundColor: '#f0f8ff',
-              border: '1px solid #007bff',
-              borderRadius: '4px',
-              textAlign: 'center',
-              color:'#333'
-            }}>
-              <div>正在创建账户...</div>
+            <div className="create-account-loading">
+              <div>{t("loginStep3.creatingAccount")}</div>
               <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
-                请稍候，这可能需要几分钟时间
+                {t("loginStep3.pleaseWait")}
               </div>
             </div>
           )}
 
           {createStatus?.status === CREATE_STATUS.FAILURE && (
-            <div className="create-account-error" style={{ 
-              marginTop: '8px', 
-              padding: '8px', 
-              backgroundColor: '#ffe6e6',
-              border: '1px solid #ff4444',
-              borderRadius: '4px',
-              textAlign: 'center'
-            }}>
-              <div style={{ color: '#cc0000' }}>账户创建失败</div>
-              <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+            <div className="create-account-error">
+              <div>{t("loginStep3.accountCreationFailed")}</div>
+              <div className="error-reason">
                 {createStatus.reason}
               </div>
             </div>

@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactQuill from 'react-quill-new';
-import DatePicker from 'react-datepicker';
+import CustomDatePicker from '@/components/ui/DatePicker';
 import { useI18n } from '@/contexts/I18nContext';
-import 'react-datepicker/dist/react-datepicker.css';
 
 interface Milestone {
   id: string;
@@ -140,27 +139,12 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
                         <label className="form-label">
                           {messages.proposalSteps.projectMilestones.expectedDate}
                         </label>
-                        <div className="input-container">
-                          <DatePicker
-                            selected={milestone.date ? new Date(milestone.date) : null}
-                            onChange={(date) => onMilestoneDateChange(milestone.id, date)}
-                            dateFormat="yyyy-MM-dd"
-                            placeholderText={messages.proposalSteps.projectMilestones.datePlaceholder}
-                            minDate={new Date()}
-                            className="form-input"
-                            showPopperArrow={false}
-                            popperClassName="react-datepicker-popper"
-                            calendarClassName="react-datepicker-calendar"
-                            locale="zh-CN"
-                            autoComplete="off"
-                          />
-                          <div className="select-arrow">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M8 2V5M16 2V5M3.5 9.09H20.5M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
-                              <path d="M8 13H8.01M12 13H12.01M16 13H16.01M8 17H8.01M12 17H12.01M16 17H16.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                          </div>
-                        </div>
+                        <CustomDatePicker
+                          selected={milestone.date ? new Date(milestone.date) : null}
+                          onChange={(date) => onMilestoneDateChange(milestone.id, date)}
+                          placeholderText={messages.proposalSteps.projectMilestones.datePlaceholder}
+                          minDate={new Date()}
+                        />
                       </div>
                     </div>
 

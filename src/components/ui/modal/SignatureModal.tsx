@@ -36,7 +36,7 @@ export default function SignatureModal({
       isOpen={isOpen}
       onClose={onClose}
       title={messages.modal.signatureModal.title}
-      size="medium"
+      size="large"
       buttons={[
         {
           text: messages.modal.signatureModal.bind,

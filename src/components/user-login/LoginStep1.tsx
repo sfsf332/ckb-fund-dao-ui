@@ -54,28 +54,6 @@ export default function LoginStep1({ onDisconnect }: LoginStep1Props) {
             <li>{t("loginStep1.benefit2")}</li>
             <li>{t("loginStep1.benefit3")}</li>
           </ul>
-          {isConnected && (
-            <div className="wallet-status">
-              <p className="wallet-connected">✅ {t("loginStep1.walletConnected")}</p>
-              <p 
-                className="wallet-address" 
-                onClick={copyAddress} 
-                style={{ cursor: 'pointer' }} 
-                title={t("loginStep1.clickToCopyAddress")}
-              >
-                {t("loginStep1.wallet")}: {formatAddress(walletAddress)}
-              </p>
-              <div className="wallet-controls">
-                <button 
-                  className="wallet-control-btn disconnect-btn"
-                  onClick={onDisconnect}
-                >
-                  {t("loginStep1.disconnect")}
-                </button>
-              
-              </div>
-            </div>
-          )}
         </div>
         <div className="login-graphic-section">
           <Image src="/login-bg.png" alt="login-graphic" width={224} height={160} />
@@ -90,6 +68,38 @@ export default function LoginStep1({ onDisconnect }: LoginStep1Props) {
           />
         </a>
       </div>
+      {isConnected && (
+        <div className="wallet-status-section">
+          <div className="wallet-status-divider"></div>
+          <div className="wallet-status-container">
+            <div className="wallet-status-info">
+              <span className="wallet-checkmark">◎</span>
+              <span className="wallet-connected-text">{t("loginStep1.walletConnected")}</span>
+            </div>
+            <div className="wallet-address-container">
+              <span 
+                className="wallet-address-text" 
+                onClick={copyAddress} 
+                style={{ cursor: 'pointer' }} 
+                title={t("loginStep1.clickToCopyAddress")}
+              >
+                {formatAddress(walletAddress)}
+              </span>
+              <a 
+                href="#" 
+                className="wallet-disconnect-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onDisconnect?.();
+                }}
+              >
+                {t("loginStep1.disconnect")}
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+     
     </>
   );
 }

@@ -16,9 +16,9 @@
 .login-modal {
   background: #141619;
   border-radius: 15px;
-  padding: 30px;
+  padding: 30px 10px;
   width: 100%;
-  max-width: 650px;
+  max-width: 720px;
   position: relative;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
 }
@@ -77,6 +77,14 @@ rotate: 90deg;
   border:1px solid #777;
   transition: all 0.3s ease;
   margin: 0 6px;
+}
+
+.login-step-circle.completed {
+  background: #00CC9B;
+  border: 1px solid #00CC9B;
+  color: #00CC9B;
+  width: 20px;
+  height: 20px;
 }
 
 .login-step.current .login-step-circle {
@@ -154,7 +162,7 @@ rotate: 90deg;
 
 .login-benefits li {
   color: #fff;
-
+  text-align: left;
   line-height: 1.6;
   margin-bottom: 8px;
   position: relative;
@@ -423,10 +431,12 @@ rotate: 90deg;
 .name-input-container {
   position: relative;
   margin: 20px 0;
+  width: 80%;
+  display: inline-block;
 }
 
 .name-input {
-  width: 80%;
+  width: 100%;
   padding: 16px;
   background: #1C2027;
   border: 1px solid #4C525C;
@@ -452,6 +462,46 @@ rotate: 90deg;
 
 .name-input::placeholder {
   color: #6A727B;
+}
+
+.name-input-icon {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.validation-icon {
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+}
+
+.validation-icon.loading {
+  color: #00CC9B;
+  animation: spin 1s linear infinite;
+}
+
+.validation-icon.success {
+  color: #00CC9B;
+}
+
+.validation-icon.error {
+  color: #EF4444;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .input-valid-icon {
@@ -568,6 +618,69 @@ rotate: 90deg;
 }
 
 /* 钱包状态和控制按钮样式 */
+.wallet-status-section {
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.wallet-status-divider {
+  height: 1px;
+  border-top: 1px dashed #262A33;
+  margin-bottom: 12px;
+}
+
+.wallet-status-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wallet-status-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wallet-checkmark {
+  color: #00CC9B;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.wallet-connected-text {
+  color: #00CC9B;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.wallet-address-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.wallet-address-text {
+  color: #E5E7EB;
+  font-size: 12px;
+  font-family: monospace;
+  flex: 1;
+}
+
+.wallet-disconnect-link {
+  color: #EF4444;
+  font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.wallet-disconnect-link:hover {
+  color: #DC2626;
+  text-decoration: underline;
+}
+
+/* 旧样式保留以兼容（如果需要） */
 .wallet-status {
   margin-top: 16px;
   padding: 12px;
@@ -670,6 +783,20 @@ rotate: 90deg;
   text-align: center;
   margin-top: 20px;
   text-align: center;
+}
+
+.create-account-error {
+  margin-top: 8px;
+  padding: 8px;
+  text-align: center;
+  color: #EF4444;
+  font-size: 14px;
+}
+
+.create-account-error .error-reason {
+  font-size: 12px;
+  margin-top: 4px;
+  color: #EF4444;
 }
 
 /* 第四步：完成页面样式 */

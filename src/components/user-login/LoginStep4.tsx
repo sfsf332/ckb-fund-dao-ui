@@ -23,9 +23,9 @@ export default function LoginStep4({ accountName }: LoginStep4Props) {
   };
   return (
     <div className="login-info-section">
-      <h3 className="login-info-title">账号创建成功!</h3>
+      <h3 className="login-info-title">{t("loginStep4.accountCreatedSuccess")}</h3>
       <p className="success-description">
-        您的Web5 DID账号已成功创建并上链存储。现在您可以参与社区治理，发布提案和参与讨论了。
+        {t("loginStep4.successDescription")}
       </p>
       <div className="success-info">
         <div className="success-card">
@@ -42,7 +42,7 @@ export default function LoginStep4({ accountName }: LoginStep4Props) {
               {accountName || "alice"}.ckb.xyz
             </div>
             <div className="success-address" onClick={handleCopyAddress} style={{ cursor: 'pointer' }}>
-              {isLoadingAddress ? "获取地址中..." : formatAddress(walletAddress)} 
+              {isLoadingAddress ? t("loginStep4.gettingAddress") : formatAddress(walletAddress)} 
               <CopyButton text={walletAddress} className="copy-button" ariaLabel="copy-wallet-address" />
             </div>
           </div>

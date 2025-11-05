@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { CreateAccountStatus, CREATE_STATUS } from "@/hooks/createAccount";
+import { useTranslation } from "@/utils/i18n";
 
 interface LoginFooterProps {
   currentStep: number;
@@ -31,6 +32,7 @@ export default function LoginFooter({
   isConnected = false,
   createStatus,
 }: LoginFooterProps) {
+  const { t } = useTranslation();
   return (
     <div className="login-footer">
       {currentStep === 1 && (
@@ -41,14 +43,14 @@ export default function LoginFooter({
               onClick={onConnectWallet}
               disabled={isConnecting}
             >
-              {isConnecting ? "连接中..." : "连接钱包"}
+              {isConnecting ? t("loginFooter.connecting") : t("loginFooter.connectWallet")}
             </button>
           ) : (
             <button
               className="login-connect-button"
               onClick={onNextStep}
             >
-              下一步
+              {t("loginFooter.nextStep")}
             </button>
           )}
         </div>
@@ -62,7 +64,7 @@ export default function LoginFooter({
               onClick={onBackToStep1}
               style={{ backgroundColor: '#6A727B' }}
             >
-              返回上一步
+              {t("loginFooter.backToPreviousStep")}
             </button>
           )}
           <button
@@ -70,29 +72,25 @@ export default function LoginFooter({
             onClick={onNextStep}
             disabled={!validationResult || isValidating}
           >
-            下一步
+            {t("loginFooter.nextStep")}
           </button>
         </div>
       )}
 
       {currentStep === 3 && (
         <div className="step-navigation">
-          {createStatus?.status === CREATE_STATUS.FAILURE && onBackToStep2 && (
+          {createStatus?.status === CREATE_STATUS.SUCCESS ? (
+            <Link href="#" onClick={onComplete}>
+              {t("loginFooter.enterCommunity")}
+            </Link>
+          ) : createStatus?.status === CREATE_STATUS.FAILURE && onBackToStep2 ? (
             <button
               className="login-connect-button"
               onClick={onBackToStep2}
             >
-              返回上一步
+              {t("loginFooter.backToPreviousStep")}
             </button>
-          )}
-        </div>
-      )}
-
-      {currentStep === 4 && (
-        <div className="step-navigation">
-          <Link href="#" onClick={onComplete}>
-            进入社区
-          </Link>
+          ) : null}
         </div>
       )}
     </div>

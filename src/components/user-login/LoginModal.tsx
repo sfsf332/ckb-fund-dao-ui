@@ -11,7 +11,7 @@ import LoginStep4 from "./LoginStep4";
 import LoginFooter from "./LoginFooter";
 import { useAccountNameValidation } from "@/hooks/useAccountNameValidation";
 import { useCheckCkb } from "@/hooks/checkCkb";
-import useCreateAccount from "@/hooks/createAccount";
+import useCreateAccount, { CREATE_STATUS } from "@/hooks/createAccount";
 import { USER_DOMAIN } from "@/constant/Network";
 import { useTranslation } from "@/utils/i18n";
 interface LoginModalProps {
@@ -28,6 +28,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [isDropped, setIsDropped] = useState(false);
   const [showInsufficientFunds, setShowInsufficientFunds] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [shouldAutoAdvance, setShouldAutoAdvance] = useState(true); // 是否应该自动进入下一步
   
   const {
     isValidating,
@@ -39,10 +40,8 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const { checkSimpleBalance, isLoading: balanceLoading, extraIsEnough, error: balanceError } = useCheckCkb();
   const { createAccount, loading: createLoading, createStatus, resetCreateStatus } = useCreateAccount({
     createSuccess: () => {
-    
-      
-      // 注册成功后自动切换到step4
-      setCurrentStep(4);
+      // 注册成功后保持在step3，显示完成状态
+      // 完成信息会在LoginStep3中显示
     },
   });
 
@@ -53,11 +52,13 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const handleConnectWallet = async () => {
     try {
       setIsConnecting(true);
+      setShouldAutoAdvance(true); // 允许自动前进
       await open();
-      // 钱包连接成功后不自动进入下一步，保持在第一步
+      // 钱包连接成功后会自动进入下一步（通过useEffect）
     } catch (error) {
       console.error(t("loginModal.connectWalletFailed"), error);
       setIsConnecting(false);
+      setShouldAutoAdvance(false);
     }
   };
 
@@ -72,6 +73,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       setIsDropped(false);
       setShowInsufficientFunds(false);
       setIsConnecting(false);
+      setShouldAutoAdvance(true); // 重置自动前进标志
     } catch (error) {
       console.error(t("loginModal.disconnectWalletFailed"), error);
     }
@@ -79,15 +81,17 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
  
 
-  // 监听钱包连接状态 - 不再自动跳转到下一步
+  // 监听钱包连接状态 - 连接成功后自动进入第二步（仅在首次连接时）
   React.useEffect(() => {
-    if (isConnected && signerInfo) {
+    if (isConnected && signerInfo && currentStep === 1 && shouldAutoAdvance) {
       setIsConnecting(false);
-      // 保持在第一步，让用户手动选择是否继续
+      // 钱包连接成功后自动进入第二步（设置名称）
+      setCurrentStep(2);
+      setShouldAutoAdvance(false); // 标记已经自动前进过，防止再次自动跳转
     }
-  }, [isConnected, signerInfo]);
+  }, [isConnected, signerInfo, currentStep, shouldAutoAdvance]);
 
-  // 进入步骤3时重置状态
+  // 进入步骤3（上链存储）时重置状态
   React.useEffect(() => {
     if (currentStep === 3) {
       setIsDropped(false);
@@ -98,8 +102,16 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStep]);
 
+  // 当开始加载时清除 createStatus
+  React.useEffect(() => {
+    if (createLoading) {
+      resetCreateStatus();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createLoading]);
+
   const handleNextStep = () => {
-    if (currentStep < 4) {
+    if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -108,6 +120,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const handleBackToStep1 = () => {
     setCurrentStep(1);
     setAccountName("");
+    setShouldAutoAdvance(false); // 阻止自动跳转到步骤2
   };
 
   // 返回到步骤2
@@ -234,7 +247,10 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     >
 
         {/* 进度指示器 */}
-        <LoginProgress currentStep={currentStep} />
+        <LoginProgress 
+          currentStep={currentStep} 
+          isSuccess={createStatus?.status === CREATE_STATUS.SUCCESS}
+        />
 
         {/* 主要内容区域 - 根据步骤显示不同内容 */}
         {currentStep === 1 && (
@@ -274,8 +290,6 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             balanceError={balanceError}
           />
         )}
-
-        {currentStep === 4 && <LoginStep4 accountName={accountName} />}
 
         {/* 底部区域 */}
         <LoginFooter

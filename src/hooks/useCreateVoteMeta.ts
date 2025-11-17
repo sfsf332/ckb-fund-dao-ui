@@ -166,15 +166,18 @@ export function useCreateVoteMeta() {
   // 和 https://github.com/web5fans/web5-components/blob/dev/vote/create-vote-meta/src/molecules.ts
   const buildAndSendTransaction = useCallback(async (
     response: InitiationVoteResponse | { outputsData?: string[]; vote_meta?: unknown },
-    signer: ccc.Signer | null | undefined
+    signer: ccc.Signer | null | undefined | unknown
   ) => {
     if (!signer) {
       throw new Error(t("wallet.signerNotConnected"));
     }
 
+    // 类型断言以确保 signer 是正确的类型
+    const typedSigner = signer as ccc.Signer;
+
     try {
       // 获取钱包地址
-      const addresses = await signer.getAddresses();
+      const addresses = await typedSigner.getAddresses();
       if (!addresses || addresses.length === 0) {
         throw new Error(t("wallet.cannotGetAddress"));
       }
@@ -183,7 +186,7 @@ export function useCreateVoteMeta() {
       
       // 获取锁定脚本和客户端
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const cccClient = (signer as any).client_ || new ccc.ClientPublicTestnet();
+      const cccClient = (typedSigner as any).client_ || new ccc.ClientPublicTestnet();
       const { script: lock } = await ccc.Address.fromString(fromAddress, cccClient);
 
       // 解析 outputsData（每个元素是十六进制字符串，代表编码后的输出数据）
@@ -203,7 +206,7 @@ export function useCreateVoteMeta() {
 
       // 完成输入（至少需要一个输入来支付费用）
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await tx.completeInputsAtLeastOne(signer as any);
+      await tx.completeInputsAtLeastOne(typedSigner as any);
 
       // 如果 outputsData 不为空，创建对应的输出
       // 注意：这里需要根据实际的投票合约来设置 type script
@@ -237,11 +240,11 @@ export function useCreateVoteMeta() {
 
         // 完成费用计算
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        await newTx.completeFeeBy(signer as any);
+        await newTx.completeFeeBy(typedSigner as any);
 
         // 签名并发送
-        await signer.signTransaction(newTx);
-        const txHash = await signer.sendTransaction(newTx);
+        await typedSigner.signTransaction(newTx);
+        const txHash = await typedSigner.sendTransaction(newTx);
         
         console.log("投票交易已发送:", txHash);
         
@@ -288,9 +291,9 @@ export function useCreateVoteMeta() {
       } else {
         // 如果没有 outputsData，只完成费用和发送
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        await tx.completeFeeBy(signer as any);
-        await signer.signTransaction(tx);
-        const txHash = await signer.sendTransaction(tx);
+        await tx.completeFeeBy(typedSigner as any);
+        await typedSigner.signTransaction(tx);
+        const txHash = await typedSigner.sendTransaction(tx);
         
         // 发送交易后，调用更新交易哈希接口
         const voteMeta = (response as InitiationVoteResponse).vote_meta;

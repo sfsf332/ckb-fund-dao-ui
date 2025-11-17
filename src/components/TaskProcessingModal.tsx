@@ -9,6 +9,7 @@ import { useTranslation } from "@/utils/i18n";
 import CustomDatePicker from '@/components/ui/DatePicker';
 import dynamic from 'next/dynamic';
 import { InitiationVoteResponse } from "@/server/proposal";
+import { ccc } from "@ckb-ccc/core";
 import 'react-quill-new/dist/quill.snow.css';
 
 // 动态导入ReactQuill，禁用SSR
@@ -174,7 +175,9 @@ export default function TaskProcessingModal({
             return;
           }
           try {
-            const txResult = await buildAndSendTransaction(voteResponse, signer);
+            // 类型转换以匹配 buildAndSendTransaction 期望的类型
+            // 注意：由于可能存在不同版本的 @ckb-ccc/core，需要进行类型断言
+            const txResult = await buildAndSendTransaction(voteResponse, signer as unknown as ccc.Signer);
             if (txResult.success) {
               onComplete(formData);
               onClose();

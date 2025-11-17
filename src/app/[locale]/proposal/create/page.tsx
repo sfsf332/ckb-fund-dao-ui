@@ -214,8 +214,7 @@ export default function CreateProposal() {
     "italic",
     "underline",
     "strike",
-    "list",
-    "bullet",
+    "list", // "bullet" 和 "ordered" 是 list 格式的值，不是独立格式
     "blockquote",
     "code-block",
     "link",

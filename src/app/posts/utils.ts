@@ -66,7 +66,7 @@ type CreatePostResponse = {
     rev: string
   },
   results: {
-    $type: "com.atproto.web5.directWrites#createResult"
+    $type: "fans.web5.ckb.directWrites#createResult"
     cid: string
     uri: string
   }[]
@@ -87,10 +87,10 @@ export async function writesPDSOperation(params: {
     created: dayjs().format() 
   }
 
-  const writeRes = await pdsClient.com.atproto.web5.preDirectWrites({
+  const writeRes = await pdsClient.fans.web5.ckb.preDirectWrites({
     repo: params.did,
     writes: [{
-      $type: "com.atproto.web5.preDirectWrites#create",
+      $type: "fans.web5.ckb.preDirectWrites#create",
       collection: newRecord.$type,
       rkey,
       value: newRecord

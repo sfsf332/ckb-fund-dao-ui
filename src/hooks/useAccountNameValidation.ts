@@ -40,10 +40,10 @@ export function useAccountNameValidation() {
       const keyPair = await Secp256k1Keypair.create();
       const signingKey = keyPair.did();
 
-      const res = await getPDSClient().com.atproto.web5.preCreateAccount({
+      const res = await getPDSClient().fans.web5.ckb.preCreateAccount({
         handle: name + `.${USER_DOMAIN}`,
         signingKey,
-        did: 'did:plc:n5d3aggygtfxs56gbjkcajxw',
+        did: 'did:ckb:n5d3aggygtfxs56gbjkcajxw',
       });
       console.log(res, 'res');
       return { valid: true, error: null };

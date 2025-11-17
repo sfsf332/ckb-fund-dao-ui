@@ -1,6 +1,11 @@
 import React from 'react';
-import ReactQuill from 'react-quill-new';
+import dynamic from 'next/dynamic';
 import { useI18n } from '@/contexts/I18nContext';
+
+// 动态导入ReactQuill，禁用SSR
+const ReactQuill = dynamic(() => import("react-quill-new"), {
+  ssr: false,
+});
 
 interface ProjectBackgroundProps {
   formData: {

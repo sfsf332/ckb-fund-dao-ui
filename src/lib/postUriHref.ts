@@ -1,5 +1,5 @@
 
-const uriPrefix = 'at://did:web5:'
+const uriPrefix = 'at://did:ckb:'
 
 export function postUriToHref(uri: string): string {
   const linkuri = uri.replace(uriPrefix, '')

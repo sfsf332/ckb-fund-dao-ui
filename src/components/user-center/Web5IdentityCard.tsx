@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react';
 import { GoDatabase ,GoCopy,GoCheckCircle} from "react-icons/go";
 import CopyButton from '@/components/ui/copy/CopyButton';
-import { MdOutlinePrivacyTip } from "react-icons/md";
+import { MdOutlinePrivacyTip, MdQrCode2, MdOutlineDescription } from "react-icons/md";
 import storage from '@/lib/storage';
 import useUserInfoStore from '@/store/userInfo';
 import getPDSClient from '@/lib/pdsClient';
 import { useTranslation } from '@/utils/i18n';
+import KeyQRCodeModal from './KeyQRCodeModal';
+import ExportDIDInfoModal from './ExportDIDInfoModal';
 
 interface Web5IdentityCardProps {
   className?: string;
@@ -18,6 +20,8 @@ export default function Web5IdentityCard({ className = '' }: Web5IdentityCardPro
   const { userInfo } = useUserInfoStore();
   const [did, setDid] = useState('');
   const [pds, setPds] = useState('');
+  const [showKeyQRCodeModal, setShowKeyQRCodeModal] = useState(false);
+  const [showExportDIDInfoModal, setShowExportDIDInfoModal] = useState(false);
 
   // 从本地存储和用户信息中获取 DID 和 PDS
   useEffect(() => {
@@ -49,7 +53,13 @@ export default function Web5IdentityCard({ className = '' }: Web5IdentityCardPro
     { label: t('web5.dataBackup'), status: t('web5.automatic'), enabled: true },
   ];
 
-  
+  const handleKeyQRCode = () => {
+    setShowKeyQRCodeModal(true);
+  };
+
+  const handleExportDIDInfo = () => {
+    setShowExportDIDInfoModal(true);
+  };
 
   return (
     <div className={`web5-identity-card ${className}`}>
@@ -113,6 +123,32 @@ export default function Web5IdentityCard({ className = '' }: Web5IdentityCardPro
           ))}
         </div>
       </div>
+
+      <div className="web5-action-buttons">
+        <button
+          className="web5-action-button"
+          onClick={handleKeyQRCode}
+        >
+          <MdQrCode2 className="button-icon" />
+          <span>{t('web5.keyQRCode.title')}</span>
+        </button>
+        <button
+          className="web5-action-button"
+          onClick={handleExportDIDInfo}
+        >
+          <MdOutlineDescription className="button-icon" />
+          <span>{t('web5.exportDIDInfo.title')}</span>
+        </button>
+      </div>
+
+      <KeyQRCodeModal
+        isOpen={showKeyQRCodeModal}
+        onClose={() => setShowKeyQRCodeModal(false)}
+      />
+      <ExportDIDInfoModal
+        isOpen={showExportDIDInfoModal}
+        onClose={() => setShowExportDIDInfoModal(false)}
+      />
     </div>
   );
 }

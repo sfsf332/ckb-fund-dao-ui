@@ -166,7 +166,9 @@
     "userCenter": "用户中心",
     "governanceRules": "治理规则",
     "createProposal": "发起提案",
-    "login": "登录"
+    "login": "登录",
+    "goToUserCenter": "去用户中心",
+    "logout": "退出登录"
   },
   "taskTypes": {
     "organizeMeeting": "组织会议",
@@ -346,7 +348,60 @@
     "enabled": "启用",
     "automatic": "自动",
     "openLink": "打开链接",
-    "getPDSFailed": "获取 PDS 地址失败:"
+    "getPDSFailed": "获取 PDS 地址失败:",
+    "keyQRCode": {
+      "title": "密钥二维码",
+      "passwordInstruction": "查看二维码之前,请设置4位数密码:",
+      "passwordPlaceholder": "请输入",
+      "passwordNote": "此密码为一次性临时Pin码,仅在登录时二次验证使用",
+      "qrCodeInstruction": "请在5分钟内使用,5分钟后二维码失效",
+      "qrCodeNote": "在此期间请妥善保存你的密钥二维码",
+      "expiredMessage": "二维码失效请刷新",
+      "confirm": "确定",
+      "cancel": "取消",
+      "close": "关闭",
+      "refresh": "刷新"
+    },
+    "exportDIDInfo": {
+      "title": "Web5 DID信息",
+      "passwordTitle1": "为保障安全",
+      "passwordTitle2": "导出前请设置你的密码",
+      "passwordPlaceholder": "支持由数字或字母组成的8位数密码",
+      "passwordNote": "此密码在导入web5 dID信息登录时使用，请妥善保存",
+      "passwordError": "请输入由数字或字母组成的8位数密码",
+      "exportTitle": "Web5 dID等登录密钥信息",
+      "explanation": "导出保存文件即可未来在多设备登录或穿梭其他web5技术网站使用。",
+      "warning": "请妥善保存，若密钥泄漏，账号有被盗风险!",
+      "confirm": "确认",
+      "cancel": "取消",
+      "export": "导出文件",
+      "exporting": "导出中...",
+      "exportSuccess": "导出成功",
+      "exportFailed": "导出失败",
+      "encryptFailed": "加密失败"
+    },
+    "scanQRCode": {
+      "title": "扫描密钥二维码登录",
+      "cameraMode": "摄像头扫描",
+      "fileMode": "图片扫描",
+      "startScan": "开始扫描",
+      "stopScan": "停止扫描",
+      "selectImage": "选择图片文件",
+      "enterPin": "请输入4位PIN密码:",
+      "pinPlaceholder": "请输入",
+      "invalidPin": "PIN密码不正确",
+      "invalidPinFormat": "PIN必须是4位数字",
+      "invalidQRCode": "无效的二维码数据",
+      "importFailed": "导入失败",
+      "cameraError": "无法访问摄像头，请检查权限设置",
+      "invalidFileType": "请选择图片文件",
+      "scanFailed": "无法识别二维码，请确保图片清晰",
+      "confirm": "确认",
+      "cancel": "取消",
+      "close": "关闭",
+      "loginSuccess": "登录成功！",
+      "successConfirm": "确认"
+    }
   },
   "userProfile": {
     "connectWithNervosTalk": "连接 Nervos Talk",
@@ -391,7 +446,11 @@
     "wallet": "钱包",
     "disconnect": "断开连接",
     "whatIsWeb5": "什么是Web5?",
-    "web5Explanation": "web5的含义"
+    "web5Explanation": "web5的含义",
+    "connectWalletCreate": "连接钱包创建",
+    "existingWeb5Did": "已有Web5 DID",
+    "importKeyLogin": "导入Web5 DID 密钥登录",
+    "scanQrCodeLogin": "扫描密钥二维码登录"
   },
   "loginStep2": {
     "setAccountName": "设置您的Web5 DID账号名称:",
@@ -443,6 +502,31 @@
     "setName": "设置名称",
     "onChainStorage": "上链存储",
     "creationComplete": "创建完成"
+  },
+  "importDid": {
+    "title": "导入Web5 DID信息",
+    "selectKeyInfo": "选择您的Web5 DID密钥信息:",
+    "clickToSelect": "点击选择Web5 DID信息文件或登录二维码",
+    "supportedFormats": "支持图片文件(密钥二维码)和.txt文件(加密字符串)",
+    "selectFile": "选择文件",
+    "enterPassword": "请输入8位数解锁密码,验证密钥文件:",
+    "passwordPlaceholder": "请输入",
+    "confirm": "确认",
+    "cancel": "取消",
+    "verifying": "正在验证您的Web5 DID信息数据...",
+    "verificationSuccess": "Web5 DID 信息验证成功!",
+    "loginComplete": "登录完成",
+    "close": "关闭",
+    "successConfirm": "确认",
+    "invalidFileType": "不支持的文件类型，请选择图片或txt文件",
+    "fileReadError": "读取文件失败",
+    "passwordLengthError": "密码必须为8位数字",
+    "noFileContent": "文件内容为空",
+    "invalidDataFormat": "数据格式无效",
+    "verificationFailed": "验证失败",
+    "decryptionFailed": "解密失败",
+    "qrCodeNotSupported": "二维码解析功能暂未实现，请使用txt文件格式",
+    "qrCodeScanFailed": "无法识别二维码，请确保图片清晰且包含有效的二维码"
   },
   "homepage": {
     "proposalList": "提案列表",

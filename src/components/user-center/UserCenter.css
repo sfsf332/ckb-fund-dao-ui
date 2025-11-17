@@ -406,6 +406,39 @@
   font-size: 14px;
 }
 
+.web5-action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.web5-action-button {
+  flex: 1;
+  background: transparent;
+  border: 1px solid #4C525C;
+  color: #FFFFFF;
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.web5-action-button:hover {
+  background-color: #1E2229;
+  border-color: #00D4AA;
+  color: #00D4AA;
+}
+
+.web5-action-button .button-icon {
+  font-size: 18px;
+}
+
 /* 钱包及Nervos DAO卡片 */
 .wallet-dao-card {
   display: flex;

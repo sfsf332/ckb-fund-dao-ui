@@ -7,7 +7,6 @@ import LoginProgress from "./LoginProgress";
 import LoginStep1 from "./LoginStep1";
 import LoginStep2 from "./LoginStep2";
 import LoginStep3 from "./LoginStep3";
-import LoginStep4 from "./LoginStep4";
 import LoginFooter from "./LoginFooter";
 import { useAccountNameValidation } from "@/hooks/useAccountNameValidation";
 import { useCheckCkb } from "@/hooks/checkCkb";

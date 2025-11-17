@@ -7,8 +7,13 @@ import { useCreateVoteMeta } from "@/hooks/useCreateVoteMeta";
 import { useWallet } from "@/provider/WalletProvider";
 import { useTranslation } from "@/utils/i18n";
 import CustomDatePicker from '@/components/ui/DatePicker';
-import ReactQuill from 'react-quill-new';
+import dynamic from 'next/dynamic';
 import 'react-quill-new/dist/quill.snow.css';
+
+// 动态导入ReactQuill，禁用SSR
+const ReactQuill = dynamic(() => import("react-quill-new"), {
+  ssr: false,
+});
 
 interface ProposalItem {
   id: string;
@@ -82,7 +87,7 @@ export default function TaskProcessingModal({
 }: TaskProcessingModalProps) {
   const [isClient, setIsClient] = useState(false);
   const { createVoteMetaData, buildAndSendTransaction, error: voteError } = useCreateVoteMeta();
-  const { signer } = useWallet();
+  const { signer, openSigner } = useWallet();
   const { t } = useTranslation();
   const [formData, setFormData] = useState<TaskFormData>({
     proposal_uri: proposal?.uri || "",
@@ -152,29 +157,34 @@ export default function TaskProcessingModal({
   const handleComplete = async () => {
     if (isTaskType(taskType, "taskTypes.createVote", t) && proposal) {
       // 处理投票创建
-      // 使用 formData 中的时间，如果没有自定义时间，则使用默认值
+      // 使用新的 initiation_vote 接口
       const result = await createVoteMetaData({
         proposalUri: formData.proposal_uri,
-        voteType: 1,
-        startTime: formData.startTime,
-        endTime: formData.endTime,
-        candidates: ["yes","no"]
+        proposalState: proposal.status, // 使用提案的状态
       });
 
       if (result.success && result.data) {
-        if (!signer) {
-          alert(t("wallet.signerNotConnected"));
-          return;
-        }
-        try {
-          const txResult = await buildAndSendTransaction(result.data, signer);
-          if (txResult.success) {
-            onComplete(formData);
-            onClose();
+        // 检查响应中是否有 outputsData，如果有则发送交易
+        if (result.data && typeof result.data === 'object' && 'outputsData' in result.data && Array.isArray((result.data as any).outputsData) && (result.data as any).outputsData.length > 0) {
+          if (!signer) {
+            // 如果没有 signer，触发连接钱包
+            openSigner();
+            return;
           }
-        } catch (error) {
-          const errorMessage = error instanceof Error ? error.message : String(error);
-          alert(`${t("alerts.sendTransactionFailed")}: ${errorMessage}`);
+          try {
+            const txResult = await buildAndSendTransaction(result.data as any, signer);
+            if (txResult.success) {
+              onComplete(formData);
+              onClose();
+            }
+          } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            alert(`${t("alerts.sendTransactionFailed")}: ${errorMessage}`);
+          }
+        } else {
+          // 如果没有 outputsData，直接完成
+          onComplete(formData);
+          onClose();
         }
       } else {
         alert(`${t("alerts.createVoteFailed")}: ${result.error}`);

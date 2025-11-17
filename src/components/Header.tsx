@@ -5,7 +5,7 @@ import Image from "next/image";
 import LanguageSwitcher from "./LanguageSwitcher";
 import Link from "next/link";
 import { CiCirclePlus } from "react-icons/ci";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useI18n } from "@/contexts/I18nContext";
 import { useTranslation } from "@/utils/i18n";
 import { LoginModal } from "./user-login";
@@ -15,10 +15,12 @@ import "./user-login/LoginModal.css";
 
 export default function Header() {
     const pathname = usePathname();
+    const router = useRouter();
     const { locale } = useI18n();
     const { t } = useTranslation();
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-    const { userInfo } = useUserInfoStore();
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const { userInfo, logout } = useUserInfoStore();
     
     // 提取 handle 第一个 . 前面的部分
     const getUserDisplayName = () => {
@@ -42,6 +44,12 @@ export default function Header() {
         return pathname === homeHref || pathname === `${homeHref}/`;
       }
       return pathname.startsWith(href);
+    };
+
+    const handleLogout = () => {
+      logout();
+      setIsDropdownOpen(false);
+      router.push(homeHref);
     };
 
   return (
@@ -75,15 +83,29 @@ export default function Header() {
         {userInfo ? (
           <div 
             className="user-dropdown-container"
-          
+            onMouseEnter={() => setIsDropdownOpen(true)}
+            onMouseLeave={() => setIsDropdownOpen(false)}
           >
             <button className="button-normal user-button">
-              
               {getUserDisplayName()}
-             
             </button>
-            
-           
+            {isDropdownOpen && (
+              <div className="user-dropdown">
+                <Link 
+                  href={userCenterHref} 
+                  className="user-dropdown-item"
+                  onClick={() => setIsDropdownOpen(false)}
+                >
+                  {t("header.goToUserCenter")}
+                </Link>
+                <button 
+                  className="user-dropdown-item logout-item"
+                  onClick={handleLogout}
+                >
+                  {t("header.logout")}
+                </button>
+              </div>
+            )}
           </div>
         ) : (
           <button onClick={() => setIsLoginModalOpen(true)} className="button-normal">{t("header.login")}</button>

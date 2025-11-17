@@ -24,6 +24,7 @@
     "copy-to-clipboard": "^3.3.3",
     "dayjs": "^1.11.18",
     "echarts": "^6.0.0",
+    "html5-qrcode": "^2.3.8",
     "katex": "^0.16.22",
     "multiformats": "^13.4.1",
     "next": "15.5.2",
@@ -32,6 +33,7 @@
     "notion-utils": "^7.4.3",
     "npm": "^11.6.2",
     "prismjs": "^1.30.0",
+    "qrcode.react": "^4.2.0",
     "react": "19.1.0",
     "react-datepicker": "^8.7.0",
     "react-dom": "19.1.0",
@@ -42,7 +44,7 @@
     "react-quill-new": "^3.6.0",
     "react-spinners": "^0.17.0",
     "react-tooltip": "^5.29.1",
-    "web5-api": "^0.0.23",
+    "web5-api": "^0.0.27",
     "zustand": "^5.0.8"
   },
   "devDependencies": {

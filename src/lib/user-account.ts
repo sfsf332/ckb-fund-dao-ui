@@ -3,7 +3,7 @@ import getPDSClient from "@/lib/pdsClient";
 import storage, { TokenStorageType } from "@/lib/storage";
 import { Secp256k1Keypair } from "@atproto/crypto";
 import { bytesFrom, hexFrom } from "@ckb-ccc/core";
-import { ComAtprotoWeb5IndexAction, ComAtprotoWeb5PreIndexAction } from "web5-api";
+import { FansWeb5CkbIndexAction, FansWeb5CkbPreIndexAction } from "web5-api";
 // import { showGlobalToast } from "@/provider/toast";
 import server from "@/server";
 import { UserProfileType } from "@/store/userInfo";
@@ -15,20 +15,20 @@ export async function fetchUserProfile(did: string): Promise<UserProfileType> {
   return result
 }
 
-export async function userLogin(localStorage: TokenStorageType): Promise<ComAtprotoWeb5IndexAction.CreateSessionResult | undefined> {
+export async function userLogin(localStorage: TokenStorageType): Promise<FansWeb5CkbIndexAction.CreateSessionResult | undefined> {
 
   
   const pdsClient = getPDSClient()
   const { did, signKey, walletAddress } = localStorage
 
   const preLoginIndex = {
-    $type: 'com.atproto.web5.preIndexAction#createSession',
+    $type: 'fans.web5.ckb.preIndexAction#createSession',
   }
 
-  let preLogin: ComAtprotoWeb5PreIndexAction.Response
+  let preLogin: FansWeb5CkbPreIndexAction.Response
 
   try {
-    preLogin = await pdsClient.com.atproto.web5.preIndexAction({
+    preLogin = await pdsClient.fans.web5.ckb.preIndexAction({
       did,
       ckbAddr: walletAddress,
       index: preLoginIndex,
@@ -56,13 +56,13 @@ export async function userLogin(localStorage: TokenStorageType): Promise<ComAtpr
  
 
   const loginIndex = {
-    $type: 'com.atproto.web5.indexAction#createSession',
+    $type: 'fans.web5.ckb.indexAction#createSession',
   }
 
   const signingKey = keyPair.did()
 
   try {
-    const loginInfo = await pdsClient.com.atproto.web5.indexAction({
+    const loginInfo = await pdsClient.fans.web5.ckb.indexAction({
       did,
       message: preLogin.data.message,
       signingKey: signingKey,
@@ -71,7 +71,7 @@ export async function userLogin(localStorage: TokenStorageType): Promise<ComAtpr
       index: loginIndex,
     })
     
-    const result = loginInfo.data.result as ComAtprotoWeb5IndexAction.CreateSessionResult
+    const result = loginInfo.data.result as FansWeb5CkbIndexAction.CreateSessionResult
     
     // 🔧 关键修复：通过 sessionManager 设置 session，这样后续请求才能带上 accessJwt
     pdsClient.sessionManager.session = {
@@ -97,10 +97,10 @@ export async function userLogin(localStorage: TokenStorageType): Promise<ComAtpr
 
 export async function deleteErrUser(did: string, address: string, signKey: string) {
   const preDelectIndex = {
-    $type: 'com.atproto.web5.preIndexAction#deleteAccount',
+    $type: 'fans.web5.ckb.preIndexAction#deleteAccount',
   }
   const pdsClient = getPDSClient()
-  const preDelete = await pdsClient.com.atproto.web5.preIndexAction({
+  const preDelete = await pdsClient.fans.web5.ckb.preIndexAction({
     did,
     ckbAddr: address,
     index: preDelectIndex,
@@ -113,10 +113,10 @@ export async function deleteErrUser(did: string, address: string, signKey: strin
   )
 
   const deleteIndex = {
-    $type: 'com.atproto.web5.indexAction#deleteAccount',
+    $type: 'fans.web5.ckb.indexAction#deleteAccount',
   }
 
-  await pdsClient.com.atproto.web5.indexAction({
+  await pdsClient.fans.web5.ckb.indexAction({
     did,
     message: preDelete.data.message,
     signingKey,

@@ -130,7 +130,9 @@
     "userCenter": "User Center",
     "governanceRules": "Governance Rules",
     "createProposal": "Create Proposal",
-    "login": "Login"
+    "login": "Login",
+    "goToUserCenter": "Go to User Center",
+    "logout": "Logout"
   },
   "taskTypes": {
     "organizeMeeting": "Organize Meeting",
@@ -307,7 +309,60 @@
     "enabled": "Enabled",
     "automatic": "Automatic",
     "openLink": "Open Link",
-    "getPDSFailed": "Failed to get PDS address:"
+    "getPDSFailed": "Failed to get PDS address:",
+    "keyQRCode": {
+      "title": "Key QR Code",
+      "passwordInstruction": "Before viewing the QR code, please set a 4-digit password:",
+      "passwordPlaceholder": "Please enter",
+      "passwordNote": "This password is a one-time temporary PIN, only used for secondary verification during login",
+      "qrCodeInstruction": "Please use within 5 minutes, the QR code will expire after 5 minutes",
+      "qrCodeNote": "Please properly save your key QR code during this period",
+      "expiredMessage": "QR code expired, please refresh",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "close": "Close",
+      "refresh": "Refresh"
+    },
+    "exportDIDInfo": {
+      "title": "Web5 DID Information",
+      "passwordTitle1": "To ensure security",
+      "passwordTitle2": "Please set your password before exporting",
+      "passwordPlaceholder": "Support 8-digit password composed of numbers or letters",
+      "passwordNote": "This password is used when importing Web5 DID information for login, please save it properly",
+      "passwordError": "Please enter an 8-digit password composed of numbers or letters",
+      "exportTitle": "Web5 DID and login key information",
+      "explanation": "Exporting and saving the file allows future login across multiple devices or transfer for use on other Web5 technology websites.",
+      "warning": "Please save it properly, if the key is leaked, the account is at risk of being stolen!",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "export": "Export File",
+      "exporting": "Exporting...",
+      "exportSuccess": "Export successful",
+      "exportFailed": "Export failed",
+      "encryptFailed": "Encryption failed"
+    },
+    "scanQRCode": {
+      "title": "Scan Key QR Code Login",
+      "cameraMode": "Camera Scan",
+      "fileMode": "Image Scan",
+      "startScan": "Start Scan",
+      "stopScan": "Stop Scan",
+      "selectImage": "Select Image File",
+      "enterPin": "Please enter 4-digit PIN:",
+      "pinPlaceholder": "Please enter",
+      "invalidPin": "Invalid PIN",
+      "invalidPinFormat": "PIN must be 4 digits",
+      "invalidQRCode": "Invalid QR code data",
+      "importFailed": "Import failed",
+      "cameraError": "Cannot access camera, please check permissions",
+      "invalidFileType": "Please select an image file",
+      "scanFailed": "Cannot recognize QR code, please ensure the image is clear",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "close": "Close",
+      "loginSuccess": "Login successful!",
+      "successConfirm": "Confirm"
+    }
   },
   "userProfile": {
     "connectWithNervosTalk": "Connect With Nervos Talk",
@@ -352,7 +407,11 @@
     "wallet": "Wallet",
     "disconnect": "Disconnect",
     "whatIsWeb5": "What is Web5?",
-    "web5Explanation": "Explanation of Web5"
+    "web5Explanation": "Explanation of Web5",
+    "connectWalletCreate": "Connect Wallet Create",
+    "existingWeb5Did": "Existing Web5 DID",
+    "importKeyLogin": "Import Web5 DID Key Login",
+    "scanQrCodeLogin": "Scan Key QR Code Login"
   },
   "loginStep2": {
     "setAccountName": "Set your Web5 DID account name:",
@@ -404,6 +463,31 @@
     "setName": "Set Name",
     "onChainStorage": "On-Chain Storage",
     "creationComplete": "Creation Complete"
+  },
+  "importDid": {
+    "title": "Import Web5 DID Information",
+    "selectKeyInfo": "Select your Web5 DID key information:",
+    "clickToSelect": "Click to select Web5 DID information file or login QR code",
+    "supportedFormats": "Supports image files (key QR code) and .txt files (encrypted string)",
+    "selectFile": "Select File",
+    "enterPassword": "Please enter an 8-digit unlock password to verify the key file:",
+    "passwordPlaceholder": "Please enter",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "verifying": "Verifying your Web5 DID information data...",
+    "verificationSuccess": "Web5 DID information verification successful!",
+    "loginComplete": "Login complete",
+    "close": "Close",
+    "successConfirm": "Confirm",
+    "invalidFileType": "Unsupported file type, please select an image or txt file",
+    "fileReadError": "Failed to read file",
+    "passwordLengthError": "Password must be 8 digits",
+    "noFileContent": "File content is empty",
+    "invalidDataFormat": "Invalid data format",
+    "verificationFailed": "Verification failed",
+    "decryptionFailed": "Decryption failed",
+    "qrCodeNotSupported": "QR code parsing is not yet implemented, please use txt file format",
+    "qrCodeScanFailed": "Unable to recognize QR code, please ensure the image is clear and contains a valid QR code"
   },
   "homepage": {
     "proposalList": "Proposal List",

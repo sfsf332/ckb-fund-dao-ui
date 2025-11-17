@@ -1,18 +1,18 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { createVoteMeta, CreateVoteMetaParams, CreateVoteMetaResponse } from "@/server/proposal";
+import { initiationVote, InitiationVoteParams, InitiationVoteResponse, updateMetaTxHash } from "@/server/proposal";
 import useUserInfoStore from "@/store/userInfo";
 import * as cbor from '@ipld/dag-cbor';
-import { uint8ArrayToHex, hexToUint8Array } from "@/lib/dag-cbor";
+import { uint8ArrayToHex } from "@/lib/dag-cbor";
 import storage from "@/lib/storage";
 import { Secp256k1Keypair } from "@atproto/crypto";
 import { useTranslation } from "@/utils/i18n";
 import { ccc } from "@ckb-ccc/core";
 
 /**
- * 创建投票元数据的 Hook
- * 提供提交投票元数据到 /api/vote/create_vote_meta 接口的功能
+ * 发起立项投票的 Hook
+ * 提供提交立项投票到 /api/proposal/initiation_vote 接口的功能
  */
 export function useCreateVoteMeta() {
   const { userInfo } = useUserInfoStore();
@@ -20,28 +20,22 @@ export function useCreateVoteMeta() {
   const [error, setError] = useState<string | null>(null);
   const { t } = useTranslation();
 
-  // 生成signed_bytes
-  const generateSignedBytes = useCallback(async (params: {
-    candidates: unknown[];
-    end_time: number;
+  // 为 initiation_vote 生成 signed_bytes
+  const generateInitiationVoteSignedBytes = useCallback(async (params: {
     proposal_uri: string;
-    start_time: number;
   }) => {
     try {
-      console.log('params', params);
       // 1. 将params对象用cbor.encode编码
       const unsignedCommit = cbor.encode(params);
-      console.log('unsignedCommit', unsignedCommit);
       // 2. 从storage获取signKey并创建keyPair
       const storageInfo = storage.getToken();
       if (!storageInfo?.signKey) {
         throw new Error(t("taskModal.errors.userNotLoggedIn"));
       }
       
-      const keyPair = await Secp256k1Keypair.import(storageInfo?.signKey?.slice(2))
+      const keyPair = await Secp256k1Keypair.import(storageInfo?.signKey?.slice(2));
 
       // 3. 用keyPair.sign签名
-
       const signature = await keyPair.sign(unsignedCommit);
       
       // 4. 转换为hex字符串
@@ -49,18 +43,44 @@ export function useCreateVoteMeta() {
       
       return signedBytes;
     } catch (error) {
-      console.error(t("voteMeta.createVoteMetaFailed"), error);
+      console.error("生成立项投票签名字节失败:", error);
       throw new Error(t("taskModal.errors.signatureFailed"));
     }
   }, [t]);
 
-  // 创建投票元数据
+  // 为 update_meta_tx_hash 生成 signed_bytes
+  const generateUpdateMetaTxHashSignedBytes = useCallback(async (params: {
+    id: number;
+    tx_hash: string;
+  }) => {
+    try {
+      // 1. 将params对象用cbor.encode编码
+      const unsignedCommit = cbor.encode(params);
+      // 2. 从storage获取signKey并创建keyPair
+      const storageInfo = storage.getToken();
+      if (!storageInfo?.signKey) {
+        throw new Error(t("taskModal.errors.userNotLoggedIn"));
+      }
+      
+      const keyPair = await Secp256k1Keypair.import(storageInfo?.signKey?.slice(2));
+
+      // 3. 用keyPair.sign签名
+      const signature = await keyPair.sign(unsignedCommit);
+      
+      // 4. 转换为hex字符串
+      const signedBytes = uint8ArrayToHex(signature);
+      
+      return signedBytes;
+    } catch (error) {
+      console.error("生成更新交易哈希签名字节失败:", error);
+      throw new Error(t("taskModal.errors.signatureFailed"));
+    }
+  }, [t]);
+
+  // 创建投票元数据（发起立项投票）
   const createVoteMetaData = useCallback(async (params: {
     proposalUri: string;
-    voteType: number;
-    startTime: number;
-    endTime: number;
-    candidates?: unknown[];
+    proposalState: number; // 提案状态
     signedBytes?: string;
     signingKeyDid?: string;
   }) => {
@@ -73,16 +93,13 @@ export function useCreateVoteMeta() {
       setIsLoading(true);
       setError(null);
 
-      // 构建参数对象
+      // 构建参数对象（只包含 proposal_uri）
       const voteParams = {
-        candidates: params.candidates || ([] as unknown[]),
-        end_time: params.endTime,
         proposal_uri: params.proposalUri,
-        start_time: params.startTime,
       };
 
       // 生成signed_bytes
-      const signedBytes = params.signedBytes || await generateSignedBytes(voteParams);
+      const signedBytes = params.signedBytes || await generateInitiationVoteSignedBytes(voteParams);
       
       // 获取signing_key_did
       const storageInfo = storage.getToken();
@@ -92,23 +109,23 @@ export function useCreateVoteMeta() {
       const keyPair = await Secp256k1Keypair.import(storageInfo.signKey.slice(2));
       const signingKeyDid = keyPair.did();
 
-      const voteMetaParams: CreateVoteMetaParams = {
+      const initiationVoteParams: InitiationVoteParams = {
+        uri: params.proposalUri, // 路径参数
+        state: params.proposalState, // 路径参数
         did: userInfo.did,
         params: voteParams,
         signed_bytes: signedBytes,
         signing_key_did: params.signingKeyDid || signingKeyDid,
       };
 
-      const response = await createVoteMeta(voteMetaParams);
+      const response = await initiationVote(initiationVoteParams);
       
-      // API 返回格式: {code: 200, data: {outputsData: [...], vote_meta: {...}}, message: "OK"}
-      // requestAPI 会自动提取 data 字段，所以 response 应该是 {outputsData: [...], vote_meta: {...}}
-      if (response && response.vote_meta) {
+      // API 返回格式: {code: 200, data: {...}, message: "OK"}
+      // requestAPI 会自动提取 data 字段
+      if (response) {
         return { 
           success: true, 
           data: response,
-          voteId: response.vote_meta.id,
-          voteMeta: response.vote_meta
         };
       } else {
         throw new Error(t("taskModal.errors.createVoteFailed"));
@@ -134,20 +151,13 @@ export function useCreateVoteMeta() {
     } finally {
       setIsLoading(false);
     }
-  }, [userInfo?.did, generateSignedBytes, t]);
+  }, [userInfo?.did, generateInitiationVoteSignedBytes, t]);
 
   // 为社区审议中的提案创建投票
-  const createReviewVote = useCallback(async (proposalUri: string) => {
-    const now = Date.now();
-    const startTime = now;
-    const endTime = now + (3 * 24 * 60 * 60 * 1000); // 3天后结束投票
-
+  const createReviewVote = useCallback(async (proposalUri: string, proposalState: number = 1) => {
     return createVoteMetaData({
       proposalUri,
-      voteType: 1, // 社区审议投票类型
-      startTime: Math.floor(startTime / 1000), // 转换为秒
-      endTime: Math.floor(endTime / 1000), // 转换为秒
-      candidates: [], // 社区审议投票通常没有候选人
+      proposalState, // 默认使用 REVIEW 状态 (1)
     });
   }, [createVoteMetaData]);
 
@@ -155,8 +165,8 @@ export function useCreateVoteMeta() {
   // 参照: https://github.com/web5fans/web5-components/blob/dev/vote/create-vote-meta/src/index.ts
   // 和 https://github.com/web5fans/web5-components/blob/dev/vote/create-vote-meta/src/molecules.ts
   const buildAndSendTransaction = useCallback(async (
-    response: CreateVoteMetaResponse,
-    signer: any
+    response: InitiationVoteResponse | { outputsData?: string[]; vote_meta?: unknown },
+    signer: ccc.Signer | null | undefined
   ) => {
     if (!signer) {
       throw new Error(t("wallet.signerNotConnected"));
@@ -172,26 +182,23 @@ export function useCreateVoteMeta() {
       const fromAddress = addresses[0];
       
       // 获取锁定脚本和客户端
-      const cccClient = signer.client_ || new ccc.ClientPublicTestnet();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const cccClient = (signer as any).client_ || new ccc.ClientPublicTestnet();
       const { script: lock } = await ccc.Address.fromString(fromAddress, cccClient);
 
       // 解析 outputsData（每个元素是十六进制字符串，代表编码后的输出数据）
       // outputsData 是 molecules 编码的数据，需要与对应的 outputs 配对
       // 根据 web5-components 的结构，outputsData[0] 包含投票元数据的编码
+      if (!response.outputsData || response.outputsData.length === 0) {
+        throw new Error("响应中缺少 outputsData");
+      }
       const outputsData = response.outputsData.map((hexStr: string) => {
         // 确保是 0x 开头的格式
         const hex = hexStr.startsWith('0x') ? hexStr : `0x${hexStr}`;
         return hex;
       });
 
-      // 注意：根据投票合约的实际结构，可能需要：
-      // 1. 解析 outputsData 来确定 type script 和输出结构
-      // 2. 或者 outputs 信息已经包含在 API 返回的其他字段中
-      // 这里我们假设 outputsData 对应一个输出，需要构建对应的 output
-      // 实际的 type script 应该从投票合约的配置中获取
-
-      // 创建交易 - 先创建初始结构
-      // 由于我们不知道完整的 outputs 结构，先创建默认交易，然后设置数据
+    
       const tx = ccc.Transaction.default();
 
       // 完成输入（至少需要一个输入来支付费用）
@@ -238,10 +245,45 @@ export function useCreateVoteMeta() {
         
         console.log("投票交易已发送:", txHash);
         
+        // 发送交易后，调用更新交易哈希接口
+        const voteMeta = (response as InitiationVoteResponse).vote_meta;
+        if (voteMeta?.id && userInfo?.did) {
+          try {
+            // 生成签名参数
+            const updateParams = {
+              id: voteMeta.id,
+              tx_hash: txHash,
+            };
+            
+            // 生成 signed_bytes
+            const signedBytes = await generateUpdateMetaTxHashSignedBytes(updateParams);
+            
+            // 获取 signing_key_did
+            const storageInfo = storage.getToken();
+            if (!storageInfo?.signKey) {
+              throw new Error(t("taskModal.errors.userNotLoggedIn"));
+            }
+            const keyPair = await Secp256k1Keypair.import(storageInfo.signKey.slice(2));
+            const signingKeyDid = keyPair.did();
+            
+            // 调用更新接口
+            await updateMetaTxHash({
+              did: userInfo.did,
+              params: updateParams,
+              signed_bytes: signedBytes,
+              signing_key_did: signingKeyDid,
+            });
+            console.log("交易哈希已更新到服务器");
+          } catch (updateError) {
+            console.error("更新交易哈希失败:", updateError);
+            // 即使更新失败，也返回成功，因为交易已经发送
+          }
+        }
+        
         return {
           success: true,
           txHash,
-          voteMeta: response.vote_meta
+          voteMeta
         };
       } else {
         // 如果没有 outputsData，只完成费用和发送
@@ -250,10 +292,45 @@ export function useCreateVoteMeta() {
         await signer.signTransaction(tx);
         const txHash = await signer.sendTransaction(tx);
         
+        // 发送交易后，调用更新交易哈希接口
+        const voteMeta = (response as InitiationVoteResponse).vote_meta;
+        if (voteMeta?.id && userInfo?.did) {
+          try {
+            // 生成签名参数
+            const updateParams = {
+              id: voteMeta.id,
+              tx_hash: txHash,
+            };
+            
+            // 生成 signed_bytes
+            const signedBytes = await generateUpdateMetaTxHashSignedBytes(updateParams);
+            
+            // 获取 signing_key_did
+            const storageInfo = storage.getToken();
+            if (!storageInfo?.signKey) {
+              throw new Error(t("taskModal.errors.userNotLoggedIn"));
+            }
+            const keyPair = await Secp256k1Keypair.import(storageInfo.signKey.slice(2));
+            const signingKeyDid = keyPair.did();
+            
+            // 调用更新接口
+            await updateMetaTxHash({
+              did: userInfo.did,
+              params: updateParams,
+              signed_bytes: signedBytes,
+              signing_key_did: signingKeyDid,
+            });
+            console.log("交易哈希已更新到服务器");
+          } catch (updateError) {
+            console.error("更新交易哈希失败:", updateError);
+            // 即使更新失败，也返回成功，因为交易已经发送
+          }
+        }
+        
         return {
           success: true,
           txHash,
-          voteMeta: response.vote_meta
+          voteMeta
         };
       }
     } catch (error) {
@@ -261,7 +338,7 @@ export function useCreateVoteMeta() {
       const errorMessage = error instanceof Error ? error.message : String(error);
       throw new Error(`交易构建失败: ${errorMessage}`);
     }
-  }, [t]);
+  }, [t, userInfo?.did, generateUpdateMetaTxHashSignedBytes]);
 
   // 清除错误状态
   const clearError = useCallback(() => {

@@ -877,10 +877,83 @@ rotate: 90deg;
   justify-content: center;
   gap: 16px;
   width: 100%;
+  position: relative;
 }
 .step-navigation a{
   color: #00CC9B;
   text-decoration: underline;
+}
+
+/* Web5 DID 下拉菜单容器 */
+.web5-did-dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* 已有Web5 DID 按钮 */
+.login-web5-did-button {
+  background: #6A727B;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  height: 32px;
+  line-height: 32px;
+  padding: 0 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 114px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+}
+
+.login-web5-did-button:hover {
+  background: #5A6068;
+}
+
+.login-web5-did-button.active {
+  background: #5A6068;
+}
+
+/* Web5 DID 下拉菜单 */
+.web5-did-dropdown {
+  position: absolute;
+  top:-60px;
+  left: 0;
+  background: #262A33;
+  border-radius: 6px;
+  min-width: 200px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.web5-did-dropdown-item {
+  padding: 12px 16px;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.web5-did-dropdown-item:hover {
+  background: #1C2027;
+}
+
+.web5-did-dropdown-item:first-child {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.web5-did-dropdown-item:last-child {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
 .nav-button {
   padding: 12px 24px;

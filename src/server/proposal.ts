@@ -245,3 +245,113 @@ export const getBindList = defineAPI<
     },
   }
 );
+
+// 创建投票参数类型
+export interface CreateVoteParams {
+  did: string; // 用户DID
+  params: {
+    candidates_index: number; // 候选人索引
+    vote_meta_id: number; // 投票元数据ID
+  };
+  signed_bytes: string; // 签名字节
+  signing_key_did: string; // 签名密钥DID
+}
+
+// 创建投票响应类型
+// 注意：由于 requestAPI 会自动提取响应中的 data 字段，
+// 所以实际返回的是以下结构，而不是包裹在 {code, data, message} 中
+export interface CreateVoteResponse {
+  // 根据实际API响应调整
+  [key: string]: unknown;
+}
+
+/**
+ * 创建投票
+ * POST /api/vote/create_vote
+ */
+export const createVote = defineAPI<
+  CreateVoteParams,
+  CreateVoteResponse
+>(
+  "/vote/create_vote",
+  "POST",
+  {
+    divider: {
+      body: ["did", "params", "signed_bytes", "signing_key_did"],
+    },
+  }
+);
+
+// 发起立项投票参数类型
+export interface InitiationVoteParams {
+  uri: string; // 提案URI (路径参数)
+  state: number; // 提案状态 (路径参数)
+  did: string; // 用户DID
+  params: {
+    proposal_uri: string; // 提案URI
+  };
+  signed_bytes: string; // 签名字节
+  signing_key_did: string; // 签名密钥DID
+}
+
+// 发起立项投票响应类型
+// 注意：由于 requestAPI 会自动提取响应中的 data 字段，
+// 所以实际返回的是以下结构，而不是包裹在 {code, data, message} 中
+export interface InitiationVoteResponse {
+  outputsData?: string[]; // 输出数据数组（如果接口返回）
+  vote_meta?: VoteMetaItem; // 投票元数据（如果接口返回）
+  [key: string]: unknown;
+}
+
+/**
+ * 发起立项投票
+ * POST /api/proposal/initiation_vote
+ */
+export const initiationVote = defineAPI<
+  InitiationVoteParams,
+  InitiationVoteResponse
+>(
+  "/proposal/initiation_vote",
+  "POST",
+  {
+    
+    divider: {
+      path: ["uri", "state"], // uri 和 state 作为路径参数
+      body: ["did", "params", "signed_bytes", "signing_key_did"],
+    },
+  }
+);
+
+// 更新投票元数据交易哈希参数类型
+export interface UpdateMetaTxHashParams {
+  did: string; // 用户DID
+  params: {
+    id: number; // 投票元数据ID
+    tx_hash: string; // 交易哈希
+  };
+  signed_bytes: string; // 签名字节
+  signing_key_did: string; // 签名密钥DID
+}
+
+// 更新投票元数据交易哈希响应类型
+export interface UpdateMetaTxHashResponse {
+  success: boolean;
+  [key: string]: unknown;
+}
+
+/**
+ * 更新投票元数据交易哈希
+ * POST /api/vote/update_meta_tx_hash
+ */
+export const updateMetaTxHash = defineAPI<
+  UpdateMetaTxHashParams,
+  UpdateMetaTxHashResponse
+>(
+  "/vote/update_meta_tx_hash",
+  "POST",
+  {
+    divider: {
+      body: ["did", "params", "signed_bytes", "signing_key_did"],
+    },
+  }
+);

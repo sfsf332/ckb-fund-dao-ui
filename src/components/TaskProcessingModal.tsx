@@ -8,6 +8,7 @@ import { useWallet } from "@/provider/WalletProvider";
 import { useTranslation } from "@/utils/i18n";
 import CustomDatePicker from '@/components/ui/DatePicker';
 import dynamic from 'next/dynamic';
+import { InitiationVoteResponse } from "@/server/proposal";
 import 'react-quill-new/dist/quill.snow.css';
 
 // 动态导入ReactQuill，禁用SSR
@@ -165,14 +166,15 @@ export default function TaskProcessingModal({
 
       if (result.success && result.data) {
         // 检查响应中是否有 outputsData，如果有则发送交易
-        if (result.data && typeof result.data === 'object' && 'outputsData' in result.data && Array.isArray((result.data as any).outputsData) && (result.data as any).outputsData.length > 0) {
+        const voteResponse = result.data as InitiationVoteResponse;
+        if (voteResponse && typeof voteResponse === 'object' && 'outputsData' in voteResponse && Array.isArray(voteResponse.outputsData) && voteResponse.outputsData.length > 0) {
           if (!signer) {
             // 如果没有 signer，触发连接钱包
             openSigner();
             return;
           }
           try {
-            const txResult = await buildAndSendTransaction(result.data as any, signer);
+            const txResult = await buildAndSendTransaction(voteResponse, signer);
             if (txResult.success) {
               onComplete(formData);
               onClose();

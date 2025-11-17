@@ -35,7 +35,7 @@ export default function ScanQRCodeModal({ isOpen, onClose, onSuccess }: ScanQRCo
   // 解析二维码数据并导入
   const parseAndImportQRData = async (qrData: string, pinPassword?: string) => {
     try {
-      let dataToParse = qrData.trim();
+      const dataToParse = qrData.trim();
 
       // 尝试解析JSON
       let parsedData: TokenStorageType | null = null;
@@ -100,8 +100,9 @@ export default function ScanQRCodeModal({ isOpen, onClose, onSuccess }: ScanQRCo
       await importUserDid(parsedData);
       // 显示成功弹窗
       setShowSuccessModal(true);
-    } catch (err: any) {
-      setError(err.message || t('web5.scanQRCode.importFailed') || '导入失败');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setError(errorMessage || t('web5.scanQRCode.importFailed') || '导入失败');
       setIsScanning(false);
     }
   };
@@ -138,11 +139,11 @@ export default function ScanQRCodeModal({ isOpen, onClose, onSuccess }: ScanQRCo
           stopScanning();
           parseAndImportQRData(decodedText);
         },
-        (errorMessage) => {
+        () => {
           // 扫描错误（忽略，继续扫描）
         }
       );
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('启动摄像头失败:', err);
       setError(t('web5.scanQRCode.cameraError') || '无法访问摄像头，请检查权限设置');
       setIsScanning(false);
@@ -198,7 +199,7 @@ export default function ScanQRCodeModal({ isOpen, onClose, onSuccess }: ScanQRCo
       
       setIsScanning(false);
       parseAndImportQRData(decodedText);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('扫描文件失败:', err);
       setError(t('web5.scanQRCode.scanFailed') || '无法识别二维码，请确保图片清晰');
       setIsScanning(false);

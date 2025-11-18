@@ -130,7 +130,7 @@ export default function ProposalVoting({ votingInfo, onVote, className = '' }: P
       {/* 我的投票权 */}
     
         <span>{messages.proposalPhase.proposalVoting.myVotingPower} </span>
-        <span className="power-amount">{formatNumber(votingInfo.userVotingPower)} CKB</span>
+        <span className="power-amount">{formatNumber(votingInfo.userVotingPower/100000000)} CKB</span>
       
 
       {/* 分隔线 */}

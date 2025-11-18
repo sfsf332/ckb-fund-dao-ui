@@ -610,6 +610,13 @@ interface Messages {
       defaultMessage: string;
       close: string;
     };
+    voteModal: {
+      voteSuccess: string;
+      voteFailed: string;
+      voteFailedMessage: string;
+      missingInfo: string;
+      close: string;
+    };
   };
   chart: {
     totalAssetsChart: {

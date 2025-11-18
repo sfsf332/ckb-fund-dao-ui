@@ -2,6 +2,7 @@
  * 提案相关API接口定义
  */
 import { ProposalStatus } from "@/utils/proposalUtils";
+import { VoteOption } from "@/types/voting";
 import defineAPI from "./defineAPI";
 
 // 提案详情接口的参数类型
@@ -17,6 +18,20 @@ export interface ProposalMilestone {
   description: string;
   date: string;
   index:number
+}
+
+// 投票元数据项类型（从提案详情接口返回）
+export interface VoteMetaItem {
+  id: number; // 投票ID
+  proposal_uri: string; // 提案URI
+  candidates: string[]; // 候选人列表（如 ["Abstain", "Agree", "Against"]）
+  start_time: string; // 投票开始时间（ISO 8601格式）
+  end_time: string; // 投票结束时间（ISO 8601格式）
+  created: string; // 创建时间（ISO 8601格式）
+  creater: string; // 创建者DID
+  state: number; // 投票状态
+  tx_hash: string | null; // 交易哈希
+  whitelist_id?: string; // 白名单ID
 }
 
 // 提案详情接口的响应类型
@@ -50,6 +65,7 @@ export interface ProposalDetailResponse {
   };
   updated: string;
   uri: string;
+  vote_meta?: VoteMetaItem; // 投票元数据（如果进入投票阶段）
 }
 
 /**
@@ -173,18 +189,7 @@ export interface CreateVoteMetaParams {
   signing_key_did: string; // 签名密钥DID
 }
 
-// 投票元数据项类型
-export interface VoteMetaItem {
-  id: number; // 投票ID
-  proposal_uri: string; // 提案URI
-  candidates: unknown[]; // 候选人列表
-  start_time: string; // 投票开始时间（ISO 8601格式）
-  end_time: string; // 投票结束时间（ISO 8601格式）
-  created: string; // 创建时间（ISO 8601格式）
-  state: number; // 投票状态
-  tx_hash: string | null; // 交易哈希
-  whitelist_id?: string; // 白名单ID
-}
+// VoteMetaItem 已在上面定义，这里保留用于向后兼容
 
 // 投票元数据响应类型
 // 注意：由于 requestAPI 会自动提取响应中的 data 字段，
@@ -352,6 +357,39 @@ export const updateMetaTxHash = defineAPI<
   {
     divider: {
       body: ["did", "params", "signed_bytes", "signing_key_did"],
+    },
+  }
+);
+
+// 注意：vote_meta 现在从 /api/proposal/detail 接口返回，不再需要单独的接口
+
+// 准备投票参数类型
+export interface PrepareVoteParams {
+  did: string; // 用户DID
+  vote_meta_id: number; // 投票元数据ID
+}
+
+// 准备投票响应类型
+export interface PrepareVoteResponse {
+  did: string;
+  proof: number[][];
+  vote_addr: string;
+  vote_meta: VoteMetaItem;
+}
+
+/**
+ * 准备投票
+ * POST /api/vote/prepare
+ */
+export const prepareVote = defineAPI<
+  PrepareVoteParams,
+  PrepareVoteResponse
+>(
+  "/vote/prepare",
+  "POST",
+  {
+    divider: {
+      body: ["did", "vote_meta_id"],
     },
   }
 );

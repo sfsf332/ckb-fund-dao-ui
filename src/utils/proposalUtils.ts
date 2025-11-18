@@ -37,6 +37,7 @@ export interface Proposal {
     oppose: number;  // 反对票百分比
     totalVotes: number; // 总投票数
   };
+  
   category: string;
   tags: string[];
 }

@@ -1,5 +1,8 @@
 /* 里程碑追踪组件样式 */
+@import './common.css';
+
 .milestone-tracking-card {
+  /* 基础样式继承自 .proposal-phase-card */
   background: #262A33;
   border-radius: 10px;
   padding: 20px;
@@ -116,16 +119,11 @@
   color: #00CC9B;
 }
 
-.milestone-in-progress .milestone-icon {
-  background: #fff;
-  color: #1E2128;
-  border: 2px solid #fff;
-}
+
 
 .milestone-in-progress .milestone-status-badge {
   background: transparent;
   color: #fff;
-  border: 1px solid #fff;
 }
 
 .milestone-pending .milestone-icon {

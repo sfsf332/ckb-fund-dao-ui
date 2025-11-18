@@ -85,4 +85,38 @@ import type {
       );
     }
   }
+
+  // table VoteProof {
+  //     vote_script_hash: Byte32,
+  //     user_smt_proof: BytesVec,
+  // }
+  export type VoteProofLike = {
+    vote_script_hash: HexLike;
+    user_smt_proof: HexLike[];
+  };
+
+  @mol.codec(
+    mol.table({
+      vote_script_hash: mol.Byte32,
+      user_smt_proof: mol.BytesVec,
+    }),
+  )
+  export class VoteProof extends mol.Entity.Base<VoteProofLike, VoteProof>() {
+    constructor(
+      public vote_script_hash: Hex,
+      public user_smt_proof: Hex[],
+    ) {
+      super();
+    }
+
+    static from(data: VoteProofLike): VoteProof {
+      if (data instanceof VoteProof) {
+        return data;
+      }
+      return new VoteProof(
+        hexFrom(data.vote_script_hash),
+        data.user_smt_proof.map((p) => hexFrom(p)),
+      );
+    }
+  }
   

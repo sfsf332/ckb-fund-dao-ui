@@ -1,7 +1,11 @@
 /* 里程碑投票组件样式 */
+@import './common.css';
+
 .milestone-voting-card {
+  /* 基础样式继承自 .proposal-phase-card */
   background: #262A33;
   border-radius: 10px;
+  padding: 20px;
   margin-bottom: 20px;
 }
 
@@ -42,24 +46,7 @@
   margin-bottom: 12px;
 }
 
-.progress-bar {
-  width: 100%;
-  height: 8px;
-  background: #1A1D23;
-  border-radius: 8px;
-  overflow: hidden;
-  display: flex;
-}
-
-.progress-approve {
-  background: #10B981;
-  transition: width 0.3s ease;
-}
-
-.progress-reject {
-  background: #EF4444;
-  transition: width 0.3s ease;
-}
+/* 进度条样式继承自 common.css */
 
 .progress-labels {
   display: flex;
@@ -91,61 +78,12 @@
   margin-bottom: 20px;
 }
 
+/* 投票按钮样式继承自 common.css */
 .vote-button {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 4px 20px;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: 2px solid transparent;
-  position: relative;
+  position: relative; /* milestoneVoting 特有 */
 }
 
-.vote-button.approve {
-  background: #10B981;
-  color: #fff;
-}
-
-.vote-button.approve:hover {
-  background: #059669;
-  transform: translateY(-1px);
-}
-
-.vote-button.approve.selected {
-  border-color: #fff;
-  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
-}
-
-.vote-button.reject {
-  background: #EF4444;
-  color: #fff;
-}
-
-.vote-button.reject:hover {
-  background: #DC2626;
-  transform: translateY(-1px);
-}
-
-.vote-button.reject.selected {
-  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
-}
-
-.vote-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.vote-count {
-  color: #fff;
-  font-size: 12px;
-}
+/* 投票计数样式继承自 common.css */
 
 .milestone-voting-power {
   color: #fff;
@@ -207,29 +145,7 @@
   font-size: 12px;
 }
 
-.requirement-status {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.requirement-status.met {
-  color: #10B981;
-  background: rgba(16, 185, 129, 0.1);
-}
-
-.requirement-status.not-met {
-  color: #EF4444;
-  background: rgba(239, 68, 68, 0.1);
-}
-
-.requirement-status.not-met span {
-  font-size: 14px;
-  font-weight: bold;
-}
+/* 状态指示器样式继承自 common.css */
 
 /* 响应式设计 */
 @media (max-width: 768px) {

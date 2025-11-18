@@ -1,5 +1,8 @@
 /* 提案时间线组件样式 */
+@import './common.css';
+
 .timeline-card {
+  /* 基础样式继承自 .proposal-phase-card */
   background: #262A33;
   border-radius: 10px;
   padding: 20px;

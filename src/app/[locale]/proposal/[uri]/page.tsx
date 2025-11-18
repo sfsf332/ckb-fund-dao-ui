@@ -19,7 +19,8 @@ import { TimelineEvent } from "@/types/timeline";
 import { VotingInfo, VoteOption } from "@/types/voting";
 import { ProposalTimeline, ProposalVoting, MilestoneTracking } from "@/components/proposal-phase";
 import { generateTimelineEvents } from "@/utils/timelineUtils";
-import { generateVotingInfo, handleVote } from "@/utils/votingUtils";
+import { generateVotingInfo, handleVote, buildAndSendVoteTransaction } from "@/utils/votingUtils";
+import { useWallet } from "@/provider/WalletProvider";
 import { getAvatarByDid } from "@/utils/avatarUtils";
 import { generateMilestones } from "@/utils/milestoneUtils";
 import { Milestone } from "@/types/milestone";
@@ -30,6 +31,9 @@ import { writesPDSOperation } from "@/app/posts/utils";
 import useUserInfoStore from "@/store/userInfo";
 import { useCommentList } from "@/hooks/useCommentList";
 import { CommentItem } from "@/server/comment";
+import { useVoteWeight } from "@/hooks/useVoteWeight";
+import { SuccessModal, Modal } from "@/components/ui/modal";
+import { MdErrorOutline } from "react-icons/md";
 
 // 适配器函数：将API返回的ProposalDetailResponse转换为工具函数期望的Proposal类型
 const adaptProposalDetail = (detail: ProposalDetailResponse): Proposal => {
@@ -46,7 +50,8 @@ const adaptProposalDetail = (detail: ProposalDetailResponse): Proposal => {
   return {
     id: detail.cid, // 使用 cid 作为 id
     title: proposalData.title,
-    state: proposalData.state, // 默认状态，可以根据实际情况调整
+    // 优先使用顶层的 state，如果不存在则使用 record.data.state
+    state: (detail.state ?? proposalData.state) as ProposalStatus,
     type: proposalData.proposalType as ProposalType,
     proposer: {
       name: detail.author.displayName,
@@ -89,6 +94,7 @@ export default function ProposalDetail() {
   const params = useParams();
   const uri = params?.uri as string;
   const { userInfo, userProfile } = useUserInfoStore();
+  const { signer, walletClient, openSigner, isConnected } = useWallet();
 
   const steps = [
     { id: 2, name: messages.proposalDetail.projectBackground, description: messages.proposalDetail.stepDescriptions.projectBackground },
@@ -99,7 +105,7 @@ export default function ProposalDetail() {
   ];
 
   // 使用真实API接口获取提案详情
-  const { proposal, loading, error } = useProposalDetail(uri);
+  const { proposal, loading, error, refetch: refetchProposal } = useProposalDetail(uri);
   
   // 使用真实API接口获取评论列表
   const { 
@@ -108,6 +114,9 @@ export default function ProposalDetail() {
     error: commentsError, 
     refetch: refetchComments 
   } = useCommentList(proposal?.uri || null);
+  
+  // 获取用户投票权重
+  const { voteWeight } = useVoteWeight();
   
   // 调试：打印评论列表状态
   useEffect(() => {
@@ -128,6 +137,10 @@ export default function ProposalDetail() {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [isLiking, setIsLiking] = useState(false);
+  // 投票弹窗状态
+  const [showVoteSuccessModal, setShowVoteSuccessModal] = useState(false);
+  const [showVoteErrorModal, setShowVoteErrorModal] = useState(false);
+  const [voteErrorMessage, setVoteErrorMessage] = useState<string>('');
 
   useEffect(() => {
     // 处理锚点高亮
@@ -224,9 +237,12 @@ export default function ProposalDetail() {
     const events = generateTimelineEvents(adaptedProposal);
     setTimelineEvents(events);
     
-    // 如果是投票阶段，生成投票信息
-    if (adaptedProposal.state === ProposalStatus.VOTE) {
-      const voting = generateVotingInfo(adaptedProposal);
+    // 如果是投票阶段，生成投票信息（使用真实数据）
+    if (adaptedProposal.state === ProposalStatus.VOTE && proposal.vote_meta) {
+      // 将投票权重转换为投票权（乘以100000000，因为API返回的是最小单位）
+      const userVotingPower = voteWeight * 100000000;
+      // 从提案详情中获取 vote_meta
+      const voting = generateVotingInfo(adaptedProposal, proposal.vote_meta, userVotingPower);
       setVotingInfo(voting);
     }
     
@@ -239,7 +255,7 @@ export default function ProposalDetail() {
       
       // 如果是里程碑阶段，生成里程碑投票信息
     }
-  }, [proposal]);
+  }, [proposal, voteWeight]);
   //点赞
   const handleLike = async() => {
     if (!proposal?.uri || !userInfo?.did) {
@@ -484,11 +500,42 @@ export default function ProposalDetail() {
 
   // 处理投票
   const handleVoteSubmit = async (option: VoteOption) => {
-    if (!votingInfo) return;
+    if (!votingInfo || !userInfo?.did) {
+      const errorMsg = messages.modal.voteModal.missingInfo || '缺少投票信息或用户未登录';
+      setVoteErrorMessage(errorMsg);
+      setShowVoteErrorModal(true);
+      return;
+    }
+    
+    // 检查钱包连接
+    if (!isConnected || !signer || !walletClient) {
+      openSigner();
+      return;
+    }
     
     try {
-      const success = await handleVote(votingInfo.proposalId, option);
-      if (success) {
+      // 从提案详情中获取 vote_meta_id
+      const voteMetaId = proposal?.vote_meta?.id || 2;
+      
+      // 1. 调用 prepareVote 接口获取投票数据
+      const result = await handleVote(userInfo.did, voteMetaId, option);
+      if (!result.success || !result.data) {
+        // 投票准备失败，显示错误弹窗
+        const errorMsg = result.error || messages.modal.voteModal.voteFailedMessage;
+        setVoteErrorMessage(errorMsg);
+        setShowVoteErrorModal(true);
+        return;
+      }
+      
+      // 2. 构建并发送投票交易
+      const txResult = await buildAndSendVoteTransaction(
+        result.data,
+        option,
+        signer,
+        walletClient
+      );
+      
+      if (txResult.success) {
         // 更新投票信息
         setVotingInfo(prev => prev ? {
           ...prev,
@@ -508,9 +555,33 @@ export default function ProposalDetail() {
               : (prev.approveVotes / (prev.totalVotes + prev.userVotingPower)) * 100
           }
         } : null);
+        
+        // 显示成功弹窗
+        setShowVoteSuccessModal(true);
+        
+        // 刷新提案详情以获取最新投票数据
+        setTimeout(() => {
+          refetchProposal();
+        }, 1000);
+      } else {
+        // 交易发送失败，显示错误弹窗
+        const errorMsg = txResult.error || messages.modal.voteModal.voteFailedMessage;
+        setVoteErrorMessage(errorMsg);
+        setShowVoteErrorModal(true);
       }
     } catch (error) {
       console.error('投票失败:', error);
+      // 提取错误信息
+      let errorMsg = messages.modal.voteModal.voteFailedMessage;
+      if (error instanceof Error) {
+        errorMsg = error.message || errorMsg;
+      } else if (typeof error === 'string') {
+        errorMsg = error;
+      } else if (error && typeof error === 'object' && 'message' in error) {
+        errorMsg = String(error.message);
+      }
+      setVoteErrorMessage(errorMsg);
+      setShowVoteErrorModal(true);
     }
   };
 
@@ -824,6 +895,44 @@ export default function ProposalDetail() {
           </div>
         </div>
       </main>
+      
+      {/* 投票成功弹窗 */}
+      <SuccessModal
+        isOpen={showVoteSuccessModal}
+        onClose={() => setShowVoteSuccessModal(false)}
+        message={messages.modal.voteModal.voteSuccess}
+      />
+      
+      {/* 投票失败弹窗 */}
+      <Modal
+        isOpen={showVoteErrorModal}
+        onClose={() => {
+          setShowVoteErrorModal(false);
+          setVoteErrorMessage('');
+        }}
+        title={messages.modal.voteModal.voteFailed}
+        size="small"
+        showCloseButton={false}
+        buttons={[
+          {
+            text: messages.modal.voteModal.close,
+            onClick: () => {
+              setShowVoteErrorModal(false);
+              setVoteErrorMessage('');
+            },
+            variant: 'secondary'
+          }
+        ]}
+      >
+        <div className="error-content" style={{ textAlign: 'center', padding: '20px 0' }}>
+          <div style={{ fontSize: '48px', color: '#ff4d6d', marginBottom: '16px' }}>
+            <MdErrorOutline />
+          </div>
+          <p style={{ color: '#FFFFFF', margin: 0, wordBreak: 'break-word' }}>
+            {voteErrorMessage || messages.modal.voteModal.voteFailedMessage}
+          </p>
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -4,6 +4,8 @@ import { MilestoneTrackingProps, MilestoneStatus } from '../../types/milestone';
 import MilestoneVoting from './MilestoneVoting';
 import { MilestoneVoteOption } from '../../types/milestoneVoting';
 import { useI18n } from '@/contexts/I18nContext';
+import useUserInfoStore from '@/store/userInfo';
+import { prepareVote } from '@/server/proposal';
 import './milestone.css';
 
 export default function MilestoneTracking({ 
@@ -13,11 +15,28 @@ export default function MilestoneTracking({
   className = '' 
 }: MilestoneTrackingProps) {
   const { messages } = useI18n();
+  const { userInfo } = useUserInfoStore();
 
   // 处理里程碑投票
-  const handleMilestoneVote = (milestoneId: string, option: MilestoneVoteOption) => {
-    console.log(`里程碑 ${milestoneId} 投票:`, option);
-    // TODO: 这里应该调用实际的投票API
+  const handleMilestoneVote = async (milestoneId: string, option: MilestoneVoteOption) => {
+    if (!userInfo?.did) {
+      console.error('投票失败: 用户未登录');
+      return;
+    }
+    
+    try {
+      // 暂时使用 vote_meta_id = 2
+      const voteMetaId = 1;
+      
+      const response = await prepareVote({
+        did: userInfo.did,
+        vote_meta_id: voteMetaId,
+      });
+      
+      console.log(`里程碑 ${milestoneId} 投票准备成功: vote_meta_id=${voteMetaId}, option=${option === MilestoneVoteOption.APPROVE ? '赞成' : '反对'}`, response);
+    } catch (error) {
+      console.error('里程碑投票准备失败:', error);
+    }
   };
   
   // 获取里程碑状态样式

@@ -303,19 +303,7 @@ a{
     color: #00B287;
   }
   
-  /* 鼠标经过状态的下划线 */
-  &:hover::after{
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 20px;
-    height: 8px;
-    background-image: url('/arrow-u.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-  }
+  
   
   /* 当前选中状态的下划线 */
   &.active::after{
@@ -325,6 +313,7 @@ a{
     left: 50%;
     width: 20px;
     height: 8px;
+    transform: translateX(-50%);
     background-image: url('/arrow-u.svg');
     background-repeat: no-repeat;
     background-size: contain;
@@ -360,23 +349,6 @@ a{
   display: flex;
   flex-direction: column;
   gap: 24px;
-}
-
-.logo-title {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.logo {
-  width: 32px;
-  height: 32px;
-  background: #fff;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
 }
 
 .company-name {

@@ -373,7 +373,8 @@
     "unbindAccount": "Unbind Account",
     "connect": "Connect",
     "connectLog": "Connect {connectionId}",
-    "unbindLog": "Unbind {connectionId}"
+    "unbindLog": "Unbind {connectionId}",
+    "temporarilyUnavailable": "Temporarily Unavailable"
   },
   "footer": {
     "companyName": "CKB Community Fund DAO",

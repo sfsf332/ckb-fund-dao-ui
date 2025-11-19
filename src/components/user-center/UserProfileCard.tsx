@@ -93,7 +93,8 @@ export default function UserProfileCard({ className = '' }: UserProfileCardProps
   }, []);
 
   return (
-    <div ref={cardRef} className={`user-profile-card ${className}`}>
+    <div ref={cardRef} className={`user-profile-card ${className} user-profile-card-disabled`}>
+      <div className="disabled-overlay"></div>
       <div className="user-info">
         <div className="user-avatar">
           <Image

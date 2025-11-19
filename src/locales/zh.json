@@ -412,7 +412,8 @@
     "unbindAccount": "解绑账号",
     "connect": "连接",
     "connectLog": "连接 {connectionId}",
-    "unbindLog": "解绑 {connectionId}"
+    "unbindLog": "解绑 {connectionId}",
+    "temporarilyUnavailable": "暂时不可使用"
   },
   "footer": {
     "companyName": "CKB Community Fund DAO",

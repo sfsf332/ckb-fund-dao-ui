@@ -110,7 +110,7 @@ export default function Header() {
       <div className="header-actions">
         <LanguageSwitcher />
         <Link href={`${homeHref}/proposal/create`} className="button-secondary">
-          <CiCirclePlus style={{ marginRight: "4px", fontSize: "18px" }} />
+          <CiCirclePlus style={{ marginRight: "4px", fontSize: "18px", strokeWidth: "1" }} />
           {t("header.createProposal")}
         </Link>
         {userInfo ? (

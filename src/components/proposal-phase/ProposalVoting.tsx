@@ -14,7 +14,15 @@ import {
 export default function ProposalVoting({ votingInfo, onVote, className = '' }: ProposalVotingProps) {
   const { messages } = useI18n();
   const [timeLeft, setTimeLeft] = useState('');
-  const [userVote, setUserVote] = useState<VoteOption | undefined>(votingInfo?.userVote);
+  
+  // 根据 userVoteIndex 确定用户投票选项
+  // userVoteIndex: 1 = Agree (赞成), 2 = Against (反对)
+  const userVote = votingInfo?.userVoteIndex 
+    ? (votingInfo.userVoteIndex === 1 ? VoteOption.APPROVE : VoteOption.REJECT)
+    : votingInfo?.userVote;
+  
+  // 检查投票是否正在上链中（state === 0）
+  const isChainPending = votingInfo?.voteState === 0;
 
   // 计算倒计时
   useEffect(() => {
@@ -30,7 +38,7 @@ export default function ProposalVoting({ votingInfo, onVote, className = '' }: P
         const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         
-        setTimeLeft(`${days}${messages.proposalPhase.proposalVoting.timeLeft.days} ${hours}${messages.proposalPhase.proposalVoting.timeLeft.hours} ${minutes}${messages.proposalPhase.proposalVoting.timeLeft.minutes}`);
+        setTimeLeft(`${days}D ${hours}H ${minutes} M`);
       } else {
         setTimeLeft(messages.proposalPhase.proposalVoting.timeLeft.ended);
       }
@@ -45,8 +53,9 @@ export default function ProposalVoting({ votingInfo, onVote, className = '' }: P
   // 处理投票
   const handleVote = (option: VoteOption) => {
     if (votingInfo.status === VotingStatus.ENDED) return;
+    // 如果投票正在上链中，不允许再次投票
+    if (isChainPending) return;
     
-    setUserVote(option);
     onVote(option);
   };
 
@@ -76,7 +85,7 @@ export default function ProposalVoting({ votingInfo, onVote, className = '' }: P
       {/* 投票统计 */}
       <div className="voting-stats">
         <div className="voting-total">
-          <span>{messages.proposalPhase.proposalVoting.totalVotes} {formatNumber(votingInfo.totalVotes)}</span>
+          <span>{messages.proposalPhase.proposalVoting.totalVotes} {formatNumber(votingInfo.totalVotes / 100000000)} CKB</span>
         </div>
         
         {/* 进度条 */}
@@ -97,11 +106,11 @@ export default function ProposalVoting({ votingInfo, onVote, className = '' }: P
         <div className="voting-results">
           <div className="vote-result approve">
             <span className="vote-label">{messages.proposalPhase.proposalVoting.approve} {approveRate.toFixed(1)}%</span>
-            <span className="vote-count">({formatNumber(votingInfo.approveVotes)})</span>
+            <span className="vote-count">({formatNumber(votingInfo.approveVotes / 100000000)} CKB)</span>
           </div>
           <div className="vote-result reject">
             <span className="vote-label">{messages.proposalPhase.proposalVoting.reject} {rejectRate.toFixed(1)}%</span>
-            <span className="vote-count">({formatNumber(votingInfo.rejectVotes)})</span>
+            <span className="vote-count">({formatNumber(votingInfo.rejectVotes / 100000000)} CKB)</span>
           </div>
         </div>
       </div>
@@ -109,20 +118,29 @@ export default function ProposalVoting({ votingInfo, onVote, className = '' }: P
       {/* 投票按钮 */}
       {votingInfo.status !== VotingStatus.ENDED && (
         <div className="voting-buttons">
-          <button
-            className={`vote-button approve ${userVote === VoteOption.APPROVE ? 'selected' : ''}`}
-            onClick={() => handleVote(VoteOption.APPROVE)}
-          >
-            <IoThumbsUpOutline size={14} />
-            {messages.proposalPhase.proposalVoting.approve}
-          </button>
-          <button
-            className={`vote-button reject ${userVote === VoteOption.REJECT ? 'selected' : ''}`}
-            onClick={() => handleVote(VoteOption.REJECT)}
-          >
-            <IoThumbsDownOutline size={14} />
-            {messages.proposalPhase.proposalVoting.reject}
-          </button>
+          <div className="voting-buttons-row">
+            <button
+              className={`vote-button approve ${userVote === VoteOption.APPROVE ? 'selected' : ''}`}
+              onClick={() => handleVote(VoteOption.APPROVE)}
+              disabled={isChainPending}
+            >
+              <IoThumbsUpOutline size={14} />
+              {messages.proposalPhase.proposalVoting.approve}
+            </button>
+            <button
+              className={`vote-button reject ${userVote === VoteOption.REJECT ? 'selected' : ''}`}
+              onClick={() => handleVote(VoteOption.REJECT)}
+              disabled={isChainPending}
+            >
+              <IoThumbsDownOutline size={14} />
+              {messages.proposalPhase.proposalVoting.reject}
+            </button>
+          </div>
+          {isChainPending && (
+            <div className="chain-pending-message">
+              {(messages.proposalPhase.proposalVoting as { chainPending?: string }).chainPending || '投票结果上链中'}
+            </div>
+          )}
         </div>
       )}
 
@@ -130,7 +148,7 @@ export default function ProposalVoting({ votingInfo, onVote, className = '' }: P
       {/* 我的投票权 */}
     
         <span>{messages.proposalPhase.proposalVoting.myVotingPower} </span>
-        <span className="power-amount">{formatNumber(votingInfo.userVotingPower/100000000)} CKB</span>
+        <span className="power-amount">{formatNumber(votingInfo.userVotingPower / 100000000)} CKB</span>
       
 
       {/* 分隔线 */}
@@ -143,7 +161,7 @@ export default function ProposalVoting({ votingInfo, onVote, className = '' }: P
         <div className="condition-item">
             <span>{messages.proposalPhase.proposalVoting.conditions.minTotalVotes}</span>
             <span className="condition-values">
-              {formatNumber(votingInfo.totalVotes)} / {formatNumber(votingInfo.conditions.minTotalVotes)}
+              {formatNumber(votingInfo.totalVotes / 100000000)} / {formatNumber(votingInfo.conditions.minTotalVotes / 100000000)} CKB
             </span>
         
           <div className={`condition-status ${totalVotesMet ? 'met' : 'not-met'}`}>

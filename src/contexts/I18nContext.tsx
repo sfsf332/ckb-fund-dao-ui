@@ -503,13 +503,13 @@ interface Messages {
     proposalVoting: {
       title: string;
       deadline: string;
-      totalVotes: string;
+      totalVotes: string; // 总投票权重数（显示文本）
       approve: string;
       reject: string;
       myVotingPower: string;
       conditions: {
         title: string;
-        minTotalVotes: string;
+        minTotalVotes: string; // 最低投票权重总数（显示文本）
         approveRate: string;
       };
       timeLeft: {
@@ -522,7 +522,7 @@ interface Messages {
     milestoneVoting: {
       confirmVoting: string;
       deadline: string;
-      totalVotes: string;
+      totalVotes: string; // 总投票权重数（显示文本）
       approve: string;
       reject: string;
       approveFunding: string;
@@ -530,7 +530,7 @@ interface Messages {
       myVotingPower: string;
       requirements: {
         title: string;
-        minTotalVotes: string;
+        minTotalVotes: string; // 最低投票权重总数（显示文本）
         approveRate: string;
       };
       timeLeft: {

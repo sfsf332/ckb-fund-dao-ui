@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Modal from "@/components/ui/modal/Modal";
 import { useTranslation } from "@/utils/i18n";
 import useUserInfoStore from "@/store/userInfo";
 import { TokenStorageType } from "@/lib/storage";
-import { MdCloudUpload, MdCheckCircle } from "react-icons/md";
+import { MdCloudUpload, MdCheckCircle, MdError } from "react-icons/md";
 import { decryptData } from "@/lib/encrypt";
 import { Html5Qrcode } from "html5-qrcode";
+import { ccc } from "@ckb-ccc/connector-react";
 import "./ImportDidModal.css";
 
 enum ImportStep {
@@ -15,6 +16,7 @@ enum ImportStep {
   SELECT_FILE = "select_file",
   ENTER_PASSWORD = "enter_password",
   VERIFYING = "verifying",
+  CONNECT_WALLET = "connect_wallet",
   SUCCESS = "success",
 }
 
@@ -37,8 +39,13 @@ export default function ImportDidModal({
   const [error, setError] = useState<string>("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showWalletMismatchModal, setShowWalletMismatchModal] = useState(false);
+  const [importedWalletAddress, setImportedWalletAddress] = useState<string>("");
+  const [isConnecting, setIsConnecting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const importUserDid = useUserInfoStore((state) => state.importUserDid);
+  const { open, wallet, signerInfo, disconnect } = ccc.useCcc();
+  const isConnected = Boolean(wallet) && Boolean(signerInfo);
 
   // 重置状态
   const resetState = () => {
@@ -49,6 +56,9 @@ export default function ImportDidModal({
     setError("");
     setIsVerifying(false);
     setShowSuccessModal(false);
+    setShowWalletMismatchModal(false);
+    setImportedWalletAddress("");
+    setIsConnecting(false);
   };
 
   // 关闭弹窗
@@ -159,6 +169,9 @@ export default function ImportDidModal({
         throw new Error(t("importDid.invalidDataFormat"));
       }
 
+      // 保存导入的钱包地址
+      setImportedWalletAddress(decryptedData.walletAddress);
+
       // 导入用户DID
       const tokenData: TokenStorageType = {
         did: decryptedData.did,
@@ -168,8 +181,8 @@ export default function ImportDidModal({
 
       await importUserDid(tokenData);
       
-      // 显示成功弹窗
-      setShowSuccessModal(true);
+      // 进入连接钱包步骤
+      setCurrentStep(ImportStep.CONNECT_WALLET);
     } catch (err: unknown) {
       const errorMessage = (err && typeof err === "object" && "message" in err) ? (err as { message?: string }).message : undefined;
       setError(errorMessage || t("importDid.verificationFailed"));
@@ -243,6 +256,54 @@ export default function ImportDidModal({
     }
   };
 
+  // 处理钱包连接
+  const handleConnectWallet = async () => {
+    try {
+      setIsConnecting(true);
+      setError("");
+      await open();
+    } catch (err) {
+      console.error("连接钱包失败:", err);
+      setError(t("importDid.walletConnectFailed") || "连接钱包失败");
+      setIsConnecting(false);
+    }
+  };
+
+  // 验证钱包地址
+  useEffect(() => {
+    const verifyWalletAddress = async () => {
+      if (currentStep === ImportStep.CONNECT_WALLET && isConnected && signerInfo && importedWalletAddress) {
+        try {
+          const addresses = await signerInfo.signer.getAddresses();
+          const connectedAddress = addresses[0];
+          
+          // 比较地址（不区分大小写）
+          if (connectedAddress.toLowerCase() !== importedWalletAddress.toLowerCase()) {
+            // 地址不一致，显示错误弹窗并断开连接
+            setShowWalletMismatchModal(true);
+            setIsConnecting(false);
+            // 断开连接
+            try {
+              await disconnect();
+            } catch (err) {
+              console.error("断开连接失败:", err);
+            }
+          } else {
+            // 地址一致，显示成功弹窗
+            setIsConnecting(false);
+            setShowSuccessModal(true);
+          }
+        } catch (err) {
+          console.error("获取钱包地址失败:", err);
+          setError(t("importDid.getWalletAddressFailed") || "获取钱包地址失败");
+          setIsConnecting(false);
+        }
+      }
+    };
+
+    verifyWalletAddress();
+  }, [currentStep, isConnected, signerInfo, importedWalletAddress, disconnect, t]);
+
   // 处理成功弹窗确认
   const handleSuccessConfirm = () => {
     resetState();
@@ -250,6 +311,26 @@ export default function ImportDidModal({
     onSuccess?.();
     // 刷新页面
     window.location.reload();
+  };
+
+  // 格式化地址显示（显示前10位...后10位）
+  const formatAddress = (address: string) => {
+    if (!address) return "";
+    if (address.length <= 20) return address;
+    return `${address.slice(0, 10)}...${address.slice(-10)}`;
+  };
+
+  // 处理钱包地址不匹配弹窗确认
+  const handleWalletMismatchConfirm = async () => {
+    setShowWalletMismatchModal(false);
+    // 断开连接
+    try {
+      await disconnect();
+    } catch (err) {
+      console.error("断开连接失败:", err);
+    }
+    // 重置连接状态，允许重新连接
+    setIsConnecting(false);
   };
 
   return (
@@ -353,6 +434,41 @@ export default function ImportDidModal({
           </div>
         )}
 
+        {/* 步骤4: 连接钱包 */}
+        {currentStep === ImportStep.CONNECT_WALLET && (
+          <div className="import-did-step">
+            <div className="import-did-password-section">
+              <p className="import-did-instruction">
+                {t("importDid.connectWallet")}
+              </p>
+              <p className="import-did-hint" style={{ marginTop: '8px', fontSize: '14px', color: '#666' }}>
+                {t("importDid.connectWalletHint")}
+              </p>
+              {error && <div className="import-did-error">{error}</div>}
+              <div className="import-did-buttons" style={{ marginTop: '24px' }}>
+                {!isConnected ? (
+                  <button
+                    className="import-did-button import-did-button-primary"
+                    onClick={handleConnectWallet}
+                    disabled={isConnecting}
+                  >
+                    {isConnecting ? t("importDid.connecting") : t("importDid.connectWalletButton")}
+                  </button>
+                ) : (
+                  <div className="import-did-verifying">
+                    <div className="import-did-icon-large">
+                      <MdCloudUpload />
+                    </div>
+                    <p className="import-did-verifying-text">
+                      {t("importDid.verifyingWallet")}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
       </Modal>
       
@@ -381,6 +497,44 @@ export default function ImportDidModal({
           <p className="import-did-success-message">
             {t("importDid.loginComplete")}
           </p>
+        </div>
+      </Modal>
+
+      {/* 钱包地址不匹配提示弹窗 */}
+      <Modal
+        isOpen={showWalletMismatchModal}
+        onClose={handleWalletMismatchConfirm}
+        size="small"
+        showCloseButton={false}
+        buttons={[
+          {
+            text: t("importDid.walletMismatchConfirm") || "确认",
+            onClick: handleWalletMismatchConfirm,
+            variant: 'primary' as const,
+          },
+        ]}
+        className="import-did-success-modal"
+      >
+        <div className="import-did-success-content">
+          <div className="import-did-success-icon" style={{ color: '#dc3545' }}>
+            <MdError />
+          </div>
+          <p className="import-did-success-title" style={{ color: '#dc3545' }}>
+            {t("importDid.walletMismatchTitle")}
+          </p>
+          <p className="import-did-success-message">
+            {t("importDid.walletMismatchMessage")}
+          </p>
+          {importedWalletAddress && (
+            <div style={{ marginTop: '16px', padding: '12px', backgroundColor: '#f8f9fa', borderRadius: '4px', fontSize: '14px' }}>
+              <div style={{ fontWeight: 'bold', marginBottom: '4px', color: '#333' }}>
+                {t("importDid.registeredWalletAddress")}
+              </div>
+              <div style={{ color: '#666', wordBreak: 'break-all', fontFamily: 'monospace' }}>
+                {formatAddress(importedWalletAddress)}
+              </div>
+            </div>
+          )}
         </div>
       </Modal>
     </>

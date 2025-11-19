@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useWalletAddress } from "@/hooks/useWalletAddress";
 import { handleCopy } from "@/utils/common";
@@ -45,12 +45,57 @@ export default function LoginStep3({
 }: LoginStep3Props) {
   const { t } = useTranslation();
   const { walletAddress, isLoadingAddress, formatAddress } = useWalletAddress();
+  const svgContainerRef = useRef<HTMLDivElement>(null);
+  
   // 复制地址到剪贴板（统一行为+toast）
   const handleCopyAddress = () => {
     if (walletAddress) {
       handleCopy(walletAddress, t("copy.addressSuccess"));
     }
   };
+
+  // 当 createLoading 为 true 时，确保 SVG 动画能够播放
+  useEffect(() => {
+    if (createLoading && svgContainerRef.current) {
+      const objectElement = svgContainerRef.current.querySelector('object');
+      if (!objectElement) return;
+
+      const handleLoad = () => {
+        try {
+          const svgDoc = (objectElement as HTMLObjectElement).contentDocument;
+          if (svgDoc) {
+            const svgElement = svgDoc.querySelector('svg#ej0HNe5rAG41');
+            if (svgElement) {
+              // 等待 SVGator 播放器初始化
+              const checkPlayer = () => {
+                const player = (svgElement as HTMLElement & { svgatorPlayer?: { play: () => void } }).svgatorPlayer;
+                if (player) {
+                  player.play();
+                } else {
+                  setTimeout(checkPlayer, 100);
+                }
+              };
+              checkPlayer();
+            }
+          }
+        } catch {
+          // 跨域限制时忽略错误
+          console.log('SVG animation may not work due to CORS restrictions');
+        }
+      };
+
+      // 如果已经加载完成
+      if ((objectElement as HTMLObjectElement).contentDocument) {
+        handleLoad();
+      } else {
+        objectElement.addEventListener('load', handleLoad);
+      }
+
+      return () => {
+        objectElement.removeEventListener('load', handleLoad);
+      };
+    }
+  }, [createLoading]);
   
   // 如果创建成功，显示成功信息
   if (createStatus?.status === CREATE_STATUS.SUCCESS) {
@@ -196,8 +241,24 @@ export default function LoginStep3({
             onDragOver={onDragOver}
             onDrop={onDrop}
           >
-            <div className="galaxy-core">
-              <Image src="/nervos-galaxy.png" alt="planet" width={240} height={160} />
+            <div className="galaxy-core" ref={svgContainerRef}>
+              {createLoading ? (
+                <object 
+                  data="/nervos_galaxy_rotate.svg" 
+                  type="image/svg+xml"
+                  width={240} 
+                  height={160}
+                  style={{ width: '240px', height: '160px' }}
+                  aria-label="planet"
+                />
+              ) : (
+                <Image 
+                  src="/nervos-galaxy.png" 
+                  alt="planet" 
+                  width={240} 
+                  height={160} 
+                />
+              )}
             </div>
           </div>
         </div>

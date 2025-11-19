@@ -31,13 +31,13 @@ export default function UserGovernance() {
         <Image src="/nervos-logo-s.svg" alt="nervos" width={14} height={14} />
         {t("wallet.stakeCKB")}
       </button>
-      <div className="pending_section">
+      {/* <div className="pending_section">
         <h4>{messages.userGovernance.pending}</h4>
         <div className="pending_item">
           <p className="pending_title">{messages.userGovernance.ckbUtxoGameEngine}</p>
           <Tag status={2} size="sm" />
         </div>
-      </div>
+      </div> */}
     </section>
   );
 }

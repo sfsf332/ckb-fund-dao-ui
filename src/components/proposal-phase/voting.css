@@ -75,11 +75,33 @@
 
 .voting-buttons {
   display: flex;
+  flex-direction: column;
   gap: 12px;
   margin-bottom: 20px;
 }
 
+.voting-buttons-row {
+  display: flex;
+  gap: 12px;
+}
+
 /* 投票按钮样式继承自 common.css */
+
+.vote-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.chain-pending-message {
+  width: 100%;
+  text-align: center;
+  color: #8A949E;
+  font-size: 12px;
+  margin-top: 8px;
+  padding: 8px;
+  background: rgba(138, 148, 158, 0.1);
+  border-radius: 4px;
+}
 
 .voting-divider {
   height: 1px;

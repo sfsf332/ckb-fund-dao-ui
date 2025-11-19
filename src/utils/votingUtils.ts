@@ -262,27 +262,23 @@ export const buildAndSendVoteTransaction = async (
     console.log("vote index:", voteIndex, "vote num:", voteNum, "vote data bytes:", voteDataBytes);
 
     // 3. 构建 VoteProof
-    // 将 proof 数组转换为 hex 字符串数组
-    // proof 格式: [[140, 174, ...], [76, 79, ...]]
+    // proof 格式: [76, 79, 255, ...] (一维数字数组)
     if (!voteData.proof || !Array.isArray(voteData.proof)) {
       throw new Error('投票数据中缺少 proof 字段或格式不正确');
     }
     
-    const userSmtProofHex = voteData.proof.map(proofArray => {
-      if (!proofArray || !Array.isArray(proofArray)) {
-        throw new Error('proof 数组中的元素格式不正确');
-      }
-      // 将数字数组转换为 Uint8Array，然后转换为 hex 字符串
-      const bytes = Uint8Array.from(proofArray);
-      // 使用 hexFrom 将 bytes 转换为 hex 字符串
-      return hexFrom(bytes);
-    });
+    // proof 是一个一维数字数组，直接转换为字节数组
+    const userSmtProofBytes = Uint8Array.from(voteData.proof);
+    
+    // 转换为 hex 字符串
+    const userSmtProofHex = hexFrom(userSmtProofBytes);
     
     // 构建 VoteProof
     // vote_script_hash 应该是 voteAddr.script.hash()（32 字节的 hash）
     const voteScriptHash = voteAddr.script.hash();
     console.log("vote script hash:", voteScriptHash, "length:", voteScriptHash.length);
-    console.log("user smt proof hex:", userSmtProofHex, "count:", userSmtProofHex.length);
+    console.log("user smt proof bytes length:", userSmtProofBytes.length);
+    console.log("user smt proof hex:", userSmtProofHex);
     
     const voteProof = VoteProof.from({
       vote_script_hash: voteScriptHash,
@@ -315,12 +311,10 @@ export const buildAndSendVoteTransaction = async (
     });
     
     // vote meta cell dep
-    // 注意：depType 可能是 "code" 或 "depGroup"，取决于 vote meta cell 的类型
-    // 根据实际交易数据，vote meta cell 可能需要使用 "depGroup"
-    // 但根据示例代码，这里使用 "code"，如果失败可能需要改为 "depGroup"
+    // vote meta cell 使用 "code" depType
     const voteMetaCellDep = {
       outPoint: voteMetaOutpoint,
-      depType: "code" as const, // 如果验证失败，可能需要改为 "depGroup"
+      depType: "code" as const,
     };
     
     console.log("vote meta cell dep:", voteMetaCellDep);
@@ -335,6 +329,30 @@ export const buildAndSendVoteTransaction = async (
       outPoint: voteContractOutpoint,
       depType: "code" as const,
     };
+
+    // depGroup cell dep（如果需要）
+    // 根据实际交易数据，可能需要添加这个 depGroup
+    const depGroupOutpoint = {
+      txHash: "0xf8de3bb47d055cdf460d93a2a6e1b05f7432f9777c8c474abf4eec1d4aee5d37",
+      index: 0,
+    };
+    const depGroupCellDep = {
+      outPoint: depGroupOutpoint,
+      depType: "depGroup" as const,
+    };
+
+    // 构建 cell deps 数组，避免重复
+    // 检查 vote meta tx_hash 是否与其他 cell deps 重复
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const cellDeps: any[] = [voteContractCellDep];
+    
+    // 只有当 vote meta tx_hash 与 vote contract 不同时才添加 vote meta cell dep
+    if (voteData.vote_meta.tx_hash.toLowerCase() !== voteContractOutpoint.txHash.toLowerCase()) {
+      cellDeps.push(voteMetaCellDep);
+    }
+    
+    // 添加 depGroup cell dep
+    cellDeps.push(depGroupCellDep);
 
     // 5. 构建 vote type script
     // vote type args 应该是 vote meta outpoint 的 hash 的前 20 字节（blake160）
@@ -358,10 +376,7 @@ export const buildAndSendVoteTransaction = async (
       throw new Error(`vote type args 长度不正确: ${voteTypeArgs.length}, 期望: 42`);
     }
     
-    console.log("vote meta outpoint:", voteMetaOutpoint);
-    console.log("vote meta outpoint hash:", voteMetaOutpointHash, "length:", voteMetaOutpointHash.length);
-    console.log("vote type args:", voteTypeArgs, "length:", voteTypeArgs.length);
-    console.log("vote type args (hex):", voteTypeArgs);
+ 
     
     const voteTypeScript = {
       codeHash: "0xb140de2d7d1536cfdcb82da7520475edce5785dff90edae9073c1143d88f50c5",
@@ -371,10 +386,7 @@ export const buildAndSendVoteTransaction = async (
 
     // 6. 创建投票交易
     const tx = Transaction.from({
-      cellDeps: [
-        voteContractCellDep,
-        voteMetaCellDep,
-      ],
+      cellDeps: cellDeps,
       outputs: [
         {
           lock: voteAddr.script,
@@ -395,8 +407,7 @@ export const buildAndSendVoteTransaction = async (
     const inputs = (tx as any).inputs || [];
     const inputsCount = inputs.length;
     
-    console.log('交易 inputs 数量:', inputsCount);
-    console.log('交易 witnesses:', tx.witnesses);
+  
     
     // 如果 witnesses 为空或数量不足，需要初始化
     if (!tx.witnesses || tx.witnesses.length < inputsCount) {
@@ -416,7 +427,6 @@ export const buildAndSendVoteTransaction = async (
       witness = WitnessArgs.from({
         outputType: hexFrom(voteProofBytes),
       });
-      console.log("创建新的 witness，只设置 outputType");
     } else {
       // 如果第一个 witness 已存在，解析它并更新 outputType
       let witnessBytes: Uint8Array;
@@ -439,8 +449,7 @@ export const buildAndSendVoteTransaction = async (
       console.log("更新现有 witness 的 outputType");
     }
     
-    console.log("witness outputType length:", witness.outputType?.length);
-    console.log("witness outputType:", witness.outputType);
+
     
     // 设置 witness 到交易中
     // 使用 setWitnessArgsAt 方法（如果存在）或直接设置
@@ -452,15 +461,28 @@ export const buildAndSendVoteTransaction = async (
       tx.witnesses[0] = hexFrom(witness.toBytes());
     }
     
-    console.log("设置 witness 后的交易:", {
-      witnesses: tx.witnesses,
-      witnessLength: tx.witnesses?.length,
-      firstWitnessLength: tx.witnesses?.[0]?.length
-    });
+   
 
     // 在设置 witness 之后重新计算费用，确保费用充足
     // 因为 witness 的大小会影响交易费用
+    // 注意：completeFeeBy 可能会添加找零输出，需要确保 outputsData 数组长度匹配
     await tx.completeFeeBy(signer);
+    
+    // 确保 outputsData 数组长度与 outputs 数组长度匹配
+    // completeFeeBy 可能会添加找零输出，需要为这些输出添加空的 outputsData
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const currentOutputs = (tx as any).outputs || [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const currentOutputsData = (tx as any).outputsData || [];
+    
+    // 如果 outputs 数量大于 outputsData 数量，为新增的输出添加空的 outputsData
+    if (currentOutputs.length > currentOutputsData.length) {
+      const additionalOutputsData = new Array(currentOutputs.length - currentOutputsData.length).fill('0x');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (tx as any).outputsData = [...currentOutputsData, ...additionalOutputsData];
+    }
+    
+
 
     // 9. 签名并发送交易
     const signedTx = await signer.signTransaction(tx);

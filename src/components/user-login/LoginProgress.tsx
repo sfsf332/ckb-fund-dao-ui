@@ -67,9 +67,7 @@ export default function LoginProgress({ currentStep, isSuccess = false }: LoginP
           <div className={`login-step ${step.status}`}>
             {step.status === "completed" ? (
               <div className="login-step-circle completed">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M10 3L4.5 8.5L2 6" stroke="#00CC9B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+               {step.id}
               </div>
             ) : (
               <div className="login-step-circle">{step.id}</div>
@@ -77,17 +75,7 @@ export default function LoginProgress({ currentStep, isSuccess = false }: LoginP
             <span className="login-step-title">{step.title}</span>
           </div>
           {index < steps.length - 1 && (
-            <div className="login-step-separator">
-              <svg
-                width="8"
-                height="14"
-                viewBox="0 0 8 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M1 1L7 7L1 13" stroke="#4C525C" />
-              </svg>
-            </div>
+            <div className="login-step-separator"></div>
           )}
         </React.Fragment>
       ))}

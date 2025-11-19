@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { ccc } from "@ckb-ccc/connector-react";
 import { Modal } from "../ui/modal";
 import LoginProgress from "./LoginProgress";
@@ -28,6 +28,9 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [showInsufficientFunds, setShowInsufficientFunds] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const [shouldAutoAdvance, setShouldAutoAdvance] = useState(true); // 是否应该自动进入下一步
+  const connectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const walletRef = useRef(wallet);
+  const signerInfoRef = useRef(signerInfo);
   
   const {
     isValidating,
@@ -47,17 +50,52 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
   // 检查是否已连接钱包
   const isConnected = Boolean(wallet) && Boolean(signerInfo);
+  
+  // 同步 wallet 和 signerInfo 到 ref，以便在超时回调中访问最新值
+  useEffect(() => {
+    walletRef.current = wallet;
+    signerInfoRef.current = signerInfo;
+  }, [wallet, signerInfo]);
+
+  // 重置连接状态的辅助函数
+  const resetConnectionState = () => {
+    setIsConnecting(false);
+    setShouldAutoAdvance(false);
+    setCurrentStep(1);
+    setAccountName("");
+    setIsDropped(false);
+    setShowInsufficientFunds(false);
+    if (connectTimeoutRef.current) {
+      clearTimeout(connectTimeoutRef.current);
+      connectTimeoutRef.current = null;
+    }
+  };
 
   const handleConnectWallet = async () => {
     try {
       setIsConnecting(true);
       setShouldAutoAdvance(true); // 允许自动前进
+      
+      // 清除之前的超时（如果有）
+      if (connectTimeoutRef.current) {
+        clearTimeout(connectTimeoutRef.current);
+      }
+      
+      // 设置超时检测：如果10秒内没有连接成功，则认为连接失败
+      connectTimeoutRef.current = setTimeout(() => {
+        // 检查当前是否仍未连接（使用 ref 获取最新值，避免闭包问题）
+        if (!walletRef.current || !signerInfoRef.current) {
+          console.error(t("loginModal.connectWalletFailed"), "连接超时");
+          resetConnectionState();
+        }
+      }, 10000); // 10秒超时
+      
       await open();
-      // 钱包连接成功后会自动进入下一步（通过useEffect）
+      // 注意：open() 可能不会抛出错误，连接成功会通过 useEffect 监听状态变化来处理
+      
     } catch (error) {
       console.error(t("loginModal.connectWalletFailed"), error);
-      setIsConnecting(false);
-      setShouldAutoAdvance(false);
+      resetConnectionState();
     }
   };
 
@@ -67,12 +105,8 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       // 调用 ccc 库的断开连接方法
       await disconnect();
       // 重置所有状态
-      setCurrentStep(1);
-      setAccountName("");
-      setIsDropped(false);
-      setShowInsufficientFunds(false);
+     
       setIsConnecting(false);
-      setShouldAutoAdvance(true); // 重置自动前进标志
     } catch (error) {
       console.error(t("loginModal.disconnectWalletFailed"), error);
     }
@@ -84,11 +118,25 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   React.useEffect(() => {
     if (isConnected && signerInfo && currentStep === 1 && shouldAutoAdvance) {
       setIsConnecting(false);
+      // 清除连接超时定时器
+      if (connectTimeoutRef.current) {
+        clearTimeout(connectTimeoutRef.current);
+        connectTimeoutRef.current = null;
+      }
       // 钱包连接成功后自动进入第二步（设置名称）
       setCurrentStep(2);
       setShouldAutoAdvance(false); // 标记已经自动前进过，防止再次自动跳转
     }
-  }, [isConnected, signerInfo, currentStep, shouldAutoAdvance]);
+  }, [isConnected, signerInfo, currentStep, shouldAutoAdvance, wallet]);
+
+  // 清理超时定时器
+  useEffect(() => {
+    return () => {
+      if (connectTimeoutRef.current) {
+        clearTimeout(connectTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // 进入步骤3（上链存储）时重置状态
   React.useEffect(() => {
@@ -246,11 +294,12 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     >
 
         {/* 进度指示器 */}
-        <LoginProgress 
-          currentStep={currentStep} 
-          isSuccess={createStatus?.status === CREATE_STATUS.SUCCESS}
-        />
-
+        {currentStep !== 1 && (
+          <LoginProgress 
+            currentStep={currentStep} 
+            isSuccess={createStatus?.status === CREATE_STATUS.SUCCESS}
+          />
+        )}
         {/* 主要内容区域 - 根据步骤显示不同内容 */}
         {currentStep === 1 && (
           <LoginStep1 

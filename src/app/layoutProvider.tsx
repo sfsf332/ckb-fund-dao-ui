@@ -52,7 +52,9 @@ export function LayoutProvider({ children }: { children: React.ReactNode }) {
         },
       ]}
     >
-      <WalletProvider>{children}</WalletProvider>
+      <WalletProvider>
+        {children}
+      </WalletProvider>
     </ccc.Provider>
   );
 }

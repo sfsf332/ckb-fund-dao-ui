@@ -14,6 +14,7 @@ import { useI18n } from "@/contexts/I18nContext";
 import "./comment.css";
 import { CommentItemProps } from "@/types/comment";
 import CommentReply from "./CommentReply";
+import { formatHandleDisplay } from "@/utils/common";
 
 // 移除了内联回复框，不再需要 ReactQuill
 // 动态导入ReactQuill，禁用SSR
@@ -57,7 +58,9 @@ export default function CommentItem({
   // 判断是否为回复评论
   const isReplyToComment = comment.to && comment.to.did;
   const replyToName = isReplyToComment
-    ? comment.to?.displayName || comment.to?.handle || comment.to?.did
+    ? comment.to?.displayName || 
+      (comment.to?.handle ? formatHandleDisplay(comment.to.handle) : null) || 
+      comment.to?.did
     : null;
   // const [isReplying, setIsReplying] = useState(false);
   // const [replyContent, setReplyContent] = useState("");

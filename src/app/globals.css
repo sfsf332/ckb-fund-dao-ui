@@ -19,7 +19,9 @@ body {
   color: var(--foreground);
   font-family: 'Nunito Sans', Arial, Helvetica, sans-serif;
 }
-
+a{
+  color: #fff;
+}
 .main-content {
   min-height: 100vh;
 }
@@ -173,7 +175,9 @@ body {
   align-items: center;
   gap: 8px;
 }
-
+.header-actions a{
+  text-decoration: none;
+}
 /* 语言切换器样式 */
 .language-switcher-container {
   position: relative;
@@ -257,11 +261,6 @@ body {
 }
 
 
-.user-dropdown-container {
-  position: relative;
-  display: inline-block;
-}
-
 .user-button {
   display: flex;
   align-items: center;
@@ -275,48 +274,7 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   min-width: 120px;
-}
-
-.user-dropdown {
-  position: absolute;
-  top: 80%;
-  right: 0;
-  margin-top: 8px;
-  background: #262A33;
-  border-radius: 6px;
-  min-width: 160px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
-  overflow: hidden;
-  animation: dropdownFadeIn 0.2s ease-out;
-}
-
-.user-dropdown-item {
-  display: block;
-  width: 100%;
-  padding: 12px 16px;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
   text-decoration: none;
-  border: none;
-  background: transparent;
-  text-align: left;
-}
-
-.user-dropdown-item:hover {
-  background: #1C2027;
-}
-
-.user-dropdown-item.logout-item {
-  color: #EF4444;
-}
-
-.user-dropdown-item.logout-item:hover {
-  background: #1C2027;
-  color: #DC2626;
 }
 
 
@@ -336,7 +294,6 @@ body {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
   text-decoration: none;
   display: block;
   padding: 8px 0;
@@ -352,15 +309,12 @@ body {
     position: absolute;
     bottom: 0;
     left: 50%;
-    transform: translateX(-50%);
     width: 20px;
     height: 8px;
     background-image: url('/arrow-u.svg');
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
-    opacity: 0.8;
-    animation: fadeIn 0.3s ease;
   }
   
   /* 当前选中状态的下划线 */
@@ -369,7 +323,6 @@ body {
     position: absolute;
     bottom: 0;
     left: 50%;
-    transform: translateX(-50%);
     width: 20px;
     height: 8px;
     background-image: url('/arrow-u.svg');
@@ -377,18 +330,6 @@ body {
     background-size: contain;
     background-position: center;
     opacity: 1;
-  }
-}
-
-/* 下划线淡入动画 */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(5px);
-  }
-  to {
-    opacity: 0.8;
-    transform: translateX(-50%) translateY(0);
   }
 }
 
@@ -525,12 +466,23 @@ body {
   justify-content: center;
 }
 .banner img{
-  width: 1104px;
-  height: 100px;
+  width: 50%;
+  height: auto;
+  max-width: 1104px;
 }
 .banner svg{
-  width: 1104px;
-  height: 100px;
+  width: 50%;
+  height: auto;
+  max-width: 1104px;
+}
+
+@media (min-width: 1280px) {
+  .banner img{
+    width: 80%;
+  }
+  .banner svg{
+    width: 80%;
+  }
 }
 .container{
   max-width: 1440px;

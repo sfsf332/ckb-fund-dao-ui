@@ -17,7 +17,7 @@ export default function UserProfileCard({ className = '' }: UserProfileCardProps
   const { t } = useTranslation();
   const { userInfo } = useUserInfoStore();
   const [isEditing, setIsEditing] = useState(false);
-  const [userName, setUserName] = useState('Alice');
+  const [userName, setUserName] = useState('');
   const [joinDate] = useState('2025年1月1日');
   const [expandedConnection, setExpandedConnection] = useState<string | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -47,7 +47,7 @@ export default function UserProfileCard({ className = '' }: UserProfileCardProps
       name: t('userProfile.connectWithDiscord'), 
       icon: <FaDiscord color='#5865F2' />, 
       connected: true,
-      username: '0xalice'
+      username: null
     },
     { 
       id: 'telegram',

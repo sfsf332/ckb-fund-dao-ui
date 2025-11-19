@@ -158,8 +158,7 @@ export default function Treasury() {
             {/* 我的治理部分 - 组件化并固定显示 */}
             <UserGovernance />
 
-            {/* 金库概览部分 - 组件化并固定显示 */}
-            <TreasuryOverview />
+            {/* <TreasuryOverview /> */}
           </div>
         </div>
       </main>

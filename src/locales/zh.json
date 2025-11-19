@@ -482,7 +482,7 @@
     "insufficientFundsWarning": "需要至少355CKB才能上链存储信息, 请补充CKB或切换有充足CKB的钱包。",
     "recheckBalance": "重新检查余额",
     "creatingAccount": "正在创建账户...",
-    "pleaseWait": "请稍候，这可能需要几分钟时间",
+    "pleaseWait": "请稍候，这可能需要几分钟时间。请不要刷新页面，耐心等待",
     "accountCreationFailed": "账户创建失败"
   },
   "loginStep4": {
@@ -526,7 +526,18 @@
     "verificationFailed": "验证失败",
     "decryptionFailed": "解密失败",
     "qrCodeNotSupported": "二维码解析功能暂未实现，请使用txt文件格式",
-    "qrCodeScanFailed": "无法识别二维码，请确保图片清晰且包含有效的二维码"
+    "qrCodeScanFailed": "无法识别二维码，请确保图片清晰且包含有效的二维码",
+    "connectWallet": "请连接钱包",
+    "connectWalletHint": "请连接创建此DID时使用的钱包",
+    "connectWalletButton": "连接钱包",
+    "connecting": "连接中...",
+    "verifyingWallet": "正在验证钱包地址...",
+    "walletConnectFailed": "连接钱包失败",
+    "getWalletAddressFailed": "获取钱包地址失败",
+    "walletMismatchTitle": "钱包地址不匹配",
+    "walletMismatchMessage": "当前连接的钱包不是创建此DID时使用的钱包，请使用正确的钱包重新连接",
+    "walletMismatchConfirm": "确认",
+    "registeredWalletAddress": "注册时的CKB地址："
   },
   "homepage": {
     "proposalList": "提案列表",
@@ -647,13 +658,14 @@
     "proposalVoting": {
       "title": "提案投票",
       "deadline": "截至:",
-      "totalVotes": "总票数:",
+      "totalVotes": "总投票权重数:",
       "approve": "赞成",
       "reject": "反对",
       "myVotingPower": "我的投票权:",
+      "chainPending": "投票结果上链中",
       "conditions": {
         "title": "通过条件",
-        "minTotalVotes": "最低投票总数",
+        "minTotalVotes": "最低投票权重总数",
         "approveRate": "赞成票数占比"
       },
       "timeLeft": {
@@ -666,7 +678,7 @@
     "milestoneVoting": {
       "confirmVoting": "确认投票",
       "deadline": "截至:",
-      "totalVotes": "总票数:",
+      "totalVotes": "总投票权重数:",
       "approve": "赞成",
       "reject": "反对",
       "approveFunding": "赞成拨款",
@@ -674,7 +686,7 @@
       "myVotingPower": "我的投票权:",
       "requirements": {
         "title": "通过条件",
-        "minTotalVotes": "最低投票总数",
+        "minTotalVotes": "最低投票权重总数",
         "approveRate": "赞成票数占比"
       },
       "timeLeft": {

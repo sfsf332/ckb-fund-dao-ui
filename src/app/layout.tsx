@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 
 import { LayoutProvider } from "./layoutProvider";
 import Banner from "@/components/Banner";
+import WalletConnectionModal from "@/components/user-login/WalletConnectionModal";
 
 export const metadata: Metadata = {
   title: "CKB CFD",
@@ -37,6 +38,7 @@ export default function RootLayout({
             <TooltipClient />
             <Footer />
             <Toaster position="top-center" toastOptions={{ duration: 1500 }} />
+            <WalletConnectionModal />
           </I18nProvider>
         </LayoutProvider>
       </body>

@@ -361,6 +361,41 @@ export const updateMetaTxHash = defineAPI<
   }
 );
 
+// 更新投票交易哈希参数类型
+export interface UpdateVoteTxHashParams {
+  did: string; // 用户DID
+  params: {
+    id: number; // 投票元数据ID
+    tx_hash: string; // 交易哈希
+    candidates_index: number; // 候选人索引（0: Abstain, 1: Agree, 2: Against）
+  };
+  signed_bytes: string; // 签名字节
+  signing_key_did: string; // 签名密钥DID
+}
+
+// 更新投票交易哈希响应类型
+export interface UpdateVoteTxHashResponse {
+  success: boolean;
+  [key: string]: unknown;
+}
+
+/**
+ * 更新投票交易哈希
+ * POST /api/vote/update_vote_tx_hash
+ */
+export const updateVoteTxHash = defineAPI<
+  UpdateVoteTxHashParams,
+  UpdateVoteTxHashResponse
+>(
+  "/vote/update_vote_tx_hash",
+  "POST",
+  {
+    divider: {
+      body: ["did", "params", "signed_bytes", "signing_key_did"],
+    },
+  }
+);
+
 // 注意：vote_meta 现在从 /api/proposal/detail 接口返回，不再需要单独的接口
 
 // 准备投票参数类型
@@ -372,7 +407,7 @@ export interface PrepareVoteParams {
 // 准备投票响应类型
 export interface PrepareVoteResponse {
   did: string;
-  proof: number[][];
+  proof: number[]; // proof 现在是一个一维数字数组
   vote_addr: string;
   vote_meta: VoteMetaItem;
 }
@@ -390,6 +425,78 @@ export const prepareVote = defineAPI<
   {
     divider: {
       body: ["did", "vote_meta_id"],
+    },
+  }
+);
+
+// 查询投票状态参数类型
+export interface VoteStatusParams {
+  did: string; // 用户DID
+  vote_meta_id: number; // 投票元数据ID
+}
+
+// 查询投票状态响应类型
+export interface VoteStatusResponse {
+  vote_meta_id: number;
+  total_votes: number;
+  approve_votes: number;
+  reject_votes: number;
+  abstain_votes: number;
+  approval_rate: number;
+  candidates_index?: number; // 当前用户投票的候选人索引（1: Agree, 2: Against）
+  state?: number; // 投票状态（0: 上链中, 其他: 已确认）
+  voter?: string; // 投票者DID
+  created?: string; // 创建时间
+  tx_hash?: string; // 交易哈希
+  [key: string]: unknown;
+}
+
+/**
+ * 查询投票状态
+ * POST /api/vote/status
+ */
+export const getVoteStatus = defineAPI<
+  VoteStatusParams,
+  VoteStatusResponse
+>(
+  "/vote/status",
+  "POST",
+  {
+    divider: {
+      body: ["did", "vote_meta_id"],
+    },
+  }
+);
+
+// 查询投票详情参数类型
+export interface VoteDetailParams {
+  id: number; // 投票元数据ID
+}
+
+// 查询投票详情响应类型
+export interface VoteDetailResponse {
+  candidate_votes: Array<[number, number]>; // [[票数, 权重], ...] 顺序: [0: Abstain, 1: Agree, 2: Against]
+  valid_vote_sum: number; // 有效投票数
+  valid_weight_sum: number; // 有效投票权重总和
+  vote_meta: VoteMetaItem; // 投票元数据
+  vote_sum: number; // 总投票数
+  weight_sum: number; // 总权重
+  [key: string]: unknown;
+}
+
+/**
+ * 查询投票详情（当前结果）
+ * GET /api/vote/detail
+ */
+export const getVoteDetail = defineAPI<
+  VoteDetailParams,
+  VoteDetailResponse
+>(
+  "/vote/detail",
+  "GET",
+  {
+    divider: {
+      query: ["id"], // vote_meta_id作为查询参数
     },
   }
 );

@@ -53,7 +53,7 @@ rotate: 90deg;
 .login-progress {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   margin-bottom: 32px;
   gap: 8px;
 }
@@ -62,11 +62,12 @@ rotate: 90deg;
   display: flex;
   align-items: center;
   padding-bottom: 12px;
+  position: relative;
 }
 
 .login-step-circle {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -74,23 +75,25 @@ rotate: 90deg;
   font-weight: 600;
   font-size: 12px;
   color: #777;
-  border:1px solid #777;
+  border: 1px solid #777;
+  background: transparent;
   transition: all 0.3s ease;
   margin: 0 6px;
+  flex-shrink: 0;
 }
 
 .login-step-circle.completed {
   background: #00CC9B;
   border: 1px solid #00CC9B;
-  color: #00CC9B;
-  width: 20px;
-  height: 20px;
+  color: #fff;
+  width: 24px;
+  height: 24px;
 }
 
 .login-step.current .login-step-circle {
   background: #00CC9B;
-  border:1px solid #00CC9B;
-  color: #000;
+  border: 1px solid #00CC9B;
+  color: #fff;
 }
 .login-step.current .login-step-title {
   color: #fff;
@@ -109,9 +112,18 @@ rotate: 90deg;
   padding: 0 10px;
 }
 
-.login-step.current{
-  color: #fff!important;
-  border-bottom:2px solid #00CC9B;
+.login-step.current {
+  color: #fff !important;
+}
+
+.login-step.current::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #00CC9B;
 }
 
 .login-step-separator {
@@ -256,6 +268,7 @@ rotate: 90deg;
 
 /* 底部区域 */
 .login-footer {
+  padding: 20px 0 0 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -757,7 +770,7 @@ rotate: 90deg;
 
 .nervos-galaxy {
   width: 240px;
-  height: 160px;
+  height: 166px;
   position: relative;
   display: flex;
   align-items: center;
@@ -865,11 +878,12 @@ rotate: 90deg;
 
 }
 .card-name{
-  font-size: 16px;
-  line-height: 40px;
+  font-size: 14px;
+  line-height: 16px;
   font-weight: 600;
   color: #000;
   text-align: center;
+  padding:10px 0;
 }
 /* 步骤导航按钮 */
 .step-navigation {

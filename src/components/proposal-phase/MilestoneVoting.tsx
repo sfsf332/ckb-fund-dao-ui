@@ -76,7 +76,7 @@ export default function MilestoneVoting({
 
       <div className="milestone-voting-stats">
         <div className="voting-stat">
-          <span>{messages.proposalPhase.milestoneVoting.totalVotes} {formatNumber(votingInfo.totalVotes)}</span>
+          <span>{messages.proposalPhase.milestoneVoting.totalVotes} {formatNumber(votingInfo.totalVotes / 100000000)} CKB</span>
         </div>
         
         <div className="milestone-voting-progress">
@@ -95,11 +95,11 @@ export default function MilestoneVoting({
         <div className="progress-labels">
           <div className="progress-label approve">
             <span className="label-text">{messages.proposalPhase.milestoneVoting.approve} {formatPercentage(votingInfo.approveRate)}</span>
-            <span className="vote-count">({formatNumber(votingInfo.approveVotes)})</span>
+            <span className="vote-count">({formatNumber(votingInfo.approveVotes / 100000000)} CKB)</span>
           </div>
           <div className="progress-label reject">
             <span className="label-text">{messages.proposalPhase.milestoneVoting.reject} {formatPercentage(votingInfo.rejectRate)}</span>
-            <span className="vote-count">({formatNumber(votingInfo.rejectVotes)})</span>
+            <span className="vote-count">({formatNumber(votingInfo.rejectVotes / 100000000)} CKB)</span>
           </div>
         </div>
       </div>
@@ -125,7 +125,7 @@ export default function MilestoneVoting({
 
       <div className="milestone-voting-power">
         <span>{messages.proposalPhase.milestoneVoting.myVotingPower} </span>
-        <span className="power-value">{formatNumber(votingInfo.userVotingPower)} CKB</span>
+        <span className="power-value">{formatNumber(votingInfo.userVotingPower / 100000000)} CKB</span>
       </div>
 
       <div className="milestone-voting-requirements">
@@ -134,7 +134,7 @@ export default function MilestoneVoting({
           <div className="requirement-info">
             <span className="requirement-label">{messages.proposalPhase.milestoneVoting.requirements.minTotalVotes}</span>
             <span className="requirement-value">
-              {formatNumber(votingInfo.totalVotes)} / {formatNumber(votingInfo.requirements.minTotalVotes)}
+              {formatNumber(votingInfo.totalVotes / 100000000)} / {formatNumber(votingInfo.requirements.minTotalVotes)} CKB
             </span>
           </div>
           <div className={`requirement-status ${votingInfo.isRequirementMet.totalVotes ? 'met' : 'not-met'}`}>

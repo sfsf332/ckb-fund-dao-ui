@@ -124,12 +124,12 @@
     "noData": "No Data"
   },
   "header": {
-    "governanceHome": "Governance Home",
+    "governanceHome": "Home",
     "treasury": "Treasury",
-    "propertyInfo": "Property Info",
+    "propertyInfo": "Steward",
     "userCenter": "User Center",
-    "governanceRules": "Governance Rules",
-    "createProposal": "Create Proposal",
+    "governanceRules": "Rules",
+    "createProposal": "Proposal",
     "login": "Login",
     "goToUserCenter": "Go to User Center",
     "logout": "Logout"
@@ -443,7 +443,7 @@
     "insufficientFundsWarning": "At least 355 CKB is required to store information on-chain. Please add CKB or switch to a wallet with sufficient CKB.",
     "recheckBalance": "Recheck Balance",
     "creatingAccount": "Creating account...",
-    "pleaseWait": "Please wait, this may take a few minutes",
+    "pleaseWait": "Please wait, this may take a few minutes. Please do not refresh the page and wait patiently",
     "accountCreationFailed": "Account creation failed"
   },
   "loginStep4": {
@@ -487,7 +487,18 @@
     "verificationFailed": "Verification failed",
     "decryptionFailed": "Decryption failed",
     "qrCodeNotSupported": "QR code parsing is not yet implemented, please use txt file format",
-    "qrCodeScanFailed": "Unable to recognize QR code, please ensure the image is clear and contains a valid QR code"
+    "qrCodeScanFailed": "Unable to recognize QR code, please ensure the image is clear and contains a valid QR code",
+    "connectWallet": "Please connect wallet",
+    "connectWalletHint": "Please connect the wallet used when creating this DID",
+    "connectWalletButton": "Connect Wallet",
+    "connecting": "Connecting...",
+    "verifyingWallet": "Verifying wallet address...",
+    "walletConnectFailed": "Failed to connect wallet",
+    "getWalletAddressFailed": "Failed to get wallet address",
+    "walletMismatchTitle": "Wallet Address Mismatch",
+    "walletMismatchMessage": "The currently connected wallet is not the wallet used when creating this DID. Please reconnect with the correct wallet",
+    "walletMismatchConfirm": "Confirm",
+    "registeredWalletAddress": "Registered CKB Address:"
   },
   "homepage": {
     "proposalList": "Proposal List",
@@ -608,13 +619,14 @@
     "proposalVoting": {
       "title": "Proposal Voting",
       "deadline": "Deadline:",
-      "totalVotes": "Total Votes:",
+      "totalVotes": "Total Voting Weight:",
       "approve": "Approve",
       "reject": "Reject",
       "myVotingPower": "My Voting Power:",
+      "chainPending": "Vote result is being confirmed on-chain",
       "conditions": {
         "title": "Passing Conditions",
-        "minTotalVotes": "Minimum Total Votes",
+        "minTotalVotes": "Minimum Total Voting Weight",
         "approveRate": "Approval Rate"
       },
       "timeLeft": {
@@ -627,7 +639,7 @@
     "milestoneVoting": {
       "confirmVoting": "Confirmation Voting",
       "deadline": "Deadline:",
-      "totalVotes": "Total Votes:",
+      "totalVotes": "Total Voting Weight:",
       "approve": "Approve",
       "reject": "Reject",
       "approveFunding": "Approve Funding",
@@ -635,7 +647,7 @@
       "myVotingPower": "My Voting Power:",
       "requirements": {
         "title": "Passing Requirements",
-        "minTotalVotes": "Minimum Total Votes",
+        "minTotalVotes": "Minimum Total Voting Weight",
         "approveRate": "Approval Rate"
       },
       "timeLeft": {

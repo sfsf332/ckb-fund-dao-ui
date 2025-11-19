@@ -135,19 +135,24 @@ export default function LoginFooter({
       )}
 
       {currentStep === 3 && (
-        <div className="step-navigation">
+        <div className="step-navigation" style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
           {createStatus?.status === CREATE_STATUS.SUCCESS ? (
             <Link href="#" onClick={onComplete}>
               {t("loginFooter.enterCommunity")}
             </Link>
-          ) : createStatus?.status === CREATE_STATUS.FAILURE && onBackToStep2 ? (
-            <button
-              className="login-connect-button"
-              onClick={onBackToStep2}
-            >
-              {t("loginFooter.backToPreviousStep")}
-            </button>
-          ) : null}
+          ) : (
+            <>
+              {onBackToStep2 && (
+                <button
+                  className="login-connect-button"
+                  onClick={onBackToStep2}
+                  style={{ backgroundColor: '#6A727B' }}
+                >
+                  {t("loginFooter.backToPreviousStep")}
+                </button>
+              )}
+            </>
+          )}
         </div>
       )}
 

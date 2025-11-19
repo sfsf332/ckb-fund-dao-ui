@@ -34,12 +34,12 @@ export default function LoginStep4({ accountName }: LoginStep4Props) {
               <Image src="/nervos-planet.png" alt="planet" width={60} height={32} />
             </div>
             <div className="card-name">
-              {accountName || "alice"}
+              {accountName }
             </div>
           </div>
           <div className="success-details">
             <div className="success-name">
-              {accountName || "alice"}.ckb.xyz
+              {accountName}.ckb.xyz
             </div>
             <div className="success-address" onClick={handleCopyAddress} style={{ cursor: 'pointer' }}>
               {isLoadingAddress ? t("loginStep4.gettingAddress") : formatAddress(walletAddress)} 

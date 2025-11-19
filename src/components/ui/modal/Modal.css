@@ -79,6 +79,8 @@
   font-weight: bold;
   color: #FFFFFF;
   margin: 0;
+  text-align: center;
+  width: 100%;
 }
 
 .modal-close-button {

@@ -7,6 +7,7 @@ import Image from "next/image";
 import "./comment.css";
 import { CommentReplyProps } from "@/types/comment";
 import { getAvatarByDid } from "@/utils/avatarUtils";
+import { formatHandleDisplay } from "@/utils/common";
 
 export default function CommentReply({ 
   comment, 
@@ -38,7 +39,9 @@ export default function CommentReply({
   // 判断是否为回复评论
   const isReplyToComment = comment.to && comment.to.did;
   const replyToName = isReplyToComment 
-    ? (comment.to?.displayName || comment.to?.handle || comment.to?.did)
+    ? (comment.to?.displayName || 
+       (comment.to?.handle ? formatHandleDisplay(comment.to.handle) : null) || 
+       comment.to?.did)
     : null;
 
   // 拆分引用内容和回复内容

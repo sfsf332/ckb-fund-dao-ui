@@ -38,7 +38,7 @@ export default function Treasury() {
               <AiOutlineExport />
             </Link>
           </div>
-          <div className="dash_line"></div>
+          {/* <div className="dash_line"></div>
           <h4>{messages.treasuryPage.multisigSigners}</h4>
           <ol className="treasury_list">
             <li>
@@ -68,7 +68,7 @@ export default function Treasury() {
                 <AiOutlineExport />
               </Link>
             </li>
-          </ol>
+          </ol> */}
         </div>
         <div className="block_container">
           <h3>{messages.treasuryPage.treasuryAssets}</h3>
@@ -89,9 +89,9 @@ export default function Treasury() {
           <h4>{messages.treasuryPage.totalAssetsStatistics}</h4>
           <TotalAssetsChart height={320} />
         </div>
-        <div className="block_container">
+        {/* <div className="block_container">
           <ProjectWalletsTable />
-        </div>
+        </div> */}
       </main>
  
     </div>

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { ccc } from "@ckb-ccc/connector-react";
 import { useTranslation } from "@/utils/i18n";
+import { useI18n } from "@/contexts/I18nContext";
 
 interface LoginStep1Props {
   onDisconnect?: () => void;
@@ -12,8 +13,14 @@ interface LoginStep1Props {
 
 export default function LoginStep1({ onDisconnect }: LoginStep1Props) {
   const { t } = useTranslation();
+  const { locale } = useI18n();
   const { wallet, signerInfo } = ccc.useCcc();
   const isConnected = !!wallet && !!signerInfo;
+  
+  // 根据语言设置 web5 链接
+  const web5Link = locale === 'zh' 
+    ? 'https://www.nervos.org/zh/knowledge-base/web5-extra-decentralized'
+    : 'https://www.nervos.org/knowledge-base/web5-extra-decentralized';
   
   // 获取钱包地址并格式化
   const [walletAddress, setWalletAddress] = React.useState<string>("");
@@ -60,7 +67,12 @@ export default function LoginStep1({ onDisconnect }: LoginStep1Props) {
         </div>
       </div>
       <div>
-        <a href="#" className="login-info-link">
+        <a 
+          href={web5Link} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="login-info-link"
+        >
           {t("loginStep1.whatIsWeb5")}
           <IoMdInformationCircleOutline
             data-tooltip-id="my-tooltip"

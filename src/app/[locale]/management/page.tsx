@@ -24,13 +24,13 @@ export default function Management() {
             <div className="team_item">
               <Image src={getAvatarByDid("did:ckb:ckt1qvqr...7q2h")} alt="avatar" width={40} height={40} />
               <div className="name">
-                <h3>John</h3>
+                <h3>Alice</h3>
                 <h4>{t("managementPage.daoManager")}</h4>
                 <p>did:ckb:ckt1qvqr...7q2h</p>
                 <p>
                   Twitter:
-                  <Link href="https://twitter.com/john">
-                    https://twitter.com/john
+                  <Link href="https://twitter.com/Alice">
+                    https://twitter.com/Alice
                   </Link>
                 </p>
               </div>
@@ -38,13 +38,13 @@ export default function Management() {
             <div className="team_item">
               <Image src={getAvatarByDid("did:ckb:ckt1qvqr...7q2h")} alt="avatar" width={40} height={40} />
               <div className="name">
-                <h3>John</h3>
+                <h3>Bob</h3>
                 <h4>{t("managementPage.daoManager")}</h4>
                 <p>did:ckb:ckt1qvqr...7q2h</p>
                 <p>
                   Twitter:
-                  <Link href="https://twitter.com/john">
-                    https://twitter.com/john
+                  <Link href="https://twitter.com/Bob">
+                    https://twitter.com/Bob
                   </Link>
                 </p>
               </div>
@@ -52,13 +52,13 @@ export default function Management() {
             <div className="team_item">
               <Image src={getAvatarByDid("did:ckb:ckt1qvqr...7q2h")} alt="avatar" width={40} height={40} />
               <div className="name">
-                <h3>John</h3>
+                <h3>Carol</h3>
                 <h4>{t("managementPage.daoManager")}</h4>
                 <p>did:ckb:ckt1qvqr...7q2h</p>
                 <p>
                   Twitter:
-                  <Link href="https://twitter.com/john">
-                    https://twitter.com/john
+                  <Link href="https://twitter.com/Carol">
+                    https://twitter.com/Carol
                   </Link>
                 </p>
               </div>

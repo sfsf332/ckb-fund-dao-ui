@@ -284,6 +284,35 @@ interface Messages {
     communityReviewVote: string;
     threeDaysLater: string;
   };
+  voting: {
+    errors: {
+      prepareFailed: string;
+      submitFailedEmptyResponse: string;
+      submitFailedRetry: string;
+      submitFailedInvalidFormat: string;
+      missingProof: string;
+      missingTxHash: string;
+      buildTransactionFailed: string;
+      getVoteDetailFailed: string;
+      getVoteStatusFailed: string;
+      queryVoteStatusFailed: string;
+      updateTxHashFailed: string;
+      voteFailed: string;
+      userNotLoggedIn: string;
+    };
+    logs: {
+      prepareSuccess: string;
+      prepareFailed: string;
+      buildTransactionFailed: string;
+      txHash: string;
+      milestoneVotePrepareSuccess: string;
+      milestoneVotePrepareFailed: string;
+    };
+    options: {
+      approve: string;
+      reject: string;
+    };
+  };
   verificationResults: {
     pass: string;
     fail: string;

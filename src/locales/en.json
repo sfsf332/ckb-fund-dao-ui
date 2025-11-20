@@ -734,6 +734,35 @@
       "voteFailedMessage": "Failed to submit vote, please try again later",
       "missingInfo": "Missing voting information or user not logged in",
       "close": "Close"
+    },
+    "voting": {
+      "errors": {
+        "prepareFailed": "Vote preparation failed: empty response",
+        "submitFailedEmptyResponse": "Failed to submit vote, server returned empty response",
+        "submitFailedRetry": "Failed to submit vote, please try again later",
+        "submitFailedInvalidFormat": "Failed to submit vote, server returned invalid data format",
+        "missingProof": "Vote data missing proof field or incorrect format",
+        "missingTxHash": "Vote metadata missing transaction hash",
+        "buildTransactionFailed": "Failed to build vote transaction",
+        "getVoteDetailFailed": "Failed to get vote detail",
+        "getVoteStatusFailed": "Failed to get vote status",
+        "queryVoteStatusFailed": "Failed to query vote status",
+        "updateTxHashFailed": "Failed to update vote transaction hash",
+        "voteFailed": "Vote failed",
+        "userNotLoggedIn": "Vote failed: user not logged in"
+      },
+      "logs": {
+        "prepareSuccess": "Vote preparation successful",
+        "prepareFailed": "Vote preparation failed",
+        "buildTransactionFailed": "Failed to build vote transaction",
+        "txHash": "Vote transaction hash",
+        "milestoneVotePrepareSuccess": "Milestone vote preparation successful",
+        "milestoneVotePrepareFailed": "Milestone vote preparation failed"
+      },
+      "options": {
+        "approve": "Approve",
+        "reject": "Reject"
+      }
     }
   },
   "chart": {
@@ -848,5 +877,41 @@
     "notSet": "Not set",
     "notNamed": "Not named",
     "noMilestonesAdded": "No milestones added"
+  },
+  "proposalCreate": {
+    "steps": {
+      "proposalSettings": "Settings",
+      "projectBackground": "Background",
+      "projectGoals": "Goals",
+      "teamIntroduction": "Team",
+      "projectBudget": "Budget",
+      "milestones": "Milestones"
+    },
+    "stepDescriptions": {
+      "proposalSettings": "Basic settings information",
+      "projectBackground": "Project background introduction",
+      "projectGoals": "Project goals planning",
+      "teamIntroduction": "Team information introduction",
+      "projectBudget": "Budget planning settings",
+      "milestones": "Project milestone planning"
+    },
+    "buttons": {
+      "previewProposal": "Preview Proposal",
+      "reset": "Reset",
+      "submitProposal": "Submit Proposal",
+      "submitting": "Submitting...",
+      "nextStep": "Next Step"
+    },
+    "messages": {
+      "submitSuccess": "Proposal submitted successfully!"
+    },
+    "errors": {
+      "pleaseLoginFirst": "Please login first",
+      "submitFailed": "Submission failed, please try again",
+      "submitProposalFailed": "Failed to submit proposal:",
+      "saveDraftFailed": "Failed to save draft:",
+      "loadDraftFailed": "Failed to load draft:",
+      "deleteDraftFailed": "Failed to delete draft:"
+    }
   }
 }

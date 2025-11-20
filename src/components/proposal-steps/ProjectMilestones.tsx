@@ -63,7 +63,7 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
                   }`}
                   onClick={() => setActiveMilestoneIndex(index)}
                 >
-                  {milestone.title || `里程碑${index + 1}`}{" "}
+                  {milestone.title || `Milestone-${index + 1}`}{" "}
                 </button>
                 <button
                   type="button"

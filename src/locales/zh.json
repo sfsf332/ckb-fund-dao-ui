@@ -773,6 +773,35 @@
       "voteFailedMessage": "投票提交失败，请稍后重试",
       "missingInfo": "缺少投票信息或用户未登录",
       "close": "关闭"
+    },
+    "voting": {
+      "errors": {
+        "prepareFailed": "投票准备失败: 响应为空",
+        "submitFailedEmptyResponse": "投票提交失败，服务器返回空响应",
+        "submitFailedRetry": "投票提交失败，请稍后重试",
+        "submitFailedInvalidFormat": "投票提交失败，服务器返回的数据格式不正确",
+        "missingProof": "投票数据中缺少 proof 字段或格式不正确",
+        "missingTxHash": "投票元数据缺少交易哈希",
+        "buildTransactionFailed": "构建投票交易失败",
+        "getVoteDetailFailed": "获取投票详情失败",
+        "getVoteStatusFailed": "获取投票状态失败",
+        "queryVoteStatusFailed": "查询投票状态失败",
+        "updateTxHashFailed": "更新投票交易哈希失败",
+        "voteFailed": "投票失败",
+        "userNotLoggedIn": "投票失败: 用户未登录"
+      },
+      "logs": {
+        "prepareSuccess": "投票准备成功",
+        "prepareFailed": "投票准备失败",
+        "buildTransactionFailed": "构建投票交易失败",
+        "txHash": "投票交易哈希",
+        "milestoneVotePrepareSuccess": "里程碑投票准备成功",
+        "milestoneVotePrepareFailed": "里程碑投票准备失败"
+      },
+      "options": {
+        "approve": "赞成",
+        "reject": "反对"
+      }
     }
   },
   "chart": {
@@ -887,5 +916,41 @@
     "notSet": "未设置",
     "notNamed": "未命名",
     "noMilestonesAdded": "未添加任何里程碑"
+  },
+  "proposalCreate": {
+    "steps": {
+      "proposalSettings": "提案设置",
+      "projectBackground": "项目背景",
+      "projectGoals": "项目目标",
+      "teamIntroduction": "团队介绍",
+      "projectBudget": "项目预算",
+      "milestones": "里程碑"
+    },
+    "stepDescriptions": {
+      "proposalSettings": "基本设置信息",
+      "projectBackground": "项目背景介绍",
+      "projectGoals": "项目目标规划",
+      "teamIntroduction": "团队信息介绍",
+      "projectBudget": "预算规划设置",
+      "milestones": "项目里程碑规划"
+    },
+    "buttons": {
+      "previewProposal": "预览提案",
+      "reset": "重置",
+      "submitProposal": "提交提案",
+      "submitting": "提交中...",
+      "nextStep": "下一步"
+    },
+    "messages": {
+      "submitSuccess": "提案提交成功！"
+    },
+    "errors": {
+      "pleaseLoginFirst": "请先登录",
+      "submitFailed": "提交失败，请重试",
+      "submitProposalFailed": "提交提案失败:",
+      "saveDraftFailed": "保存草稿失败:",
+      "loadDraftFailed": "加载草稿失败:",
+      "deleteDraftFailed": "删除草稿失败:"
+    }
   }
 }

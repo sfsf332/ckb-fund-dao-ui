@@ -6,8 +6,7 @@ import { formatNumber } from '../../utils/proposalUtils';
 import { useI18n } from '@/contexts/I18nContext';
 import './voting.css';
 import { 
-  IoThumbsUpOutline, 
-  IoThumbsDownOutline, 
+
   IoCheckmarkCircleOutline
 } from 'react-icons/io5';
 

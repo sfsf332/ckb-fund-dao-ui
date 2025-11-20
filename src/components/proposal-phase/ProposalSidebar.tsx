@@ -179,7 +179,8 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
         fetchingVoteMetaIds.current.delete(voteMetaId);
       })
       .catch((error: unknown) => {
-        console.error("获取投票详情失败:", error);
+        const errorMsg = messages.voting?.errors?.getVoteDetailFailed || "获取投票详情失败";
+        console.error(errorMsg + ":", error);
         // 请求失败时，从正在请求的集合中移除，允许重试
         fetchingVoteMetaIds.current.delete(voteMetaId);
       });
@@ -253,7 +254,8 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
         fetchingVoteStatuses.current.delete(statusKey);
       })
       .catch((error: unknown) => {
-        console.error("获取投票状态失败:", error);
+        const errorMsg = messages.voting?.errors?.getVoteStatusFailed || "获取投票状态失败";
+        console.error(errorMsg + ":", error);
         // 请求失败时，从正在请求的集合中移除，允许重试
         fetchingVoteStatuses.current.delete(statusKey);
       });
@@ -278,7 +280,18 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
     try {
       const voteMetaId = proposal?.vote_meta?.id || 2;
       
-      const result = await handleVote(userInfo.did, voteMetaId, option);
+      // 创建翻译函数
+      const t = (key: string) => {
+        const keys = key.split('.');
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let value: any = messages;
+        for (const k of keys) {
+          value = value?.[k];
+        }
+        return typeof value === 'string' ? value : key;
+      };
+      
+      const result = await handleVote(userInfo.did, voteMetaId, option, t);
       if (!result.success || !result.data) {
         const errorMsg = result.error || messages.modal.voteModal.voteFailedMessage;
         setVoteErrorMessage(errorMsg);
@@ -290,7 +303,8 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
         result.data,
         option,
         signer,
-        walletClient
+        walletClient,
+        t
       );
       
       if (txResult.success && txResult.txHash) {
@@ -358,11 +372,13 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
                 };
               });
             } catch (statusError) {
-              console.error("查询投票状态失败:", statusError);
+              const errorMsg = messages.voting?.errors?.queryVoteStatusFailed || "查询投票状态失败";
+              console.error(errorMsg + ":", statusError);
             }
           }
         } catch (updateError) {
-          console.error("更新投票交易哈希失败:", updateError);
+          const errorMsg = messages.voting?.errors?.updateTxHashFailed || "更新投票交易哈希失败";
+          console.error(errorMsg + ":", updateError);
         }
         
         const candidatesIndex = option === VoteOption.APPROVE ? 1 : 2;
@@ -395,7 +411,8 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
         setShowVoteErrorModal(true);
       }
     } catch (error) {
-      console.error('投票失败:', error);
+      const errorLogMsg = messages.voting?.errors?.voteFailed || '投票失败';
+      console.error(errorLogMsg + ':', error);
       let errorMsg = messages.modal.voteModal.voteFailedMessage;
       if (error instanceof Error) {
         errorMsg = error.message || errorMsg;

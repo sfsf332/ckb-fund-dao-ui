@@ -59,6 +59,8 @@ export default function CommentQuote({
         // 如果已有内容，在前面插入引用；如果没有内容，直接设置引用
         return prevContent.trim() ? quotedContent + prevContent : quotedContent;
       });
+      
+     
     }
   }, [quotedText, isClient]);
 

@@ -101,7 +101,8 @@ export interface VoteResult {
 export const handleVote = async (
   did: string,
   voteMetaId: number,
-  option: VoteOption
+  option: VoteOption,
+  t?: (key: string) => string
 ): Promise<VoteResult> => {
   try {
     const { prepareVote } = await import('@/server/proposal');
@@ -116,8 +117,9 @@ export const handleVote = async (
     
     // 如果响应为 null 或 undefined，视为错误
     if (response === null || response === undefined) {
-      console.error('投票准备失败: 响应为空');
-      return { success: false, error: '投票提交失败，服务器返回空响应' };
+      const errorMsg = t?.('voting.errors.prepareFailed') || '投票准备失败: 响应为空';
+      console.error(errorMsg);
+      return { success: false, error: t?.('voting.errors.submitFailedEmptyResponse') || '投票提交失败，服务器返回空响应' };
     }
     
     // 检查响应对象是否包含错误信息
@@ -132,7 +134,7 @@ export const handleVote = async (
         
         if (codeNum !== null && codeNum !== 0 && codeNum !== 200) {
           // 提取错误信息
-          let errorMessage = '投票提交失败，请稍后重试';
+          let errorMessage = t?.('voting.errors.submitFailedRetry') || '投票提交失败，请稍后重试';
           
           // 优先使用 message 字段
           if (typeof responseData.message === 'string' && responseData.message) {
@@ -162,18 +164,24 @@ export const handleVote = async (
           typeof responseData.vote_meta === 'object';
         
         if (!hasRequiredFields) {
-          console.error('投票准备失败: 响应格式不正确', responseData);
-          return { success: false, error: '投票提交失败，服务器返回的数据格式不正确' };
+          const errorMsg = t?.('voting.errors.prepareFailed') || '投票准备失败: 响应格式不正确';
+          console.error(errorMsg, responseData);
+          return { success: false, error: t?.('voting.errors.submitFailedInvalidFormat') || '投票提交失败，服务器返回的数据格式不正确' };
         }
       }
     }
     
-    console.log(`投票准备成功: vote_meta_id=${voteMetaId}, option=${option === VoteOption.APPROVE ? '赞成' : '反对'}`, response);
+    const approveText = t?.('voting.options.approve') || '赞成';
+    const rejectText = t?.('voting.options.reject') || '反对';
+    const optionText = option === VoteOption.APPROVE ? approveText : rejectText;
+    const logMsg = t?.('voting.logs.prepareSuccess') || '投票准备成功';
+    console.log(`${logMsg}: vote_meta_id=${voteMetaId}, option=${optionText}`, response);
     return { success: true, data: response as PrepareVoteResponse };
   } catch (error) {
-    console.error('投票准备失败:', error);
+    const errorLogMsg = t?.('voting.logs.prepareFailed') || '投票准备失败';
+    console.error(errorLogMsg + ':', error);
     // 提取错误信息
-    let errorMessage = '投票提交失败，请稍后重试';
+    let errorMessage = t?.('voting.errors.submitFailedRetry') || '投票提交失败，请稍后重试';
     
     if (error instanceof Error) {
       errorMessage = error.message || errorMessage;
@@ -230,7 +238,8 @@ export const buildAndSendVoteTransaction = async (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   signer: any, // ccc.Signer
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  client: any  // ccc.Client
+  client: any,  // ccc.Client
+  t?: (key: string) => string
 ): Promise<{ success: boolean; error?: string; txHash?: string }> => {
   try {
     const { ccc, hexFrom, Address, OutPoint, WitnessArgs, Transaction } = await import('@ckb-ccc/core');
@@ -264,7 +273,7 @@ export const buildAndSendVoteTransaction = async (
     // 3. 构建 VoteProof
     // proof 格式: [76, 79, 255, ...] (一维数字数组)
     if (!voteData.proof || !Array.isArray(voteData.proof)) {
-      throw new Error('投票数据中缺少 proof 字段或格式不正确');
+      throw new Error(t?.('voting.errors.missingProof') || '投票数据中缺少 proof 字段或格式不正确');
     }
     
     // proof 是一个一维数字数组，直接转换为字节数组
@@ -293,7 +302,7 @@ export const buildAndSendVoteTransaction = async (
     // 4. 构建投票交易的 cell deps
     // vote meta cell dep
     if (!voteData.vote_meta.tx_hash) {
-      throw new Error('投票元数据缺少交易哈希');
+      throw new Error(t?.('voting.errors.missingTxHash') || '投票元数据缺少交易哈希');
     }
     
     // vote meta outpoint
@@ -489,12 +498,15 @@ export const buildAndSendVoteTransaction = async (
     console.log("signed tx:", ccc.stringify(signedTx));
 
     const txHash = await client.sendTransaction(signedTx);
-    console.log("投票交易哈希:", txHash);
+    const txHashLogMsg = t?.('voting.logs.txHash') || '投票交易哈希';
+    console.log(`${txHashLogMsg}:`, txHash);
 
     return { success: true, txHash };
   } catch (error) {
-    console.error('构建投票交易失败:', error);
-    const errorMessage = error instanceof Error ? error.message : '构建投票交易失败';
+    const errorLogMsg = t?.('voting.logs.buildTransactionFailed') || '构建投票交易失败';
+    console.error(errorLogMsg + ':', error);
+    const defaultErrorMsg = t?.('voting.errors.buildTransactionFailed') || '构建投票交易失败';
+    const errorMessage = error instanceof Error ? error.message : defaultErrorMsg;
     return { success: false, error: errorMessage };
   }
 };

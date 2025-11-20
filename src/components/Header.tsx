@@ -11,6 +11,8 @@ import { useTranslation } from "@/utils/i18n";
 import { LoginModal } from "./user-login";
 import useUserInfoStore from "@/store/userInfo";
 import { formatHandleDisplay } from "@/utils/common";
+import Avatar from "./Avatar";
+import { IoChevronDown } from "react-icons/io5";
 import "./user-login/LoginModal.css";
 
 export default function Header() {
@@ -120,7 +122,11 @@ export default function Header() {
           >
             <Link href={userCenterHref}>
               <button className="button-normal user-button">
-                {getUserDisplayName()}
+                <Avatar 
+                  did={userInfo?.did}
+                  size={20}
+                />
+                <span>{getUserDisplayName()}</span>
               </button>
             </Link>
             {/* {isDropdownOpen && (

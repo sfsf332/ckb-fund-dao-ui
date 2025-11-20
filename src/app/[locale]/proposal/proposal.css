@@ -9,7 +9,7 @@
 .main-content {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 32px 0;
+  padding:20px 0;
 }
 
 /* 步骤导航 */
@@ -44,7 +44,7 @@
 }
 
 .step-container{
-    padding: 80px;
+    padding: 40px 80px;
     background-color: #262A33;
     border-radius: 10px;
 }
@@ -93,13 +93,13 @@
 /* 输入框容器 */
 .input-container {
   position: relative;
+  width: 100%;
 }
 
 /* 基础输入框样式 */
 .form-input,
 .form-select,
 .form-textarea {
-  width: 100%;
   padding: 8px 12px;
   border: 1px solid #4C525C;
   border-radius: 6px;
@@ -108,12 +108,14 @@
   background-color:transparent;
   font-size: 14px;
   transition: all 0.2s;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
-  border-color: #00cc9b;
+  border-color: #00CC9B;
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
@@ -123,7 +125,7 @@
 
 .form-select {
   appearance: none;
-  padding-right: 32px;
+  padding-right: 72px;
 }
 
 /* 下拉箭头图标 */
@@ -153,27 +155,13 @@
   width: 100%;
 }
 
-.react-datepicker__input-container input {
+.react-datepicker-wrapper .react-datepicker__input-container input {
   width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #4C525C;
-  border-radius: 6px;
-  outline: none;
-  background-color: transparent;
-  font-size: 14px;
-  transition: all 0.2s;
-  color: #fff;
-  cursor: pointer;
+  box-sizing: border-box;
 }
 
-.react-datepicker__input-container input:focus {
-  border-color: #00cc9b;
-  box-shadow: 0 0 0 2px rgba(0, 204, 155, 0.2);
-}
 
-.react-datepicker__input-container input::placeholder {
-  color: #9ca3af;
-}
+
 
 /* 日期选择器弹窗样式 */
 .react-datepicker-popper {
@@ -360,41 +348,7 @@
   gap: 16px;
 }
 
-/* 基础按钮样式 */
-.btn {
-  padding: 8px 24px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.btn-secondary {
-  background-color: #ffffff;
-  color: #374151;
-  border: 1px solid #d1d5db;
-}
-
-.btn-secondary:hover {
-  background-color: #f9fafb;
-}
-
-.btn-primary {
-  background-color: #0d9488;
-  color: #ffffff;
-  padding: 8px 32px;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: #0f766e;
-}
-
-.btn-primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+/* 按钮样式已移至 globals.css，请使用全局按钮设计系统 */
 
 /* Quill 编辑器样式 - 与现有设计风格保持一致 */
 .editor-container {
@@ -439,7 +393,7 @@
   position: relative;
  width: 100%;
  height: 100%;
- z-index: 1000;
+ z-index: 100;
 }
 
 /* Quill 工具栏样式 - 移动到底部 */
@@ -618,7 +572,7 @@
 }
 
 .ql-editor a:hover {
-  color: #00b894 !important;
+  color: #00CC9B !important;
   text-decoration: none !important;
 }
 
@@ -676,7 +630,7 @@
 }
 
 .editor-link:hover {
-  color: #00b894;
+  color: #00CC9B;
 }
 
 /* 里程碑标签页样式 - 参照图片设计 */
@@ -790,9 +744,20 @@
   align-items: flex-start;
 }
 
+.milestone-panel-fields {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.milestone-panel-fields .milestone-field {
+  flex: 1;
+}
 
 .milestone-field {
   margin:10px 0;
+  width: 100%;
 }
 .milestone-field label{
   margin:20px 0 10px 0
@@ -833,8 +798,7 @@
 
 .proposal-header {
  
-  padding: 20px 24px;
-  width: 100%;
+  padding: 10px 24px;
   position: relative;
 }
 
@@ -863,21 +827,21 @@ cursor: pointer;
 .proposal-content {
   flex: 1;
   overflow-y: auto;
-  margin: 24px;
+  margin: 10px 24px;
   border-top:1px dashed  #4C525C
 }
 
 .proposal-section {
-  margin-bottom: 32px;
+  margin-bottom: 20px;
   font-size: 14px;
-  line-height: 32px;
+  line-height: 20px;
 }
 
 .proposal-section h3 {
   color: #00CC9B;
   font-size: 24px;
   font-weight: 700;
-  line-height: 64px;
+  line-height: 40px;
 }
 
 .proposal-field {
@@ -962,7 +926,7 @@ cursor: pointer;
 }
 
 .proposal-html-content a:hover {
-  color: #00b894;
+  color: #00CC9B;
 }
 
 .proposal-milestones {
@@ -1006,27 +970,12 @@ cursor: pointer;
   transition: all 0.3s ease;
   margin-right: 12px;
   &:hover,&.selected{
-    background: #00B287;
+    background: #00CC9B;
     color: #fff;
   }
 }
-/* 轮廓按钮样式 */
-.btn-outline {
-  background-color: transparent;
-  color: #00CC9B;
-  border: 1px solid #00CC9B;
-  padding: 8px 24px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.btn-outline:hover {
-  background-color: #00CC9B;
-  color: #fff;
-}
+/* 轮廓按钮样式（兼容旧代码，建议使用 btn-edit） */
+/* 按钮样式已移至 globals.css */
 
 /* 响应式设计 */
 @media (max-width: 768px) {
@@ -1198,20 +1147,9 @@ cursor: pointer;
   color: #00CC9B;
 }
 
-.primary-btn:hover {
-  background-color: #00b894;
-  color: #fff;
-}
-
-.secondary-btn {
-  background-color: transparent;
-  color: #8A949E;
-}
-
-.secondary-btn:hover {
-  background-color: #4C525C;
-  color: #fff;
-}
+/* 旧按钮样式 - 建议迁移到全局按钮设计系统 */
+/* .primary-btn - 建议使用 .btn.btn-primary */
+/* .secondary-btn - 建议使用 .btn.btn-secondary */
 
 .btn-icon {
   font-size: 16px;

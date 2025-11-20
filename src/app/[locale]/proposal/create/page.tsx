@@ -19,21 +19,21 @@ import { useI18n } from "@/contexts/I18nContext";
 import { postUriToHref } from "@/lib/postUriHref";
 import toast from "react-hot-toast";
 
-const steps = [
-  { id: 1, name: "提案设置", description: "基本设置信息" },
-  { id: 2, name: "项目背景", description: "项目背景介绍" },
-  { id: 3, name: "项目目标", description: "项目目标规划" },
-  { id: 4, name: "团队介绍", description: "团队信息介绍" },
-  { id: 5, name: "项目预算", description: "预算规划设置" },
-  { id: 6, name: "里程碑", description: "项目里程碑规划" },
-];
-
 export default function CreateProposal() {
-  useTranslation();
+  const { t } = useTranslation();
   
   const router = useRouter();
   const { locale } = useI18n();
   const { userInfo } = useUserInfoStore();
+
+  const steps = [
+    { id: 1, name: t("proposalCreate.steps.proposalSettings"), description: t("proposalCreate.stepDescriptions.proposalSettings") },
+    { id: 2, name: t("proposalCreate.steps.projectBackground"), description: t("proposalCreate.stepDescriptions.projectBackground") },
+    { id: 3, name: t("proposalCreate.steps.projectGoals"), description: t("proposalCreate.stepDescriptions.projectGoals") },
+    { id: 4, name: t("proposalCreate.steps.teamIntroduction"), description: t("proposalCreate.stepDescriptions.teamIntroduction") },
+    { id: 5, name: t("proposalCreate.steps.projectBudget"), description: t("proposalCreate.stepDescriptions.projectBudget") },
+    { id: 6, name: t("proposalCreate.steps.milestones"), description: t("proposalCreate.stepDescriptions.milestones") },
+  ];
   const [isClient, setIsClient] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -53,12 +53,6 @@ export default function CreateProposal() {
     }>,
   });
 
-  useEffect(() => {
-    setIsClient(true);
-    // 加载草稿
-    loadDraft();
-  }, []);
-
   // 草稿保存和加载功能
   const DRAFT_KEY = 'proposal_draft';
 
@@ -72,13 +66,15 @@ export default function CreateProposal() {
       localStorage.setItem(DRAFT_KEY, JSON.stringify(draftData));
       setLastSaved(new Date());
     } catch (error) {
-      console.error('保存草稿失败:', error);
+      console.error(t("proposalCreate.errors.saveDraftFailed"), error);
     } finally {
       setIsDraftSaving(false);
     }
-  }, []);
+  }, [t]);
 
-  const loadDraft = useCallback(() => {
+  useEffect(() => {
+    setIsClient(true);
+    // 加载草稿
     try {
       const savedDraft = localStorage.getItem(DRAFT_KEY);
       if (savedDraft) {
@@ -89,18 +85,19 @@ export default function CreateProposal() {
         setLastSaved(new Date(draftData.savedAt));
       }
     } catch (error) {
-      console.error('加载草稿失败:', error);
+      console.error(t("proposalCreate.errors.loadDraftFailed"), error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const clearDraft = () => {
+  const clearDraft = useCallback(() => {
     try {
       localStorage.removeItem(DRAFT_KEY);
       setLastSaved(null);
     } catch (error) {
-      console.error('删除草稿失败:', error);
+      console.error(t("proposalCreate.errors.deleteDraftFailed"), error);
     }
-  };
+  }, [t]);
 
   // 自动保存功能
   useEffect(() => {
@@ -264,7 +261,7 @@ export default function CreateProposal() {
     
     // 检查用户是否登录
     if (!userInfo?.did) {
-      setError("请先登录");
+      setError(t("proposalCreate.errors.pleaseLoginFirst"));
       return;
     }
     
@@ -296,14 +293,14 @@ export default function CreateProposal() {
       // 删除草稿
       // clearDraft();
 
-      toast.success("提案提交成功！");
+      toast.success(t("proposalCreate.messages.submitSuccess"));
       // 跳转到详情页面，传递 cid 参数
       router.push(`/${locale}/proposal/${postUriToHref(result.uri)}`);
       
     } catch (err) {
       
-      setError("提交失败，请重试");
-      console.error('提交提案失败:', err);
+      setError(t("proposalCreate.errors.submitFailed"));
+      console.error(t("proposalCreate.errors.submitProposalFailed"), err);
     } finally {
       setSubmitting(false);
     }
@@ -419,7 +416,7 @@ export default function CreateProposal() {
                 {steps[currentStep - 1]?.name}{" "}
                 <IoMdInformationCircleOutline
                   data-tooltip-id="my-tooltip"
-                  data-tooltip-content="当前步骤的解释"
+                  data-tooltip-content={steps[currentStep - 1]?.description}
                 />
             </h2>
           </div>
@@ -437,34 +434,17 @@ export default function CreateProposal() {
                   <button
                     type="button"
                        onClick={() => setShowPreview(true)}
-                       className="btn btn-outline"
+                       className="btn btn-secondary"
                      >
-                       预览提案
+                       {t("proposalCreate.buttons.previewProposal")}
                      </button>
-                     <button
-                       type="button"
-                       onClick={() =>
-                         setFormData({
-                      proposalType: "",
-                      title: "",
-                      releaseDate: "",
-                      background: "",
-                      goals: "",
-                      team: "",
-                      budget: "",
-                           milestones: [],
-                         })
-                       }
-                    className="btn btn-secondary"
-                  >
-                    重置
-                  </button>
+                    
                   <button
                     type="submit"
                     disabled={submitting}
                     className="btn btn-primary"
                   >
-                    {submitting ? "提交中..." : "提交提案"}
+                    {submitting ? t("proposalCreate.buttons.submitting") : t("proposalCreate.buttons.submitProposal")}
                   </button>
                 </div>
               ) : (
@@ -472,16 +452,16 @@ export default function CreateProposal() {
                      <button
                        type="button"
                        onClick={() => setShowPreview(true)}
-                       className="btn btn-outline"
+                       className="btn btn-secondary"
                      >
-                       预览提案
+                       {t("proposalCreate.buttons.previewProposal")}
                      </button>
                 <button
                   type="button"
                   onClick={nextStep}
                   className="btn btn-primary"
                 >
-                  下一步
+                  {t("proposalCreate.buttons.nextStep")}
                 </button>
                    </div>
               )}

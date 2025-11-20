@@ -20,7 +20,8 @@ export default function MilestoneTracking({
   // 处理里程碑投票
   const handleMilestoneVote = async (milestoneId: string, option: MilestoneVoteOption) => {
     if (!userInfo?.did) {
-      console.error('投票失败: 用户未登录');
+      const errorMsg = messages.voting?.errors?.userNotLoggedIn || '投票失败: 用户未登录';
+      console.error(errorMsg);
       return;
     }
     
@@ -33,9 +34,14 @@ export default function MilestoneTracking({
         vote_meta_id: voteMetaId,
       });
       
-      console.log(`里程碑 ${milestoneId} 投票准备成功: vote_meta_id=${voteMetaId}, option=${option === MilestoneVoteOption.APPROVE ? '赞成' : '反对'}`, response);
+      const approveText = messages.voting?.options?.approve || '赞成';
+      const rejectText = messages.voting?.options?.reject || '反对';
+      const optionText = option === MilestoneVoteOption.APPROVE ? approveText : rejectText;
+      const logMsg = messages.voting?.logs?.milestoneVotePrepareSuccess || '里程碑投票准备成功';
+      console.log(`${logMsg}: 里程碑 ${milestoneId}, vote_meta_id=${voteMetaId}, option=${optionText}`, response);
     } catch (error) {
-      console.error('里程碑投票准备失败:', error);
+      const errorLogMsg = messages.voting?.logs?.milestoneVotePrepareFailed || '里程碑投票准备失败';
+      console.error(errorLogMsg + ':', error);
     }
   };
   

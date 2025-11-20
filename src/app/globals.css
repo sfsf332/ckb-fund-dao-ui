@@ -84,44 +84,313 @@ a{
   scrollbar-color: rgba(106, 115, 125, 0.6) transparent;
 }
 
-.button-normal{
+/* ============================================
+   按钮设计系统
+   ============================================ */
+
+/* 基础按钮样式 */
+.btn {
+  padding: 8px 24px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* ============================================
+   按钮尺寸
+   ============================================ */
+.btn-large {
+  height: 40px;
+  padding: 0 32px;
+  font-size: 16px;
+}
+
+.btn-medium {
+  height: 32px;
+  padding: 0 24px;
+  font-size: 14px;
+}
+
+.btn-small {
+  height: 24px;
+  padding: 0 16px;
+  font-size: 12px;
+}
+
+/* ============================================
+   按钮类型和状态
+   ============================================ */
+
+/* 1. 确定按钮（Confirm）- 确定、发布、连接等 */
+.btn-primary {
+  background-color: #00CC9B;
+  color: #fff;
+  border: 1px solid transparent;
+  padding: 8px 32px;
+}
+
+.btn-primary:hover:not(:disabled),
+.btn-primary:active:not(:disabled) {
+  background-color: #00E6B3;
+  color: #fff;
+  border-color: #00CC9B;
+}
+
+.btn-primary:disabled {
+  background-color: #006B5A;
+  color: #fff;
+  border-color: #006B5A;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* 2. 取消按钮（Cancel）- 取消、返回、预览等 */
+.btn-secondary {
+  background-color: #4C525C;
+  color: #fff;
+  border: 1px solid #4C525C;
+  padding: 8px 32px;
+}
+
+.btn-secondary:hover:not(:disabled),
+.btn-secondary:active:not(:disabled) {
+  background-color: #4C525C;
+  color: #fff;
+  border-color: #8A949E;
+}
+
+.btn-secondary:disabled {
+  background-color: #1a1d23;
+  color: #4C525C;
+  border-color: #4C525C;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* 3. 质押按钮（Pledge）- 质押、绑钱包等特殊操作 */
+.btn-pledge {
+  background-color: #1a1d23;
+  color: #00CC9B;
+  border: 1px solid #00CC9B;
+  padding: 8px 32px;
+}
+
+.btn-pledge:hover:not(:disabled),
+.btn-pledge:active:not(:disabled) {
+  background-color: #1a1d23;
+  color: #00E6B3;
+  border-color: #00E6B3;
+}
+
+.btn-pledge:disabled {
+  background-color: #1a1d23;
+  color: #006B5A;
+  border-color: #006B5A;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* 4. 赞成按钮（Approve）- 投票-赞成 */
+.btn-approve {
+  background-color: #00CC9B;
+  color: #003d2e;
+  border: 1px solid transparent;
+  padding: 8px 32px;
+}
+
+.btn-approve:hover:not(:disabled),
+.btn-approve:active:not(:disabled) {
+  background-color: #00E6B3;
+  color: #003d2e;
+  border-color: #00CC9B;
+}
+
+.btn-approve:disabled {
+  background-color: #006B5A;
+  color: #003d2e;
+  border-color: #006B5A;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* 5. 反对按钮（Reject）- 投票-反对 */
+.btn-reject {
+  background-color: #FF4D4F;
+  color: #fff;
+  border: 1px solid transparent;
+  padding: 8px 32px;
+}
+
+.btn-reject:hover:not(:disabled),
+.btn-reject:active:not(:disabled) {
+  background-color: #FF7875;
+  color: #fff;
+  border-color: #FF4D4F;
+}
+
+.btn-reject:disabled {
+  background-color: #A8071A;
+  color: #fff;
+  border-color: #A8071A;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* 6. 编辑按钮（Edit）- 表单内操作按钮，椭圆形 */
+.btn-edit {
+  background-color: transparent;
+  color: #00CC9B;
+  border: 1px solid #00CC9B;
+  border-radius: 20px;
+  padding: 6px 16px;
+}
+
+.btn-edit:hover:not(:disabled),
+.btn-edit:active:not(:disabled) {
+  background-color: transparent;
+  color: #00E6B3;
+  border-color: #00E6B3;
+}
+
+.btn-edit:disabled {
+  background-color: transparent;
+  color: #006B5A;
+  border-color: #006B5A;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* 7. 删除按钮（Delete）- 表单内操作按钮，椭圆形 */
+.btn-delete {
+  background-color: transparent;
+  color: #FF4D4F;
+  border: 1px solid #FF4D4F;
+  border-radius: 20px;
+  padding: 6px 16px;
+}
+
+.btn-delete:hover:not(:disabled),
+.btn-delete:active:not(:disabled) {
+  background-color: transparent;
+  color: #FF7875;
+  border-color: #FF7875;
+}
+
+.btn-delete:disabled {
+  background-color: transparent;
+  color: #A8071A;
+  border-color: #A8071A;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* 8. 轮廓按钮（Outline）- 兼容旧代码 */
+.btn-outline {
+  background-color: transparent;
+  color: #00CC9B;
+  border: 1px solid #00CC9B;
+  padding: 8px 24px;
+  border-radius: 6px;
+}
+
+.btn-outline:hover:not(:disabled) {
+  background-color: transparent;
+  color: #00E6B3;
+  border-color: #00E6B3;
+}
+
+.btn-outline:disabled {
+  background-color: transparent;
+  color: #006B5A;
+  border-color: #006B5A;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* ============================================
+   兼容旧按钮样式（逐步迁移到新设计系统）
+   ============================================ */
+
+/* 旧版 button-normal - 建议迁移到 .btn.btn-primary */
+.button-normal {
   display: flex;
   align-items: center;
   justify-content: center;
   background: #00CC9B;
-  border-radius: 5px;
-  color: #000;
+  border-radius: 6px;
+  color: #fff;
   height: 32px;
-  border:0;
-  line-height: 32px;  
+  border: 0;
+  line-height: 32px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  padding: 0 10px;
-  transition: all 0.3s ease;
+  padding: 0 24px;
+  transition: all 0.2s ease;
   text-decoration: none;
-  &:hover{
-    background: #00B287;
-  } 
 }
-.button-secondary{
+
+/* 当 button-normal 与 user-button 一起使用时，使用 user-button 的样式 */
+.button-normal.user-button {
+  background: #00CC9B;
+  padding: 0 12px;
+}
+
+.button-normal.user-button:hover:not(:disabled) {
+  background: #00E6B3;
+  color: #003d2e;
+}
+
+.button-normal:hover:not(:disabled):not(.user-button) {
+  background: #00E6B3;
+  border-color: #00CC9B;
+}
+
+.button-normal:disabled {
+  background: #006B5A;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* Header 创建提案按钮（Propose）- 深色背景，浅灰色边框 */
+.button-secondary {
   text-decoration: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 5px;
+  border-radius: 6px;
   color: #fff;
-  height: 30px;
-  line-height: 30px;  
+  height: 32px;
+  line-height: 32px;
   border: 1px solid #4C525C;
+  background-color: #1a1d23;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  padding: 0 10px;
-  transition: all 0.3s ease;
-  &:hover{
-    background: #1C2027;
-  } 
+  padding: 0 16px;
+  transition: all 0.2s ease;
+  gap: 8px;
+}
+
+.button-secondary:hover:not(:disabled) {
+  background-color: #1a1d23;
+  border-color: #8A949E;
+}
+
+.button-secondary:disabled {
+  background: #1a1d23;
+  color: #4C525C;
+  border-color: #4C525C;
+  cursor: not-allowed;
+  opacity: 1;
 }
 .header-container {
   display: flex;
@@ -261,20 +530,54 @@ a{
 }
 
 
+/* Header 用户按钮（User）- 绿色背景，深绿色文字，带下拉箭头 */
 .user-button {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  background: #00B287;
+  background: #00CC9B;
   color: #000;
   border: none;
   border-radius: 6px;
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 14px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   min-width: 120px;
   text-decoration: none;
+  height: 32px;
+  position: relative;
+}
+
+.user-button:hover:not(:disabled) {
+  background: #00E6B3;
+  color: #003d2e;
+}
+
+.user-button:disabled {
+  background: #006B5A;
+  color: #003d2e;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+/* 用户按钮中的头像样式 */
+.user-button .avatar-container {
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.user-button .avatar-image {
+  width: 100%;
+  height: 100%;
+}
+
+/* 用户按钮中的下拉箭头颜色 */
+.user-button svg {
+  color: #003d2e;
+  flex-shrink: 0;
 }
 
 
@@ -937,31 +1240,43 @@ a{
   margin: 0;
 }
 
-/* 质押按钮 */
+/* 质押按钮 - 建议迁移到 .btn.btn-pledge */
 .stake_button {
   display: flex;
   align-items: center;
-  background: #1C2027;
-  border: 1px solid #00B287;
-  border-radius: 5px;
+  background: #1a1d23;
+  border: 1px solid #00CC9B;
+  border-radius: 6px;
   width: 100%;
-  color: #00B287;
+  color: #00CC9B;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   height: 32px;
   line-height: 32px;
   margin-bottom: 24px;
   text-align: center;
   justify-content: center;
+  padding: 0 16px;
 }
-.stake_button img{
+
+.stake_button img {
   margin-right: 8px;
 }
-.stake_button:hover {
-  background: #00B287;
-  color: #000;
+
+.stake_button:hover:not(:disabled) {
+  background: #1a1d23;
+  color: #00E6B3;
+  border-color: #00E6B3;
+}
+
+.stake_button:disabled {
+  background: #1a1d23;
+  color: #006B5A;
+  border-color: #006B5A;
+  cursor: not-allowed;
+  opacity: 1;
 }
 
 
@@ -1062,26 +1377,35 @@ a{
   margin: 0;
 }
 
+/* 查看金库按钮 - 建议迁移到 .btn.btn-secondary */
 .view_treasury_button {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #1C2027;
+  background: #4C525C;
   border: 1px solid #4C525C;
-  border-radius: 8px;
+  border-radius: 6px;
   color: #fff;
   height: 32px;
   line-height: 32px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   width: 100%;
 }
 
-.view_treasury_button:hover {
-  background: #2A2E35;
-  border-color: #6A727B;
+.view_treasury_button:hover:not(:disabled) {
+  background: #4C525C;
+  border-color: #8A949E;
+}
+
+.view_treasury_button:disabled {
+  background: #1a1d23;
+  color: #4C525C;
+  border-color: #4C525C;
+  cursor: not-allowed;
+  opacity: 1;
 }
 .block_container{
   padding:40px 100px;
@@ -1348,7 +1672,8 @@ a{
   align-items: center;
   gap: 8px;
 }
-.icon_button{
+/* 图标按钮 */
+.icon_button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1358,10 +1683,18 @@ a{
   color: #9AA3AF;
   border: 1px solid #2a2f38;
   background: #11151b;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
-.icon_button:hover{
+
+.icon_button:hover:not(:disabled) {
   color: #00CC9B;
-  border-color: #00CC9B33;
+  border-color: rgba(0, 204, 155, 0.3);
+}
+
+.icon_button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 .wallets_table_pagination{
   display: flex;
@@ -1370,16 +1703,28 @@ a{
   gap: 10px;
   padding-top: 12px;
 }
-.pager_button{
+/* 分页按钮 */
+.pager_button {
   width: 28px;
   height: 28px;
   border-radius: 6px;
   background: #11151b;
   border: 1px solid #2a2f38;
   color: #E5E7EB;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
-.pager_button:disabled{
-  opacity: .4;
+
+.pager_button:hover:not(:disabled) {
+  border-color: #00CC9B;
+  color: #00CC9B;
+}
+
+.pager_button:disabled {
+  opacity: 0.4;
   cursor: not-allowed;
 }
 .page_info{

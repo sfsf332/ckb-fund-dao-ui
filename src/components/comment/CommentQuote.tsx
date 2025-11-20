@@ -52,32 +52,17 @@ export default function CommentQuote({
 
   // 当quotedText变化时更新content
   useEffect(() => {
-    console.log('CommentQuote useEffect triggered:', { quotedText, isClient });
     if (quotedText && isClient) {
-      console.log('Setting quoted text:', quotedText);
-      // 直接设置content状态，让ReactQuill处理
+      // 在现有内容之前插入引用内容，保留当前输入的内容
       const quotedContent = `<blockquote>${quotedText}</blockquote><p><br></p>`;
-      console.log('Setting content to:', quotedContent);
-      setContent(quotedContent);
-      
-      // 延迟聚焦编辑器并设置光标位置
-      setTimeout(() => {
-        const editor = document.querySelector('.ql-editor') as HTMLElement;
-        if (editor) {
-          console.log('Focusing editor after quote');
-          editor.focus();
-          // 将光标移动到引用内容之后
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const quill = (editor as any).__quill;
-          if (quill) {
-            // 将光标定位在引用内容后的空段落中
-            const totalLength = quill.getLength();
-            quill.setSelection(totalLength - 1, 0);
-          }
-        }
-      }, 500);
+      setContent(prevContent => {
+        // 如果已有内容，在前面插入引用；如果没有内容，直接设置引用
+        return prevContent.trim() ? quotedContent + prevContent : quotedContent;
+      });
     }
   }, [quotedText, isClient]);
+
+
 
   const handleSubmit = () => {
     if (content.trim()) {

@@ -419,8 +419,6 @@
 /* Quill 编辑器容器样式 */
 .ql-container {
   border: 1px solid #4C525C !important;
-  border-radius: 6px 6px 0 0 !important;
-  background-color: #262A33 !important;
   color: #fff !important;
   font-size: 14px !important;
   min-height: 200px !important;
@@ -1109,10 +1107,6 @@ cursor: pointer;
   gap: 12px;
 }
 
-.author-avatar img {
-  border-radius: 50%;
-  border: 2px solid #4C525C;
-}
 
 .author-details {
   flex: 1;

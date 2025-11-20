@@ -42,9 +42,7 @@
 
 .comment-quote-avatar img {
   border-radius: 50%;
-  width: 40px;
   height: 40px;
-  object-fit: cover;
 }
 
 .comment-quote-main {
@@ -747,7 +745,9 @@ padding: 12px;
   border: none;
   font-family: inherit;
 }
-
+.quill-wrapper .ql-container{
+  outline: none;
+}
 .quill-wrapper .ql-editor {
   color: #ffffff;
   font-size: 14px;
@@ -825,6 +825,12 @@ padding: 12px;
   height: auto;
   border-radius: 6px;
   margin: 8px 0;
+}
+
+/* 防止 blockquote 被编辑 */
+.quill-wrapper .ql-editor blockquote[contenteditable="false"] {
+  pointer-events: auto !important;
+  cursor: default;
 }
 
 .quill-wrapper .ql-editor blockquote {

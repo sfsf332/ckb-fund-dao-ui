@@ -124,7 +124,7 @@ export default function ProposalVoting({ votingInfo, onVote, className = '' }: P
               onClick={() => handleVote(VoteOption.APPROVE)}
               disabled={isChainPending}
             >
-              <IoThumbsUpOutline size={14} />
+              <img src="/icon/agree.svg" alt="agree" className="vote-icon" />
               {messages.proposalPhase.proposalVoting.approve}
             </button>
             <button
@@ -132,7 +132,7 @@ export default function ProposalVoting({ votingInfo, onVote, className = '' }: P
               onClick={() => handleVote(VoteOption.REJECT)}
               disabled={isChainPending}
             >
-              <IoThumbsDownOutline size={14} />
+              <img src="/icon/against.svg" alt="against" className="vote-icon" />
               {messages.proposalPhase.proposalVoting.reject}
             </button>
           </div>

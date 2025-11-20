@@ -1,7 +1,8 @@
-import React from 'react';
-import dynamic from 'next/dynamic';
-import CustomDatePicker from '@/components/ui/DatePicker';
-import { useI18n } from '@/contexts/I18nContext';
+import React from "react";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import CustomDatePicker from "@/components/ui/DatePicker";
+import { useI18n } from "@/contexts/I18nContext";
 
 // 动态导入ReactQuill，禁用SSR
 const ReactQuill = dynamic(() => import("react-quill-new"), {
@@ -13,7 +14,7 @@ interface Milestone {
   title: string;
   description: string;
   date: string;
-  index:number
+  index: number;
 }
 
 interface ProjectMilestonesProps {
@@ -45,64 +46,60 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
   quillFormats,
 }) => {
   const { messages } = useI18n();
-  
+
   return (
     <div className="form-fields">
       <div>
-        <label className="form-label">{messages.proposalSteps.projectMilestones.title}</label>
+        <label className="form-label">
+          {messages.proposalSteps.projectMilestones.title}
+        </label>
 
         <div className="milestones-tabs-container">
           <div className="milestones-tabs">
             {formData.milestones.map((milestone, index) => (
               <>
-                <button
+                <div
                   key={milestone.id}
-                  type="button"
                   className={`milestone-tab ${
                     index === activeMilestoneIndex ? "active" : ""
                   }`}
                   onClick={() => setActiveMilestoneIndex(index)}
                 >
                   {milestone.title || `Milestone-${index + 1}`}{" "}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => removeMilestone(milestone.id)}
-                  className="milestone-remove-btn"
-                  title={messages.proposalSteps.projectMilestones.removeMilestone}
-                >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                  </svg>
-                </button>
+                  {index === activeMilestoneIndex && (
+                    <span
+                      className="milestone-remove-btn"
+                      title={
+                        messages.proposalSteps.projectMilestones.removeMilestone
+                      }
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeMilestone(milestone.id);
+                      }}
+                    >
+                      <Image
+                        src="/icon/del.svg"
+                        alt="delete"
+                        width={16}
+                        height={16}
+                      />
+                    </span>
+                  )}
+                </div>
               </>
             ))}
-            <button
-              type="button"
+            <a
               onClick={addMilestone}
               className="milestone-add-btn"
               title={messages.proposalSteps.projectMilestones.addMilestone}
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </button>
+              <Image
+                src="/icon/add.svg"
+                alt="add"
+                width={16}
+                height={16}
+              />
+            </a>
           </div>
         </div>
 
@@ -115,14 +112,14 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
             {formData.milestones.map(
               (milestone, index) =>
                 index === activeMilestoneIndex && (
-                  <div
-                    key={milestone.id}
-                    className="milestone-panel active"
-                  >
+                  <div key={milestone.id} className="milestone-panel active">
                     <div className="milestone-panel-fields">
                       <div className="milestone-field">
                         <label className="form-label">
-                          {messages.proposalSteps.projectMilestones.milestoneTitle}
+                          {
+                            messages.proposalSteps.projectMilestones
+                              .milestoneTitle
+                          }
                         </label>
                         <input
                           type="text"
@@ -135,26 +132,41 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
                             )
                           }
                           className="form-input"
-                          placeholder={messages.proposalSteps.projectMilestones.milestonePlaceholder}
+                          placeholder={
+                            messages.proposalSteps.projectMilestones
+                              .milestonePlaceholder
+                          }
                           required
                         />
                       </div>
 
                       <div className="milestone-field">
                         <label className="form-label">
-                          {messages.proposalSteps.projectMilestones.expectedDate}
+                          {
+                            messages.proposalSteps.projectMilestones
+                              .expectedDate
+                          }
                         </label>
                         <CustomDatePicker
-                          selected={milestone.date ? new Date(milestone.date) : null}
-                          onChange={(date) => onMilestoneDateChange(milestone.id, date)}
-                          placeholderText={messages.proposalSteps.projectMilestones.datePlaceholder}
+                          selected={
+                            milestone.date ? new Date(milestone.date) : null
+                          }
+                          onChange={(date) =>
+                            onMilestoneDateChange(milestone.id, date)
+                          }
+                          placeholderText={
+                            messages.proposalSteps.projectMilestones
+                              .datePlaceholder
+                          }
                           minDate={new Date()}
                         />
                       </div>
                     </div>
 
                     <div className="milestone-field">
-                      <label className="form-label">{messages.proposalSteps.projectMilestones.description}</label>
+                      <label className="form-label">
+                        {messages.proposalSteps.projectMilestones.description}
+                      </label>
                       <div className="editor-container">
                         {isClient ? (
                           <div className="quill-wrapper">
@@ -170,7 +182,10 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
                               }
                               modules={quillModules}
                               formats={quillFormats}
-                              placeholder={messages.proposalSteps.projectMilestones.descriptionPlaceholder}
+                              placeholder={
+                                messages.proposalSteps.projectMilestones
+                                  .descriptionPlaceholder
+                              }
                               style={{
                                 height: "200px",
                                 marginBottom: "20px",
@@ -192,7 +207,10 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
                               justifyContent: "center",
                             }}
                           >
-                            {messages.proposalSteps.projectMilestones.editorLoading}
+                            {
+                              messages.proposalSteps.projectMilestones
+                                .editorLoading
+                            }
                           </div>
                         )}
                       </div>

@@ -646,20 +646,19 @@
 }
 
 .milestone-tab {
-  background-color: #262A3380;
   border: 1px solid #4C525C;
   border-radius: 5px;
-  color: #8A949E;
+  color: #4C525C;
   cursor: pointer;
   font-size: 14px;
-  font-weight: 700;
-  text-align: center;
-  padding: 8px 16px;
-  min-width: 100px;
+  padding: 8px 14px;
   transition: all 0.3s ease;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .milestone-tab:hover:not(.active) {
@@ -669,16 +668,14 @@
 }
 
 .milestone-tab.active {
-  background-color: #00CC9B33;
   color: #00CC9B;
   border-color: #00CC9B;
+  font-weight: 600;
 }
 
 .milestone-add-btn {
-  background-color: #262A3380;
-  border: 1px solid #4C525C;
-  border-radius: 50%;
-  color: #8A949E;
+  border: none;
+  color: #ffffff;
   cursor: pointer;
   width: 32px;
   height: 32px;
@@ -687,34 +684,32 @@
   justify-content: center;
   transition: all 0.3s ease;
   flex-shrink: 0;
+  padding: 0;
 }
 
 .milestone-add-btn:hover {
-  background-color: #00CC9B33;
-  color: #00CC9B;
-  border-color: #00CC9B;
+  opacity: 0.8;
 }
 
 .milestone-remove-btn {
-  background-color: #262A3380;
-  border: 1px solid #4C525C;
-  border-radius: 50%;
-  color: #8A949E;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  color: #00CC9B;
   cursor: pointer;
-  width: 24px;
-  height: 24px;
-  display: flex;
+  width: auto;
+  height: auto;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
   flex-shrink: 0;
   margin-left: 8px;
+  padding: 0;
 }
 
 .milestone-remove-btn:hover {
-  background-color: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
-  border-color: #ef4444;
+  opacity: 0.7;
 }
 
 .milestones-empty {

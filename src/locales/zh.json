@@ -778,11 +778,15 @@
     "voting": {
       "errors": {
         "prepareFailed": "投票准备失败: 响应为空",
+        "prepareFailedWithCode": "投票准备失败: code={code}, message={message}",
+        "prepareFailedInvalidFormat": "投票准备失败: 响应格式不正确",
         "submitFailedEmptyResponse": "投票提交失败，服务器返回空响应",
         "submitFailedRetry": "投票提交失败，请稍后重试",
         "submitFailedInvalidFormat": "投票提交失败，服务器返回的数据格式不正确",
         "missingProof": "投票数据中缺少 proof 字段或格式不正确",
         "missingTxHash": "投票元数据缺少交易哈希",
+        "voteTypeArgsLengthError": "vote type args 长度不正确: {length}, 期望: 42",
+        "witnessFormatError": "witness 格式不正确: {error}",
         "buildTransactionFailed": "构建投票交易失败",
         "getVoteDetailFailed": "获取投票详情失败",
         "getVoteStatusFailed": "获取投票状态失败",

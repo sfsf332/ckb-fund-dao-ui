@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { getAvatarByDid, getDefaultAvatar } from '@/utils/avatarUtils';
+import './Avatar.css';
 
 interface AvatarProps {
   size?: number;
@@ -15,6 +16,7 @@ export default function Avatar({
   alt = 'User Avatar',
   did
 }: AvatarProps) {
+  // 如果有 did 就用 getAvatarByDid，否则用默认头像
   const avatarSrc = did ? getAvatarByDid(did) : getDefaultAvatar();
   
   return (

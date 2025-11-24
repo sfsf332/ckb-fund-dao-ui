@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
-import { MdOutlineModeEdit, MdCheck } from "react-icons/md";
+import { MdCheck } from "react-icons/md";
 import { FaDiscord,FaTelegramPlane   } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import { getAvatarByDid } from "@/utils/avatarUtils";
 import useUserInfoStore from "@/store/userInfo";
 import { useTranslation } from "@/utils/i18n";
+import Avatar from "@/components/Avatar";
+import { getUserDisplayNameFromStore } from "@/utils/userDisplayUtils";
 
 interface UserProfileCardProps {
   className?: string;
@@ -15,12 +15,25 @@ interface UserProfileCardProps {
 
 export default function UserProfileCard({ className = '' }: UserProfileCardProps) {
   const { t } = useTranslation();
-  const { userInfo } = useUserInfoStore();
+  const { userInfo, userProfile } = useUserInfoStore();
+  
   const [isEditing, setIsEditing] = useState(false);
-  const [userName, setUserName] = useState('');
   const [joinDate] = useState('2025年1月1日');
   const [expandedConnection, setExpandedConnection] = useState<string | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  
+  const [userName, setUserName] = useState(getUserDisplayNameFromStore(userInfo, userProfile));
+  
+  // 当 userProfile 或 userInfo 更新时，更新 userName
+  useEffect(() => {
+    if (!isEditing) {
+      const displayName = getUserDisplayNameFromStore(userInfo, userProfile);
+      if (displayName) {
+        setUserName(displayName);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userInfo?.did, userInfo?.handle, userProfile?.displayName, isEditing]);
   
   const nervosTalk = <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M5 8.64583V5L19 5.03646V8.64583H15.6283V15.3542L11.9634 19V5.14583L8.44503 8.64583H5Z" fill="white"/>
@@ -96,18 +109,13 @@ export default function UserProfileCard({ className = '' }: UserProfileCardProps
     <div ref={cardRef} className={`user-profile-card ${className} user-profile-card-disabled`}>
       <div className="disabled-overlay"></div>
       <div className="user-info">
-        <div className="user-avatar">
-          <Image
-            src={getAvatarByDid(userInfo?.did || '')}
-            alt="User Avatar"
-            width={60}
-            height={60}
-            className="avatar-image"
+        
+          <Avatar
+            did={userInfo?.did}
+            size={60}
           />
-          <div className="avatar-edit-icon">
-            <MdOutlineModeEdit />
-          </div>
-        </div>
+       
+        
         <div className="user-name-section">
           {isEditing ? (
             <div className="user-name-edit-container">

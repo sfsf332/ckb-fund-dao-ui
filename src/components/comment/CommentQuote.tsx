@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { CommentQuoteProps } from "@/types/comment";
 import "./comment.css";
+import "@/styles/quill-editor.css";
 import "react-quill-new/dist/quill.snow.css";
 import { getAvatarByDid } from "@/utils/avatarUtils";
 import useUserInfoStore from "@/store/userInfo";

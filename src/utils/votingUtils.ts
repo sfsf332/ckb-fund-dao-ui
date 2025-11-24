@@ -1,6 +1,79 @@
 import { VotingInfo, VoteOption, VotingStatus } from '../types/voting';
 import { Proposal, ProposalStatus } from './proposalUtils';
 import { VoteMetaItem, PrepareVoteResponse } from '@/server/proposal';
+import enMessages from '../locales/en.json';
+import zhMessages from '../locales/zh.json';
+
+// 获取当前语言环境
+function getCurrentLocale(): 'en' | 'zh' {
+  if (typeof window === 'undefined') return 'en';
+  
+  try {
+    const savedLocale = localStorage.getItem('locale') as 'en' | 'zh';
+    if (savedLocale && ['en', 'zh'].includes(savedLocale)) {
+      return savedLocale;
+    }
+    
+    // 检测浏览器语言
+    const browserLang = navigator.language.split('-')[0];
+    if (browserLang === 'zh') {
+      return 'zh';
+    }
+  } catch (error) {
+    // 如果localStorage不可用，使用默认语言
+    console.warn('Failed to get locale:', error);
+  }
+  
+  return 'en';
+}
+
+// 从国际化消息中获取翻译
+function getTranslation(key: string, locale: 'en' | 'zh' = getCurrentLocale(), fallbackToEn: boolean = true): string {
+  const messages = locale === 'zh' ? zhMessages : enMessages;
+  const keys = key.split('.');
+  let message: unknown = messages;
+  
+  for (const k of keys) {
+    if (message && typeof message === 'object' && message !== null && k in message) {
+      message = (message as Record<string, unknown>)[k];
+    } else {
+      // 如果找不到翻译，尝试使用英文（仅当当前是中文且允许回退时）
+      if (locale === 'zh' && fallbackToEn) {
+        return getTranslation(key, 'en', false);
+      }
+      return key;
+    }
+  }
+  
+  if (typeof message === 'string') {
+    return message;
+  }
+  
+  return key;
+}
+
+// 获取翻译的辅助函数
+function getT(key: string, t?: (key: string) => string, values?: Record<string, string | number>): string {
+  if (t) {
+    const translated = t(key);
+    // 如果翻译函数返回了键名本身（表示未找到），使用默认翻译
+    if (translated === key) {
+      return formatTranslation(getTranslation(key), values);
+    }
+    return formatTranslation(translated, values);
+  }
+  return formatTranslation(getTranslation(key), values);
+}
+
+// 格式化翻译字符串，替换占位符
+function formatTranslation(text: string, values?: Record<string, string | number>): string {
+  if (!values) return text;
+  let result = text;
+  for (const [key, value] of Object.entries(values)) {
+    result = result.replace(new RegExp(`{${key}}`, 'g'), String(value));
+  }
+  return result;
+}
 
 // 生成投票信息（使用真实数据）
 export const generateVotingInfo = (
@@ -117,9 +190,9 @@ export const handleVote = async (
     
     // 如果响应为 null 或 undefined，视为错误
     if (response === null || response === undefined) {
-      const errorMsg = t?.('voting.errors.prepareFailed') || '投票准备失败: 响应为空';
+      const errorMsg = getT('modal.voting.errors.prepareFailed', t);
       console.error(errorMsg);
-      return { success: false, error: t?.('voting.errors.submitFailedEmptyResponse') || '投票提交失败，服务器返回空响应' };
+      return { success: false, error: getT('modal.voting.errors.submitFailedEmptyResponse', t) };
     }
     
     // 检查响应对象是否包含错误信息
@@ -134,7 +207,7 @@ export const handleVote = async (
         
         if (codeNum !== null && codeNum !== 0 && codeNum !== 200) {
           // 提取错误信息
-          let errorMessage = t?.('voting.errors.submitFailedRetry') || '投票提交失败，请稍后重试';
+          let errorMessage = getT('modal.voting.errors.submitFailedRetry', t);
           
           // 优先使用 message 字段
           if (typeof responseData.message === 'string' && responseData.message) {
@@ -148,7 +221,8 @@ export const handleVote = async (
             }
           }
           
-          console.error(`投票准备失败: code=${codeNum}, message=${errorMessage}`, responseData);
+          const logMsg = getT('modal.voting.errors.prepareFailedWithCode', t, { code: String(codeNum), message: errorMessage });
+          console.error(logMsg, responseData);
           return { success: false, error: errorMessage };
         }
       }
@@ -164,24 +238,24 @@ export const handleVote = async (
           typeof responseData.vote_meta === 'object';
         
         if (!hasRequiredFields) {
-          const errorMsg = t?.('voting.errors.prepareFailed') || '投票准备失败: 响应格式不正确';
+          const errorMsg = getT('modal.voting.errors.prepareFailedInvalidFormat', t);
           console.error(errorMsg, responseData);
-          return { success: false, error: t?.('voting.errors.submitFailedInvalidFormat') || '投票提交失败，服务器返回的数据格式不正确' };
+          return { success: false, error: getT('modal.voting.errors.submitFailedInvalidFormat', t) };
         }
       }
     }
     
-    const approveText = t?.('voting.options.approve') || '赞成';
-    const rejectText = t?.('voting.options.reject') || '反对';
+    const approveText = getT('modal.voting.options.approve', t);
+    const rejectText = getT('modal.voting.options.reject', t);
     const optionText = option === VoteOption.APPROVE ? approveText : rejectText;
-    const logMsg = t?.('voting.logs.prepareSuccess') || '投票准备成功';
+    const logMsg = getT('modal.voting.logs.prepareSuccess', t);
     console.log(`${logMsg}: vote_meta_id=${voteMetaId}, option=${optionText}`, response);
     return { success: true, data: response as PrepareVoteResponse };
   } catch (error) {
-    const errorLogMsg = t?.('voting.logs.prepareFailed') || '投票准备失败';
+    const errorLogMsg = getT('modal.voting.logs.prepareFailed', t);
     console.error(errorLogMsg + ':', error);
     // 提取错误信息
-    let errorMessage = t?.('voting.errors.submitFailedRetry') || '投票提交失败，请稍后重试';
+    let errorMessage = getT('modal.voting.errors.submitFailedRetry', t);
     
     if (error instanceof Error) {
       errorMessage = error.message || errorMessage;
@@ -273,7 +347,7 @@ export const buildAndSendVoteTransaction = async (
     // 3. 构建 VoteProof
     // proof 格式: [76, 79, 255, ...] (一维数字数组)
     if (!voteData.proof || !Array.isArray(voteData.proof)) {
-      throw new Error(t?.('voting.errors.missingProof') || '投票数据中缺少 proof 字段或格式不正确');
+      throw new Error(getT('modal.voting.errors.missingProof', t));
     }
     
     // proof 是一个一维数字数组，直接转换为字节数组
@@ -302,7 +376,7 @@ export const buildAndSendVoteTransaction = async (
     // 4. 构建投票交易的 cell deps
     // vote meta cell dep
     if (!voteData.vote_meta.tx_hash) {
-      throw new Error(t?.('voting.errors.missingTxHash') || '投票元数据缺少交易哈希');
+      throw new Error(getT('modal.voting.errors.missingTxHash', t));
     }
     
     // vote meta outpoint
@@ -382,7 +456,8 @@ export const buildAndSendVoteTransaction = async (
     
     // 验证长度：应该是 42 个字符（0x + 40个hex字符 = 20字节）
     if (voteTypeArgs.length !== 42) {
-      throw new Error(`vote type args 长度不正确: ${voteTypeArgs.length}, 期望: 42`);
+      const errorMsg = getT('modal.voting.errors.voteTypeArgsLengthError', t, { length: String(voteTypeArgs.length) });
+      throw new Error(errorMsg);
     }
     
  
@@ -448,7 +523,8 @@ export const buildAndSendVoteTransaction = async (
         try {
           witnessBytes = new Uint8Array(firstWitness as ArrayLike<number>);
         } catch (e) {
-          throw new Error(`witness 格式不正确: ${e}`);
+          const errorMsg = getT('modal.voting.errors.witnessFormatError', t, { error: String(e) });
+          throw new Error(errorMsg);
         }
       }
       
@@ -498,14 +574,14 @@ export const buildAndSendVoteTransaction = async (
     console.log("signed tx:", ccc.stringify(signedTx));
 
     const txHash = await client.sendTransaction(signedTx);
-    const txHashLogMsg = t?.('voting.logs.txHash') || '投票交易哈希';
+    const txHashLogMsg = getT('modal.voting.logs.txHash', t);
     console.log(`${txHashLogMsg}:`, txHash);
 
     return { success: true, txHash };
   } catch (error) {
-    const errorLogMsg = t?.('voting.logs.buildTransactionFailed') || '构建投票交易失败';
+    const errorLogMsg = getT('modal.voting.logs.buildTransactionFailed', t);
     console.error(errorLogMsg + ':', error);
-    const defaultErrorMsg = t?.('voting.errors.buildTransactionFailed') || '构建投票交易失败';
+    const defaultErrorMsg = getT('modal.voting.errors.buildTransactionFailed', t);
     const errorMessage = error instanceof Error ? error.message : defaultErrorMsg;
     return { success: false, error: errorMessage };
   }

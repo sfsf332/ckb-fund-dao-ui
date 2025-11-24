@@ -8,7 +8,7 @@ import { writesPDSOperation } from "@/app/posts/utils";
 import useUserInfoStore from "@/store/userInfo";
 import { getAvatarByDid } from "@/utils/avatarUtils";
 import { ProposalDetailResponse } from "@/server/proposal";
-import { formatHandleDisplay } from "@/utils/common";
+import { getUserDisplayNameFromInfo, getUserDisplayNameFromStore } from "@/utils/userDisplayUtils";
 
 interface ProposalCommentsProps {
   proposal: ProposalDetailResponse | null;
@@ -21,15 +21,20 @@ interface ProposalCommentsProps {
 
 // 适配器函数：将API返回的CommentItem转换为组件需要的Comment类型
 const adaptCommentItem = (item: CommentItem, currentUserDid?: string): Comment => {
-  const displayName = item.author.displayName || 
-    (item.author.handle ? formatHandleDisplay(item.author.handle) : null) || 
-    item.author.did;
+  const displayName = getUserDisplayNameFromInfo({
+    displayName: item.author.displayName,
+    handle: item.author.handle,
+    did: item.author.did,
+  });
   
   // 格式化 to 字段的 handle（如果存在）
   const formattedTo = item.to ? {
     did: item.to.did,
-    displayName: item.to.displayName || 
-      (item.to.handle ? formatHandleDisplay(item.to.handle) : undefined),
+    displayName: getUserDisplayNameFromInfo({
+      displayName: item.to.displayName,
+      handle: item.to.handle,
+      did: item.to.did,
+    }),
     handle: item.to.handle, // 保留原始 handle，但 displayName 优先
     avatar: item.to.avatar,
   } : undefined;
@@ -143,9 +148,7 @@ export default function ProposalComments({
       });
 
       if (result) {
-        const displayName = userProfile?.displayName || 
-          (userInfo.handle ? formatHandleDisplay(userInfo.handle) : null) || 
-          userInfo.did;
+        const displayName = getUserDisplayNameFromStore(userInfo, userProfile);
         
         const newComment: Comment = {
           id: result.cid || `temp-${Date.now()}`,

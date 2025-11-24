@@ -10,6 +10,7 @@ import { useI18n } from "@/contexts/I18nContext";
 import Tag from "@/components/ui/tag/Tag";
 import { getAvatarByDid } from "@/utils/avatarUtils";
 import { useTranslation } from "@/utils/i18n";
+import { getUserDisplayNameFromInfo } from "@/utils/userDisplayUtils";
 
 interface ProposalItemProps {
   proposal: Proposal | ProposalListItem;
@@ -36,7 +37,15 @@ export default function ProposalItem({ proposal }: ProposalItemProps) {
   const createdAt = isAPIFormat ? proposal.record.created : (proposal as Proposal).createdAt;
   
   const author = isAPIFormat 
-    ? { name: proposal.author.displayName, did: proposal.author.did, avatar: getAvatarByDid(proposal.author.did) }
+    ? { 
+        name: getUserDisplayNameFromInfo({
+          displayName: proposal.author.displayName,
+          handle: proposal.author.handle,
+          did: proposal.author.did,
+        }), 
+        did: proposal.author.did, 
+        avatar: getAvatarByDid(proposal.author.did) 
+      }
     : (proposal as Proposal).proposer;
   const avatar = author.avatar || getAvatarByDid(author.did);
   

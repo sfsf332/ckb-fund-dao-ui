@@ -1,15 +1,27 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AiFillDiscord } from "react-icons/ai";
 import { RiTwitterXFill } from "react-icons/ri";
 import { FaTelegramPlane ,FaMediumM} from "react-icons/fa";
 import { useTranslation } from "@/utils/i18n";
+import isMobile from "is-mobile";
 
 export default function Footer() {
   const { t } = useTranslation();
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
+
+  useEffect(() => {
+    // 确保只在客户端执行
+    if (typeof window === 'undefined') return;
+
+    // 检测设备类型或窗口宽度
+    const isMobileDeviceType = isMobile();
+    const isSmallScreen = window.innerWidth <= 1024;
+    setIsMobileDevice(isMobileDeviceType || isSmallScreen);
+  }, []);
   
   return (
     <footer className="footer-container">
@@ -20,14 +32,14 @@ export default function Footer() {
             <div className="logo-title">
               <div className="logo">
                 <Image 
-                  src="/nervos-logo.svg" 
-                  alt="Nervos Logo" 
-                  width={32} 
-                  height={32} 
+                  src={isMobileDevice ? "/nervos-logo-short.svg" : "/header_logo.svg"}
+                  alt="CKB Community Fund DAO"
+                  width={isMobileDevice ? 151 : 330}
+                  height={isMobileDevice ? 32 : 36}
                   priority 
                 />
               </div>
-              <span className="company-name">{t("footer.companyName")}</span>
+              {/* <span className="company-name">{t("footer.companyName")}</span> */}
             </div>
             
             <div className="social-links">

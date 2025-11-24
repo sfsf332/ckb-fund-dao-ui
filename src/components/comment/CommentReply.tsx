@@ -1,13 +1,12 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 // import { MdOutlineDelete } from "react-icons/md";
 
 import "./comment.css";
 import { CommentReplyProps } from "@/types/comment";
-import { getAvatarByDid } from "@/utils/avatarUtils";
-import { formatHandleDisplay } from "@/utils/common";
+import Avatar from "@/components/Avatar";
+import { getUserDisplayNameFromInfo } from "@/utils/userDisplayUtils";
 
 export default function CommentReply({ 
   comment, 
@@ -39,9 +38,7 @@ export default function CommentReply({
   // 判断是否为回复评论
   const isReplyToComment = comment.to && comment.to.did;
   const replyToName = isReplyToComment 
-    ? (comment.to?.displayName || 
-       (comment.to?.handle ? formatHandleDisplay(comment.to.handle) : null) || 
-       comment.to?.did)
+    ? getUserDisplayNameFromInfo(comment.to)
     : null;
 
   // 拆分引用内容和回复内容
@@ -73,19 +70,10 @@ export default function CommentReply({
           
             {isReplyToComment && replyToName && (
               <span className="reply-to-indicator">
-              
-                <Image 
-                  src={getAvatarByDid(comment.to?.did || '')} 
-                  alt="reply to avatar" 
-                  width={20} 
-                  height={20}
-                  style={{ 
-                    display: 'inline-block', 
-                    borderRadius: '50%',
-                    verticalAlign: 'middle',
-                    marginLeft: '4px',
-                    marginRight: '4px'
-                  }}
+                <Avatar 
+                  did={comment.to?.did} 
+                  size={20}
+                  className="reply-to-avatar"
                 />
                 <span className="reply-to-name">{replyToName}</span>
               </span>

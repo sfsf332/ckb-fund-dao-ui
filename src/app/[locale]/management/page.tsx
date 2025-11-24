@@ -22,8 +22,7 @@ export default function Management() {
           </p>
           <div className="team_list">
             <div className="team_item">
-              <Image src={getAvatarByDid("did:ckb:ckt1qvqr...7q2h")} alt="avatar" width={40} height={40} />
-              <div className="name">
+            <Image src="/avatar/manager-0.svg" alt="avatar" width={40} height={40} />              <div className="name">
                 <h3>Alice</h3>
                 <h4>{t("managementPage.daoManager")}</h4>
                 <p>did:ckb:ckt1qvqr...7q2h</p>
@@ -36,7 +35,7 @@ export default function Management() {
               </div>
             </div>
             <div className="team_item">
-              <Image src={getAvatarByDid("did:ckb:ckt1qvqr...7q2h")} alt="avatar" width={40} height={40} />
+              <Image src="/avatar/manager-1.svg" alt="avatar" width={40} height={40} />
               <div className="name">
                 <h3>Bob</h3>
                 <h4>{t("managementPage.daoManager")}</h4>
@@ -50,8 +49,7 @@ export default function Management() {
               </div>
             </div>
             <div className="team_item">
-              <Image src={getAvatarByDid("did:ckb:ckt1qvqr...7q2h")} alt="avatar" width={40} height={40} />
-              <div className="name">
+            <Image src="/avatar/manager-2.svg" alt="avatar" width={40} height={40} />              <div className="name">
                 <h3>Carol</h3>
                 <h4>{t("managementPage.daoManager")}</h4>
                 <p>did:ckb:ckt1qvqr...7q2h</p>

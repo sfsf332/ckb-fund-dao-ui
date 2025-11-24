@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import {
   MdOutlineModeComment /*, MdOutlineEdit, MdOutlineDelete */,
@@ -14,7 +13,8 @@ import { useI18n } from "@/contexts/I18nContext";
 import "./comment.css";
 import { CommentItemProps } from "@/types/comment";
 import CommentReply from "./CommentReply";
-import { formatHandleDisplay } from "@/utils/common";
+import Avatar from "@/components/Avatar";
+import { getUserDisplayNameFromInfo } from "@/utils/userDisplayUtils";
 
 // 移除了内联回复框，不再需要 ReactQuill
 // 动态导入ReactQuill，禁用SSR
@@ -58,9 +58,7 @@ export default function CommentItem({
   // 判断是否为回复评论
   const isReplyToComment = comment.to && comment.to.did;
   const replyToName = isReplyToComment
-    ? comment.to?.displayName || 
-      (comment.to?.handle ? formatHandleDisplay(comment.to.handle) : null) || 
-      comment.to?.did
+    ? getUserDisplayNameFromInfo(comment.to)
     : null;
   // const [isReplying, setIsReplying] = useState(false);
   // const [replyContent, setReplyContent] = useState("");
@@ -142,11 +140,9 @@ export default function CommentItem({
   return (
     <div className="comment-item">
       <div className="comment-item-avatar">
-        <Image
-          src={comment.author.avatar}
-          alt="avatar"
-          width={40}
-          height={40}
+        <Avatar 
+          did={comment.author.did} 
+          size={40} 
         />
       </div>
       <div className="comment-item-container">

@@ -10,11 +10,11 @@ import { useI18n } from "@/contexts/I18nContext";
 import { useTranslation } from "@/utils/i18n";
 import { LoginModal } from "./user-login";
 import useUserInfoStore from "@/store/userInfo";
-import { handleToNickName } from "@/lib/handleToNickName";
 import Avatar from "./Avatar";
 import { IoMenu, IoClose } from "react-icons/io5";
 import isMobile from "is-mobile";
 import "./user-login/LoginModal.css";
+import { getUserDisplayNameFromStore } from "@/utils/userDisplayUtils";
 
 export default function Header() {
   const pathname = usePathname();
@@ -30,55 +30,15 @@ export default function Header() {
     // 确保只在客户端执行
     if (typeof window === 'undefined') return;
 
-    const checkMobile = () => {
-      // 检测设备类型或窗口宽度
-      const isMobileDeviceType = isMobile();
-      const isSmallScreen = window.innerWidth <= 1024;
-      setIsMobileDevice(isMobileDeviceType || isSmallScreen);
-    };
-
-    // 初始检测
-    checkMobile();
-
-    // 监听窗口大小变化
-    window.addEventListener("resize", checkMobile);
-
-    return () => {
-      window.removeEventListener("resize", checkMobile);
-    };
+    // 检测设备类型或窗口宽度
+    const isMobileDeviceType = isMobile();
+    const isSmallScreen = window.innerWidth <= 1024;
+    setIsMobileDevice(isMobileDeviceType || isSmallScreen);
   }, []);
 
   // 点击菜单项时关闭移动端菜单
   const handleMenuClick = () => {
     setIsMobileMenuOpen(false);
-  };
-
-  // 获取用户显示名称
-  const getUserDisplayName = () => {
-    if (!userInfo) return "";
-    
-    // 优先使用 userProfile 的 displayName（如果存在且不为空）
-    if (userProfile?.displayName && userProfile.displayName.trim()) {
-      return userProfile.displayName;
-    }
-    
-    // 如果有 handle，使用 handleToNickName 来显示用户名
-    if (userInfo.handle) {
-      const nickName = handleToNickName(userInfo.handle);
-      if (nickName) return nickName;
-    }
-    
-    // 最后回退到 DID（截取显示）
-    if (userInfo.did) {
-      // DID 太长，只显示前6位和后4位
-      const did = userInfo.did;
-      if (did.length > 10) {
-        return `${did.slice(0, 6)}...${did.slice(-4)}`;
-      }
-      return did;
-    }
-    
-    return "";
   };
 
 
@@ -167,7 +127,7 @@ export default function Header() {
                     did={userInfo?.did}
                     size={20}
                   />
-                  <span>{getUserDisplayName()}</span>
+                  <span>{getUserDisplayNameFromStore(userInfo, userProfile)}</span>
                 </button>
               </Link>
             </div>

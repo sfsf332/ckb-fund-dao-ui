@@ -739,11 +739,15 @@
     "voting": {
       "errors": {
         "prepareFailed": "Vote preparation failed: empty response",
+        "prepareFailedWithCode": "Vote preparation failed: code={code}, message={message}",
+        "prepareFailedInvalidFormat": "Vote preparation failed: invalid response format",
         "submitFailedEmptyResponse": "Failed to submit vote, server returned empty response",
         "submitFailedRetry": "Failed to submit vote, please try again later",
         "submitFailedInvalidFormat": "Failed to submit vote, server returned invalid data format",
         "missingProof": "Vote data missing proof field or incorrect format",
         "missingTxHash": "Vote metadata missing transaction hash",
+        "voteTypeArgsLengthError": "Vote type args length incorrect: {length}, expected: 42",
+        "witnessFormatError": "Witness format incorrect: {error}",
         "buildTransactionFailed": "Failed to build vote transaction",
         "getVoteDetailFailed": "Failed to get vote detail",
         "getVoteStatusFailed": "Failed to get vote status",

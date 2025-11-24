@@ -179,11 +179,6 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
     fetchBindList();
   }, [userInfo?.did]);
 
-  const handleStakeCKB = () => {
-    // 处理质押CKB逻辑
-    console.log(t("wallet.stakeCKB"));
-  };
-
   const handleBindNeuron = () => {
     setShowNeuronDropdown(!showNeuronDropdown);
   };
@@ -326,7 +321,12 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
       </div>
 
       <div className="action-buttons">
-        <button className="action-button stake-button" onClick={handleStakeCKB}>
+        <a 
+          href="https://www.nervdao.com/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="action-button stake-button"
+        >
           <Image
             src="/nervos-logo-s.svg"
             alt="Nervos"
@@ -335,7 +335,7 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
             className="button-icon"
           />
           {t("wallet.stakeCKB")}
-        </button>
+        </a>
 
         <div className="neuron-dropdown-container" ref={dropdownRef}>
           <button

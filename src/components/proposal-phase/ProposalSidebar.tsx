@@ -21,6 +21,7 @@ import * as cbor from '@ipld/dag-cbor';
 import { uint8ArrayToHex } from "@/lib/dag-cbor";
 import storage from "@/lib/storage";
 import { Secp256k1Keypair } from "@atproto/crypto";
+import { getUserDisplayNameFromInfo } from "@/utils/userDisplayUtils";
 
 interface ProposalSidebarProps {
   proposal: ProposalDetailResponse | null;
@@ -42,7 +43,11 @@ const adaptProposalDetail = (detail: ProposalDetailResponse): Proposal => {
     state: (detail.state ?? proposalData.state) as ProposalStatus,
     type: proposalData.proposalType as Proposal["type"],
     proposer: {
-      name: detail.author.displayName,
+      name: getUserDisplayNameFromInfo({
+        displayName: detail.author.displayName,
+        handle: detail.author.handle,
+        did: detail.author.did,
+      }),
       avatar: getAvatarByDid(detail.author.did),
       did: detail.author.did,
     },

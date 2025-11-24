@@ -4,16 +4,16 @@ import { useState, useEffect } from "react";
 import { useI18n } from "@/contexts/I18nContext";
 import { IoDocumentTextOutline } from "react-icons/io5";
 import { AiOutlineComment } from "react-icons/ai";
-import Image from "next/image";
 import { FaHeart, FaShare } from "react-icons/fa";
 import { RingLoader } from "react-spinners";
 import CopyButton from "@/components/ui/copy/CopyButton";
 import Tag from "@/components/ui/tag/Tag";
 import QuoteButton from "@/components/comment/QuoteButton";
-import { getAvatarByDid } from "@/utils/avatarUtils";
+import Avatar from "@/components/Avatar";
 import { writesPDSOperation } from "@/app/posts/utils";
 import useUserInfoStore from "@/store/userInfo";
 import { ProposalDetailResponse } from "@/server/proposal";
+import { getUserDisplayNameFromInfo } from "@/utils/userDisplayUtils";
 
 interface ProposalContentProps {
   proposal: ProposalDetailResponse;
@@ -110,16 +110,15 @@ export default function ProposalContent({
 
             <div className="proposal-author-info">
               <div className="author-avatar">
-                <Image
-                  src={getAvatarByDid(proposal.author.did)}
-                  alt="avatar"
-                  width={40}
-                  height={40}
-                />
+                <Avatar did={proposal.author.did} size={40} />
               </div>
               <div className="author-details">
                 <div className="author-name">
-                  {proposal.author.displayName}
+                  {getUserDisplayNameFromInfo({
+                    displayName: proposal.author.displayName,
+                    handle: proposal.author.handle,
+                    did: proposal.author.did,
+                  })}
                 </div>
                 <div className="author-did">
                   {proposal.author.did}

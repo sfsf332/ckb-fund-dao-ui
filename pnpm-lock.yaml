@@ -56,6 +56,9 @@ importers:
       html5-qrcode:
         specifier: ^2.3.8
         version: 2.3.8
+      is-mobile:
+        specifier: ^5.0.0
+        version: 5.0.0
       katex:
         specifier: ^0.16.22
         version: 0.16.22
@@ -2398,6 +2401,9 @@ packages:
   is-map@2.0.3:
     resolution: {integrity: sha512-1Qed0/Hr2m+YqxnM09CjA2d/i6YZNfF6R2oRAOj36eUdS6qIV/huPJNSEpKbupewFs+ZsJlxsjjPbc0/afW6Lw==}
     engines: {node: '>= 0.4'}
+
+  is-mobile@5.0.0:
+    resolution: {integrity: sha512-Tz/yndySvLAEXh+Uk8liFCxOwVH6YutuR74utvOcu7I9Di+DwM0mtdPVZNaVvvBUM2OXxne/NhOs1zAO7riusQ==}
 
   is-negative-zero@2.0.3:
     resolution: {integrity: sha512-5KoIu2Ngpyek75jXodFvnafB6DJgr3u8uuK0LEZJjrU19DrMD3EVERaR8sjz8CCGgpZvxPl9SuE1GMVPFHx1mw==}
@@ -6513,6 +6519,8 @@ snapshots:
       is-extglob: 2.1.1
 
   is-map@2.0.3: {}
+
+  is-mobile@5.0.0: {}
 
   is-negative-zero@2.0.3: {}
 

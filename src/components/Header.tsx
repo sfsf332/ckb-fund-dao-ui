@@ -10,9 +10,10 @@ import { useI18n } from "@/contexts/I18nContext";
 import { useTranslation } from "@/utils/i18n";
 import { LoginModal } from "./user-login";
 import useUserInfoStore from "@/store/userInfo";
-import { formatHandleDisplay } from "@/utils/common";
+import { handleToNickName } from "@/lib/handleToNickName";
 import Avatar from "./Avatar";
-import { IoChevronDown } from "react-icons/io5";
+import { IoMenu, IoClose } from "react-icons/io5";
+import isMobile from "is-mobile";
 import "./user-login/LoginModal.css";
 
 export default function Header() {
@@ -20,41 +21,74 @@ export default function Header() {
   const { locale } = useI18n();
   const { t } = useTranslation();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { userInfo } = useUserInfoStore();
+  const { userInfo, userProfile } = useUserInfoStore();
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
 
-  // 监听窗口大小变化
   useEffect(() => {
-    const checkScreenSize = () => {
-      setIsSmallScreen(window.innerWidth < 1280);
+    // 确保只在客户端执行
+    if (typeof window === 'undefined') return;
+
+    const checkMobile = () => {
+      // 检测设备类型或窗口宽度
+      const isMobileDeviceType = isMobile();
+      const isSmallScreen = window.innerWidth <= 1024;
+      setIsMobileDevice(isMobileDeviceType || isSmallScreen);
     };
 
-    // 初始检查
-    checkScreenSize();
+    // 初始检测
+    checkMobile();
 
     // 监听窗口大小变化
-    window.addEventListener("resize", checkScreenSize);
+    window.addEventListener("resize", checkMobile);
 
     return () => {
-      window.removeEventListener("resize", checkScreenSize);
+      window.removeEventListener("resize", checkMobile);
     };
   }, []);
+
+  // 点击菜单项时关闭移动端菜单
+  const handleMenuClick = () => {
+    setIsMobileMenuOpen(false);
+  };
 
   // 获取用户显示名称
   const getUserDisplayName = () => {
     if (!userInfo) return "";
-    if (userInfo.handle) {
-      return formatHandleDisplay(userInfo.handle);
+    
+    // 优先使用 userProfile 的 displayName（如果存在且不为空）
+    if (userProfile?.displayName && userProfile.displayName.trim()) {
+      return userProfile.displayName;
     }
-    return userInfo.did;
+    
+    // 如果有 handle，使用 handleToNickName 来显示用户名
+    if (userInfo.handle) {
+      const nickName = handleToNickName(userInfo.handle);
+      if (nickName) return nickName;
+    }
+    
+    // 最后回退到 DID（截取显示）
+    if (userInfo.did) {
+      // DID 太长，只显示前6位和后4位
+      const did = userInfo.did;
+      if (did.length > 10) {
+        return `${did.slice(0, 6)}...${did.slice(-4)}`;
+      }
+      return did;
+    }
+    
+    return "";
   };
+
 
   const homeHref = `/${locale}`;
   const treasuryHref = `/${locale}/treasury`;
   const managementHref = `/${locale}/management`;
+  const managementCenterHref = `/${locale}/management-center`;
   const userCenterHref = `/${locale}/user-center`;
   const ruleHref = `https://pebble-lumber-0be.notion.site/Community-Fund-DAO-v1-1-Web5-23924205dae080ed9290e95519c57ab1`;
+  const createProposalHref = `${homeHref}/proposal/create`;
 
   const isActive = (href: string) => {
     if (!pathname) return false;
@@ -66,108 +100,162 @@ export default function Header() {
   };
 
   return (
-    <div className="header-container">
-      <div className="logo">
-        <Image
-          src={isSmallScreen ? "/nervos-logo-short.svg" : "/header_logo.svg"}
-          width={isSmallScreen ? 151 : 330}
-          height={isSmallScreen ? 32 : 36}
-          alt="CKB Community Fund DAO"
-          priority
+    <>
+      <div className="header-container">
+        <div className="logo">
+          <Image
+            src={isMobileDevice ? "/nervos-logo-short.svg" : "/header_logo.svg"}
+            width={isMobileDevice ? 151 : 330}
+            height={isMobileDevice ? 32 : 36}
+            alt="CKB Community Fund DAO"
+            priority
+          />
+        </div>
+        
+        {/* 桌面端导航 */}
+        {!isMobileDevice && (
+          <ul className="navs">
+            <li>
+              <Link href={homeHref} className={isActive(homeHref) ? "active" : ""}>
+                {t("header.governanceHome")}
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={treasuryHref}
+                className={isActive(treasuryHref) ? "active" : ""}
+              >
+                {t("header.treasury")}
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={managementHref}
+                className={isActive(managementHref) ? "active" : ""}
+              >
+                {t("header.propertyInfo")}
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={ruleHref}
+                target="_blank"
+                className={isActive(ruleHref) ? "active" : ""}
+              >
+                {t("header.governanceRules")}
+              </Link>
+            </li>
+          </ul>
+        )}
+        
+        <div className="header-actions">
+          <LanguageSwitcher />
+          
+          {/* 桌面端创建提案按钮 */}
+          {!isMobileDevice && (
+            <Link href={createProposalHref} className="button-secondary">
+              <CiCirclePlus style={{ marginRight: "4px", fontSize: "18px", strokeWidth: "1" }} />
+              {t("header.createProposal")}
+            </Link>
+          )}
+          
+          {userInfo ? (
+            <div>
+              <Link href={userCenterHref}>
+                <button className="button-normal user-button">
+                  <Avatar 
+                    did={userInfo?.did}
+                    size={20}
+                  />
+                  <span>{getUserDisplayName()}</span>
+                </button>
+              </Link>
+            </div>
+          ) : (
+            <button
+              onClick={() => setIsLoginModalOpen(true)}
+              className="button-normal"
+            >
+              {t("header.login")}
+            </button>
+          )}
+          
+          {/* 移动端菜单按钮 */}
+          {isMobileDevice && (
+            <button
+              className="mobile-menu-button"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? (
+                <IoClose size={24} />
+              ) : (
+                <IoMenu size={24} />
+              )}
+            </button>
+          )}
+        </div>
+
+        {/* 登录弹窗 */}
+        <LoginModal
+          isOpen={isLoginModalOpen}
+          onClose={() => setIsLoginModalOpen(false)}
         />
       </div>
-      <ul className="navs">
-        <li>
-          <Link href={homeHref} className={isActive(homeHref) ? "active" : ""}>
-            {t("header.governanceHome")}
-          </Link>
-        </li>
-        <li>
-          <Link
-            href={treasuryHref}
-            className={isActive(treasuryHref) ? "active" : ""}
-          >
-            {t("header.treasury")}
-          </Link>
-        </li>
-        <li>
-          <Link
-            href={managementHref}
-            className={isActive(managementHref) ? "active" : ""}
-          >
-            {t("header.propertyInfo")}
-          </Link>
-        </li>
 
-        <li>
-          <Link
-            href={ruleHref}
-            target="_blank"
-            className={isActive(ruleHref) ? "active" : ""}
-          >
-            {t("header.governanceRules")}
-          </Link>
-        </li>
-      </ul>
-      <div className="header-actions">
-        <LanguageSwitcher />
-        <Link href={`${homeHref}/proposal/create`} className="button-secondary">
-          <CiCirclePlus style={{ marginRight: "4px", fontSize: "18px", strokeWidth: "1" }} />
-          {t("header.createProposal")}
-        </Link>
-        {userInfo ? (
-          <div
-          // onMouseEnter={() => setIsDropdownOpen(true)}
-          // onMouseLeave={() => setIsDropdownOpen(false)}
-          >
-            <Link href={userCenterHref}>
-              <button className="button-normal user-button">
-                <Avatar 
-                  did={userInfo?.did}
-                  size={20}
-                />
-                <span>{getUserDisplayName()}</span>
-              </button>
+      {/* 移动端侧边栏菜单 */}
+      <div className={`mobile-sidebar ${isMobileMenuOpen ? "open" : ""}`}>
+        <div className="mobile-sidebar-overlay" onClick={handleMenuClick}></div>
+        <div className="mobile-sidebar-content">
+          
+          
+          <nav className="mobile-sidebar-nav">
+            <Link
+              href={homeHref}
+              className={`mobile-nav-item ${isActive(homeHref) ? "active" : ""}`}
+              onClick={handleMenuClick}
+            >
+              {t("header.governanceHome")}
             </Link>
-            {/* {isDropdownOpen && (
-              <div className="user-dropdown">
-                <Link 
-                  href={userCenterHref} 
-                  className="user-dropdown-item"
-                  onClick={() => setIsDropdownOpen(false)}
-                >
-                  {t("header.goToUserCenter")}
-                </Link>
-                <button 
-                  className="user-dropdown-item logout-item"
-                  onClick={handleLogout}
-                >
-                  {t("header.logout")}
-                </button>
-              </div>
-            )} */}
-          </div>
-        ) : (
-          <button
-            onClick={() => setIsLoginModalOpen(true)}
-            className="button-normal"
-          >
-            {t("header.login")}
-          </button>
-        )}
-        {/* <button
-          onClick={open}
-          className="button-normal"
-        >
-          Connect Wallet
-        </button> */}
+            <Link
+              href={treasuryHref}
+              className={`mobile-nav-item ${isActive(treasuryHref) ? "active" : ""}`}
+              onClick={handleMenuClick}
+            >
+              {t("header.treasury")}
+            </Link>
+            <Link
+              href={managementHref}
+              className={`mobile-nav-item ${isActive(managementHref) ? "active" : ""}`}
+              onClick={handleMenuClick}
+            >
+              {t("header.propertyInfo")}
+            </Link>
+            <Link
+              href={managementCenterHref}
+              className={`mobile-nav-item ${isActive(managementCenterHref) ? "active" : ""}`}
+              onClick={handleMenuClick}
+            >
+              {t("header.propertyManagement")}
+            </Link>
+            <Link
+              href={ruleHref}
+              target="_blank"
+              className={`mobile-nav-item ${isActive(ruleHref) ? "active" : ""}`}
+              onClick={handleMenuClick}
+            >
+              {t("header.governanceRules")}
+            </Link>
+            <Link
+              href={createProposalHref}
+              className={`mobile-nav-item ${isActive(createProposalHref) ? "active" : ""}`}
+              onClick={handleMenuClick}
+            >
+              {t("header.createProposal")}
+            </Link>
+          </nav>
+        </div>
       </div>
-
-      {/* 登录弹窗 */}
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-      />
-    </div>
+    </>
   );
 }

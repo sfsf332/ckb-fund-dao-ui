@@ -25,6 +25,7 @@
     "dayjs": "^1.11.18",
     "echarts": "^6.0.0",
     "html5-qrcode": "^2.3.8",
+    "is-mobile": "^5.0.0",
     "katex": "^0.16.22",
     "multiformats": "^13.4.1",
     "next": "15.5.2",

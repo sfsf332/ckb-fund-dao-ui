@@ -2,35 +2,57 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import isMobile from "is-mobile";
 
 export default function Banner() {
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
 
-  // 监听窗口大小变化
   useEffect(() => {
-    const checkScreenSize = () => {
-      setIsSmallScreen(window.innerWidth < 1280);
+    // 确保只在客户端执行
+    if (typeof window === 'undefined') return;
+
+    const checkMobile = () => {
+      // 检测设备类型或窗口宽度
+      const isMobileDeviceType = isMobile();
+      const isSmallScreen = window.innerWidth <= 1024;
+      setIsMobileDevice(isMobileDeviceType || isSmallScreen);
     };
 
-    // 初始检查
-    checkScreenSize();
+    // 初始检测
+    checkMobile();
 
     // 监听窗口大小变化
-    window.addEventListener("resize", checkScreenSize);
+    window.addEventListener("resize", checkMobile);
 
     return () => {
-      window.removeEventListener("resize", checkScreenSize);
+      window.removeEventListener("resize", checkMobile);
     };
   }, []);
 
+  // 移动端：使用移动端图片
+  if (isMobileDevice) {
+    return (
+      <div className="banner banner-mobile">
+        <Image
+          src="/slogan-m.svg"
+          alt="banner"
+          width={640}
+          height={80}
+          priority
+        />
+      </div>
+    );
+  }
+
+  // 桌面端：使用桌面端图片
   return (
-    <div className="banner">
+    <div className="banner banner-desktop">
       <Image
-        src={isSmallScreen ? "/slogan-m.svg" : "/slogan.svg"}
+        src="/slogan.svg"
         alt="banner"
-        width={isSmallScreen ? 640 : 1104}
-        height={isSmallScreen ? 80 : 100}
-       
+        width={1104}
+        height={100}
+        priority
       />
     </div>
   );

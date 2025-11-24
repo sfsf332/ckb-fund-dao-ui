@@ -7,12 +7,35 @@ import useUserInfoStore from "@/store/userInfo";
 import { useEffect, useRef, useState } from "react";
 import { ProposalStatus } from "@/utils/proposalUtils";
 import UserGovernance from "@/components/UserGovernance";
-import TreasuryOverview from "@/components/TreasuryOverview";
 import { useI18n } from "@/contexts/I18nContext";
+import isMobile from "is-mobile";
 
 export default function Treasury() {
   const { userInfo } = useUserInfoStore();
   const { messages } = useI18n();
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
+
+  useEffect(() => {
+    // 确保只在客户端执行
+    if (typeof window === 'undefined') return;
+
+    const checkMobile = () => {
+      // 检测设备类型或窗口宽度
+      const isMobileDeviceType = isMobile();
+      const isSmallScreen = window.innerWidth <= 1024;
+      setIsMobileDevice(isMobileDeviceType || isSmallScreen);
+    };
+
+    // 初始检测
+    checkMobile();
+
+    // 监听窗口大小变化
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
   // 使用hooks获取提案列表
   const {
     proposals,
@@ -71,6 +94,13 @@ export default function Treasury() {
           </li>
         </ul> */}
         <div className="proposal_list_container">
+          {/* 移动端：my_info 在前 */}
+          {isMobileDevice && (
+            <div className="my_info">
+              <UserGovernance />
+            </div>
+          )}
+          
           <section className="proposal_list">
             <nav>
               <h3>{messages.homepage.proposalList}</h3>
@@ -154,12 +184,13 @@ export default function Treasury() {
               </div>
             )}
           </section>
-          <div className="my_info">
-            {/* 我的治理部分 - 组件化并固定显示 */}
-            <UserGovernance />
-
-            {/* <TreasuryOverview /> */}
-          </div>
+          
+          {/* 桌面端：my_info 在后 */}
+          {!isMobileDevice && (
+            <div className="my_info">
+              <UserGovernance />
+            </div>
+          )}
         </div>
       </main>
     </div>

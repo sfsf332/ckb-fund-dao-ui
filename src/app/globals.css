@@ -410,7 +410,6 @@ a{
   font-size: 18px;
   font-weight: 800;
   color: #fff;
-  min-width: 330px;
   background-color: transparent;
  
 }
@@ -625,7 +624,169 @@ a{
   }
 }
 
+/* 移动端菜单按钮 */
+.mobile-menu-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #00CC9B;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  flex-shrink: 0;
+}
 
+.mobile-menu-button:hover {
+  background: #00E6B3;
+}
+
+/* 移动端侧边栏 */
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-sidebar.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mobile-sidebar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.mobile-sidebar-content {
+  position: absolute;
+  top: 70px;
+  right: 0;
+  width: 100%;
+  max-width: 320px;
+  height: calc(100vh - 70px);
+  background:#1E2229;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-sidebar.open .mobile-sidebar-content {
+  transform: translateX(0);
+}
+
+.mobile-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #2A2E35;
+  background: #141619;
+}
+
+.mobile-sidebar-logo {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.mobile-sidebar-logo img {
+  max-width: 100%;
+  height: auto;
+}
+
+.mobile-sidebar-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.mobile-sidebar-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+
+
+.mobile-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  padding: 20px 0;
+  box-sizing: border-box;
+  gap: 4px;
+}
+
+.mobile-nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 20px;
+  height: 50px;
+  line-height: 50px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  position: relative;
+  background: transparent;
+  box-sizing: border-box;
+  border-radius: 0;
+  margin: 0 10px;
+}
+
+.mobile-nav-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.mobile-nav-item::after {
+  content: '›';
+  font-size: 20px;
+  color: #fff;
+  opacity: 0.5;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+
+.mobile-nav-item.active {
+  background:#262A33;
+  border-left: 3px solid #00CC9B;
+  padding-left: 17px;
+}
+
+.mobile-nav-item.active::after {
+  opacity: 1;
+}
 
 /* Footer 组件样式 */
 .footer-container {
@@ -734,30 +895,41 @@ a{
 }
 .banner{
   width: 100%;
-  height: 200px;
   background:url('/banner-bg.png') repeat-x center center;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.banner img{
-  width: 50%;
-  height: auto;
-  max-width: 1104px;
+
+/* 桌面端 Banner */
+.banner-desktop {
+  height: 200px;
 }
-.banner svg{
+
+.banner-desktop img,
+.banner-desktop svg {
   width: 50%;
   height: auto;
   max-width: 1104px;
 }
 
 @media (min-width: 1280px) {
-  .banner img{
+  .banner-desktop img,
+  .banner-desktop svg {
     width: 80%;
   }
-  .banner svg{
-    width: 80%;
-  }
+}
+
+/* 移动端 Banner */
+.banner-mobile {
+  height: 120px;
+}
+
+.banner-mobile img,
+.banner-mobile svg {
+  width: 80%;
+  height: auto;
+  max-width: 640px;
 }
 .container{
   max-width: 1440px;
@@ -792,25 +964,6 @@ a{
     }
 }
 /* 响应式设计 */
-@media (max-width: 768px) {
-  .footer-content {
-    flex-direction: column;
-    gap: 32px;
-  }
-  
-  .footer-left {
-    max-width: 100%;
-  }
-  
-  .footer-right {
-    gap: 32px;
-  }
-  
-  .social-links {
-    gap: 24px;
-  }
-}
-
 /* 容器样式 */
 .container {
   margin: 0 auto;
@@ -1155,38 +1308,16 @@ a{
 }
 
 /* 响应式设计 */
-@media (max-width: 768px) {
-  .dao_info {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  .proposal_list nav {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .proposal_person {
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: center;
-  }
-  
-  .proposal_detail {
-    flex-direction: column;
-    gap: 8px;
-    text-align: center;
-  }
-}
-
 /* my_info 部分样式 */
 .my_info {
-  width:385px ;
+  width: 385px;
   position: sticky;
   top: 16px;
   z-index: 10;
   align-self: flex-start; /* 防止被父级 flex 拉伸，高度以内容为准 */
   height: fit-content; /* 使粘性定位的盒子高度不占满容器 */
 }
+
 
 
 /* 我的治理部分 */
@@ -1731,37 +1862,6 @@ a{
   color: #9AA3AF;
   font-size: 12px;
 }
-/* 响应式设计 */
-@media (max-width: 1024px) {
-  .my_info {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-}
-
-@media (max-width: 768px) {
-  .my_governance,
-  .treasury_overview {
-    padding: 20px;
-  }
-  
-  .rights_amount,
-  .balance_amount {
-    font-size: 28px;
-  }
-  
-  .pending_item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  
-  .pending_status {
-    align-self: flex-end;
-  }
-}
-
-
 
 /* 规则页布局 */
 .rule_layout{
@@ -1908,4 +2008,424 @@ a{
 
 .not-found-message {
   color: #ffffff; /* 相当于 text-white */
+}
+
+/* ============================================
+   移动端响应式样式 - 统一管理
+   ============================================ */
+
+/* 平板和移动端 (max-width: 1024px) */
+@media (max-width: 1024px) {
+  body{
+    margin: 0;
+  }
+  .container{
+    padding: 10px 8px!important;
+  }
+  .my_info{
+    width:100%!important ;
+    position: relative;
+    margin-bottom: 0;
+  }
+ 
+  .language-switcher-container{
+    width: 30px;
+  }
+  .language-switcher{
+    min-width: 30px;
+    width: 30px;
+  }
+  .header-container {
+    padding: 0 12px;
+  }
+  .button-normal.user-button{
+    padding: 0 6px;
+    min-width: auto;
+    width: auto;
+  }
+  .header-container .logo {
+    min-width: auto;
+  }
+
+  .header-actions {
+    gap: 4px;
+  }
+
+  /* 移动端隐藏创建提案按钮（在侧边栏中显示） */
+  .create-proposal-button {
+    display: none;
+  }
+  
+  /* 移动端布局调整 */
+  .proposal_list_container {
+    flex-direction: column;
+  }
+  
+  .my_info {
+    width: 100%;
+    position: static;
+    margin-bottom: 24px;
+  }
+  
+  .proposal_list {
+    width: 100%!important;
+  }
+  
+  /* 移动端提案列表导航 */
+  .proposal_list nav {
+    margin-bottom: 16px;
+  }
+  
+  .proposal_list nav h3 {
+    font-size: 18px;
+  }
+  
+  .proposal_list nav .nav-controls {
+    gap: 8px;
+  }
+  
+  .proposal_list nav select {
+    min-width: auto;
+    padding: 8px 12px;
+    padding-right: 32px;
+    font-size: 12px;
+    background-size: 12px;
+    background-position: right 8px center;
+  }
+  
+  /* 移动端提案卡片 */
+  .proposal_list_content {
+    gap: 12px;
+  }
+  
+  .proposal_list_content li {
+    padding: 16px;
+    border-radius: 8px;
+  }
+  
+  /* 移动端提案项容器 */
+  .proposal-item-clickable {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  /* 移动端提案标题 */
+  .proposal_list_content li h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  /* 移动端提案人信息 */
+  .proposal_person {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 0;
+  }
+  
+  .proposal_person img {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 50%;
+  }
+  
+  .proposal_person .name {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .proposal_person .name h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+    line-height: 1.2;
+  }
+  
+  .proposal_person .name p {
+    font-size: 12px;
+    color: #8A949E;
+    margin: 0;
+    font-family: monospace;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+  
+  .proposal_person > p:last-child {
+    font-size: 12px;
+    color: #8A949E;
+    flex-shrink: 0;
+    margin: 0;
+    align-self: flex-start;
+    line-height: 1.2;
+  }
+  
+  /* 移动端提案详情（预算） */
+  .proposal_detail {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0;
+  }
+  
+  .proposal_detail p:first-child {
+    font-size: 12px;
+    color: #8A949E;
+    margin: 0;
+    line-height: 1.2;
+  }
+  
+  .proposal_detail p:last-child {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    line-height: 1.2;
+  }
+  
+  /* 移动端提案进度 */
+  .proposal_progress {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .proposal_progress p {
+    font-size: 12px;
+    color: #8A949E;
+    margin: 0;
+    line-height: 1.2;
+  }
+  
+  .proposal_progress .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #2A2E35;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .proposal_progress .progress-fill {
+    height: 100%;
+    background: #00B287;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+  
+  /* 移动端状态标签 */
+  .status-tag {
+    font-size: 11px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+}
+
+/* 移动端 (max-width: 768px) */
+@media (max-width: 768px) {
+  /* Footer 移动端样式 */
+  .footer-content {
+    flex-direction: column;
+    gap: 32px;
+  }
+  
+  .footer-left {
+    max-width: 100%;
+  }
+  
+  .footer-right {
+    gap: 32px;
+  }
+  
+  .social-links {
+    gap: 24px;
+  }
+  
+  /* DAO信息统计 */
+  .dao_info {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* 移动端提案列表导航 */
+  .proposal_list nav {
+    margin-bottom: 16px;
+  }
+  
+  .proposal_list nav h3 {
+    font-size: 18px;
+  }
+  
+  .proposal_list nav .nav-controls {
+    gap: 8px;
+  }
+  
+  .proposal_list nav select {
+    min-width: auto;
+    padding: 8px 12px;
+    padding-right: 32px;
+    font-size: 12px;
+    background-size: 12px;
+    background-position: right 8px center;
+  }
+  
+  /* 移动端提案卡片 */
+  .proposal_list_content {
+    gap: 12px;
+  }
+  
+  .proposal_list_content li {
+    padding: 16px;
+    border-radius: 8px;
+  }
+  
+  /* 移动端提案标题 */
+  .proposal_list_content li h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  
+  /* 移动端提案人信息 */
+  .proposal_person {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  
+  .proposal_person img {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+  
+  .proposal_person .name {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .proposal_person .name h3 {
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+  
+  .proposal_person .name p {
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .proposal_person p:last-child {
+    font-size: 12px;
+    color: #8A949E;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+  
+  /* 移动端提案详情 */
+  .proposal_detail {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 16px;
+  }
+  
+  .proposal_detail p:first-child {
+    font-size: 12px;
+    color: #8A949E;
+  }
+  
+  .proposal_detail p:last-child {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  
+  /* 移动端提案进度 */
+  .proposal_progress {
+    margin-bottom: 0;
+  }
+  
+  .proposal_progress p {
+    font-size: 12px;
+    color: #8A949E;
+    margin-bottom: 8px;
+  }
+  
+  .proposal_progress .progress-bar {
+    height: 8px;
+    border-radius: 4px;
+  }
+  
+  .proposal_progress .progress-fill {
+    border-radius: 4px;
+  }
+  
+  /* 移动端状态标签 */
+  .status-tag {
+    font-size: 11px;
+    padding: 3px 6px;
+    border-radius: 4px;
+  }
+  
+  /* 治理和财务相关 */
+  .my_governance,
+  .treasury_overview {
+    padding: 20px;
+  }
+  
+  .rights_amount,
+  .balance_amount {
+    font-size: 28px;
+  }
+  
+  .pending_item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .pending_status {
+    align-self: flex-end;
+  }
+}
+
+/* 小屏幕设备 (max-width: 480px) */
+@media (max-width: 480px) {
+  .mobile-sidebar-content {
+    max-width: 100%;
+  }
+  
+  .mobile-nav-item {
+    font-size: 15px;
+    padding: 0px 16px;
+    margin: 0 8px;
+  }
+  
+  .mobile-nav-item.active {
+    padding-left: 13px;
+  }
+  
+  .mobile-sidebar-nav {
+    padding: 16px 0;
+  }
 }

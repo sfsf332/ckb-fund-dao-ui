@@ -1,6 +1,5 @@
 'use client';
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Proposal } from "../utils/proposalUtils";
 import { ProposalListItem } from "@/server/proposal";
@@ -8,6 +7,7 @@ import { formatNumber, formatDate } from "../utils/proposalUtils";
 import { postUriToHref } from "@/lib/postUriHref";
 import { useI18n } from "@/contexts/I18nContext";
 import Tag from "@/components/ui/tag/Tag";
+import Avatar from "@/components/Avatar";
 import { getAvatarByDid } from "@/utils/avatarUtils";
 import { useTranslation } from "@/utils/i18n";
 import { getUserDisplayNameFromInfo } from "@/utils/userDisplayUtils";
@@ -47,7 +47,6 @@ export default function ProposalItem({ proposal }: ProposalItemProps) {
         avatar: getAvatarByDid(proposal.author.did) 
       }
     : (proposal as Proposal).proposer;
-  const avatar = author.avatar || getAvatarByDid(author.did);
   
   // 处理里程碑数据
   const milestones = isAPIFormat && proposal.record.data.milestones && proposal.record.data.milestones.length > 0
@@ -80,7 +79,7 @@ export default function ProposalItem({ proposal }: ProposalItemProps) {
         <Tag status={proposal.state} size="sm" />
       </h4>
       <div className="proposal_person">
-        <Image src={avatar} alt="avatar" width={40} height={40} />
+        <Avatar did={author.did} size={40} alt="avatar" />
         <div className="name">
           <h3>{author.name}</h3>
           <p>{author.did}</p>

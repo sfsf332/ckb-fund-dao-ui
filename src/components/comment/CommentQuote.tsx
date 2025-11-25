@@ -2,12 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import { CommentQuoteProps } from "@/types/comment";
 import "@/styles/comment.css";
 import "@/styles/quill-editor.css";
 import "react-quill-new/dist/quill.snow.css";
-import { getAvatarByDid } from "@/utils/avatarUtils";
+import Avatar from "@/components/Avatar";
 import useUserInfoStore from "@/store/userInfo";
 import { useI18n } from "@/contexts/I18nContext";
 
@@ -96,7 +95,7 @@ export default function CommentQuote({
   return (
     <div className={`comment-quote ${isReply ? "comment-quote-reply" : ""}`}>
       <div className="comment-quote-avatar">
-        <Image src={getAvatarByDid(userInfo?.did || '')} alt="avatar" width={40} height={40} />
+        <Avatar did={userInfo?.did} size={40} alt="avatar" />
       </div>
       <div className="comment-quote-main">
         <div className="editor-container">

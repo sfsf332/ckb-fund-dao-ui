@@ -669,6 +669,11 @@
       "reject": "反对",
       "myVotingPower": "我的投票权:",
       "chainPending": "投票结果上链中",
+      "voteSuccess": "投票成功！",
+      "revote": "重新投票",
+      "votedApprove": "已投赞成",
+      "votedReject": "已投反对",
+      "refreshDelay": "投票结果的刷新存在一定延迟,请耐心等待。",
       "conditions": {
         "title": "通过条件",
         "minTotalVotes": "最低投票权重总数",

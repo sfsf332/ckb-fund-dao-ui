@@ -79,20 +79,17 @@ function formatTranslation(text: string, values?: Record<string, string | number
 export const generateVotingInfo = (
   proposal: Proposal,
   voteMeta?: VoteMetaItem | null,
-  userVotingPower: number = 0,
-  userVote?: VoteOption
+  userVotingPower: number = 0
 ): VotingInfo => {
   // 如果有投票元数据，使用真实数据
   if (voteMeta) {
-    // 确定投票状态
+    // 确定投票状态（只根据时间和提案状态判断，不依赖 userVote）
     let status: VotingStatus;
     const now = new Date().getTime();
     const endTime = new Date(voteMeta.end_time).getTime();
     
     if (now > endTime || proposal.state === ProposalStatus.APPROVED || proposal.state === ProposalStatus.REJECTED) {
       status = VotingStatus.ENDED;
-    } else if (userVote) {
-      status = VotingStatus.VOTED;
     } else {
       status = VotingStatus.PENDING;
     }
@@ -111,7 +108,6 @@ export const generateVotingInfo = (
       approveVotes,
       rejectVotes,
       userVotingPower,
-      userVote,
       status,
       conditions: {
         minTotalVotes: 15000000, // 最低1500万票
@@ -152,7 +148,6 @@ export const generateVotingInfo = (
     approveVotes,
     rejectVotes,
     userVotingPower,
-    userVote: undefined,
     status,
     conditions: {
       minTotalVotes: 15000000, // 最低1500万票

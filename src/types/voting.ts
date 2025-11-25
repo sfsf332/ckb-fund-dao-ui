@@ -28,16 +28,21 @@ export interface VotingInfo {
   approveVotes: number;    // 赞成投票权重（shannon单位）
   rejectVotes: number;     // 反对投票权重（shannon单位）
   userVotingPower: number; // 用户投票权重（shannon单位）
+  status: VotingStatus;
+  conditions: VotingConditions;
+}
+
+// 用户投票信息
+export interface UserVoteInfo {
   userVote?: VoteOption;   // 用户投票选项
   userVoteIndex?: number;  // 用户投票的候选人索引（1: Agree, 2: Against）
   voteState?: number;      // 投票状态（0: 上链中, 其他: 已确认）
-  status: VotingStatus;
-  conditions: VotingConditions;
 }
 
 // 投票组件 Props
 export interface ProposalVotingProps {
   votingInfo: VotingInfo;
+  userVoteInfo?: UserVoteInfo;
   onVote: (option: VoteOption) => void;
   className?: string;
 }

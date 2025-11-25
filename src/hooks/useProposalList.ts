@@ -143,7 +143,12 @@ export function useProposalList(
             },
           },
         }));
-        setProposals(prev => [...prev, ...proposalsWithIndex]);
+        // 去重：基于 cid 或 uri 过滤掉已存在的提案
+        setProposals(prev => {
+          const existingIds = new Set(prev.map(p => p.cid || p.uri));
+          const newProposals = proposalsWithIndex.filter(p => !existingIds.has(p.cid || p.uri));
+          return [...prev, ...newProposals];
+        });
         setCursor(response.cursor || '');
         setParams({ ...params });
         setHasMore(!!response.cursor || proposalsWithIndex.length >= (nextParams.limit || 20));

@@ -1,10 +1,9 @@
 import React from "react";
 import { AiOutlineExport } from "react-icons/ai";
-import Image from "next/image";
 import Link from "next/link";
 import CopyButton from "@/components/ui/copy/CopyButton";
 import { Modal } from "./ui/modal";
-import { getAvatarByDid } from "@/utils/avatarUtils";
+import Avatar from "@/components/Avatar";
 import { useI18n } from '@/contexts/I18nContext';
 interface Milestone {
   id: string;
@@ -50,7 +49,7 @@ const PreviewModal: React.FC<PreviewModalProps> = ({
       <div className="proposal-header">
         <div className="proposal-info">
           <div className="user_info">
-            <Image src={getAvatarByDid("did:ckb:ckt1qvqr...7q2h")} alt="avatar" width={32} height={32} />
+            <Avatar did="did:ckb:ckt1qvqr...7q2h" size={32} alt="avatar" />
             <div className="name">
               <h3>John</h3>
               <p>

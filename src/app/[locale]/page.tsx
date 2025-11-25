@@ -147,8 +147,8 @@ export default function Treasury() {
                   {messages.homepage.loadFailed} {proposalsError}
                 </li>
               ) : proposals.length > 0 ? (
-                proposals.map((proposal) => (
-                  <ProposalItem key={proposal.uri} proposal={proposal} />
+                proposals.map((proposal, index) => (
+                  <ProposalItem key={proposal.cid || proposal.uri || `proposal-${index}`} proposal={proposal} />
                 ))
               ) : proposalsLoading ? (
                 <li

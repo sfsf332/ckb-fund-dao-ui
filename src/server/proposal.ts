@@ -2,7 +2,6 @@
  * 提案相关API接口定义
  */
 import { ProposalStatus } from "@/utils/proposalUtils";
-import { VoteOption } from "@/types/voting";
 import defineAPI from "./defineAPI";
 
 // 提案详情接口的参数类型
@@ -435,21 +434,19 @@ export interface VoteStatusParams {
   vote_meta_id: number; // 投票元数据ID
 }
 
-// 查询投票状态响应类型
-export interface VoteStatusResponse {
-  vote_meta_id: number;
-  total_votes: number;
-  approve_votes: number;
-  reject_votes: number;
-  abstain_votes: number;
-  approval_rate: number;
-  candidates_index?: number; // 当前用户投票的候选人索引（1: Agree, 2: Against）
-  state?: number; // 投票状态（0: 上链中, 其他: 已确认）
-  voter?: string; // 投票者DID
-  created?: string; // 创建时间
-  tx_hash?: string; // 交易哈希
-  [key: string]: unknown;
+// 单个投票记录类型
+export interface VoteRecord {
+  id: number; // 投票记录ID
+  vote_meta_id: number; // 投票元数据ID
+  voter: string; // 投票者DID
+  candidates_index: number; // 候选人索引（1: Agree, 2: Against）
+  state: number; // 投票状态（0: 上链中, 其他: 已确认）
+  tx_hash: string; // 交易哈希
+  created: string; // 创建时间（ISO 8601格式）
 }
+
+// 查询投票状态响应类型（返回投票记录数组）
+export type VoteStatusResponse = VoteRecord[];
 
 /**
  * 查询投票状态

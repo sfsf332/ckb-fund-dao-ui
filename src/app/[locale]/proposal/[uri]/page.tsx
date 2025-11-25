@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { useTranslation } from "../../../../utils/i18n";
 import { useI18n } from "@/contexts/I18nContext";
 import "@/styles/proposal.css";
+
 import "@/styles/quill-editor.css";
 import { ProposalContent, ProposalComments, ProposalSidebar } from "@/components/proposal-phase";
 import { useProposalDetail } from "@/hooks/useProposalDetail";

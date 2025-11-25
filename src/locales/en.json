@@ -623,16 +623,21 @@
       }
     },
     "proposalVoting": {
-      "title": "Proposal Voting",
+      "title": "Voting",
       "deadline": "Deadline:",
-      "totalVotes": "Total Voting Weight:",
+      "totalVotes": "Total Weight:",
       "approve": "Approve",
       "reject": "Reject",
       "myVotingPower": "My Voting Power:",
       "chainPending": "Vote result is being confirmed on-chain",
+      "voteSuccess": "Vote successful!",
+      "revote": "Re-vote",
+      "votedApprove": "Voted Approve",
+      "votedReject": "Voted Reject",
+      "refreshDelay": "There is a certain delay in refreshing the voting results, please wait patiently.",
       "conditions": {
         "title": "Passing Conditions",
-        "minTotalVotes": "Minimum Total Voting Weight",
+        "minTotalVotes": "Minimum Weight",
         "approveRate": "Approval Rate"
       },
       "timeLeft": {

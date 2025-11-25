@@ -161,3 +161,58 @@
 }
 
 /* 状态指示器样式继承自 common.css */
+
+/* 已投票状态样式 */
+.voting-revote-section {
+  margin-bottom: 16px;
+}
+
+.revote-button {
+  width: 100%;
+  padding: 10px 16px;
+  background: #3A3F47;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.revote-button:hover {
+  background: #454A52;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.revote-button:active {
+  background: #2E3238;
+}
+
+.voting-success-section {
+  margin-bottom: 20px;
+}
+
+.vote-success-message {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.success-text {
+  color: #00D9B8;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.voted-count {
+  color: #fff;
+  font-size: 14px;
+}
+
+.refresh-delay-message {
+  color: #fff;
+  font-size: 12px;
+  opacity: 0.8;
+}

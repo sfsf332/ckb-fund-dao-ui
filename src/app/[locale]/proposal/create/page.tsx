@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "../../../../utils/i18n";
-import "@/styles/proposal-create.css";
+import "@/styles/proposal.css";
 import "@/styles/quill-editor.css";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import "react-quill-new/dist/quill.snow.css";

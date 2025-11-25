@@ -9,7 +9,7 @@ export default function Management() {
   const { t } = useTranslation();
 
   return (
-    <div className="container">
+    <div className="container management-page">
       <main>
         <div className="block_container">
           <h3>{t("managementPage.title")}</h3>
@@ -112,13 +112,16 @@ export default function Management() {
           </p>
           <ul>
             <li>
-              <strong>{t("managementPage.noDecisionRights")}</strong>
+              <strong>{t("managementPage.noDecisionRightsTitle")}</strong>
+              {t("managementPage.noDecisionRightsContent")}
             </li>
             <li>
-              <strong>{t("managementPage.noInterpretationRights")}</strong>
+              <strong>{t("managementPage.noInterpretationRightsTitle")}</strong>
+              {t("managementPage.noInterpretationRightsContent")}
             </li>
             <li>
-              <strong>{t("managementPage.fundResponsibilities")}</strong>
+              <strong>{t("managementPage.fundResponsibilitiesTitle")}</strong>
+              {t("managementPage.fundResponsibilitiesContent")}
               <ul>
                 <li>
                   {t("managementPage.budgetAllocation")}
@@ -129,7 +132,8 @@ export default function Management() {
               </ul>
             </li>
             <li>
-              <strong>{t("managementPage.votingRights")}</strong>
+              <strong>{t("managementPage.votingRightsTitle")}</strong>
+              {t("managementPage.votingRightsContent")}
             </li>
           </ul>
         </div>

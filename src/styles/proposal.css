@@ -197,7 +197,8 @@
   padding: 20px;
 }
 
-.proposal-breadcrumb {
+.proposal-breadcrumb,
+.breadcrumb {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -206,7 +207,8 @@
   font-size: 14px;
 }
 
-.proposal-breadcrumb-separator {
+.proposal-breadcrumb-separator,
+.breadcrumb-separator {
   color: #4C525C;
 }
 
@@ -217,7 +219,8 @@
   align-items: start;
 }
 
-.proposal-main-content-area {
+.proposal-main-content-area,
+.proposal-main-content {
   display: flex;
   flex-direction: column;
   gap: 24px;

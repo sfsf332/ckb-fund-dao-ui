@@ -249,12 +249,16 @@
     "informationReach": "信息触达： 确保所有重要的治理信息有效触达社区成员。",
     "powerBoundaries": "权力边界",
     "powerBoundariesDesc": "物业成员不拥有提案的审核通过权，也不拥有任何投票决策权。其所有行动目标，是保障治理过程的公平、透明和高效，并将最完整、最中立的信息呈现给社区决策者。",
-    "noDecisionRights": "无决策权： DAO 物业团队不拥有提案的审核通过权，也不拥有任何投票决策权。他们是社区决策、治理的\"服务员\"，而非\"审批官\"。",
-    "noInterpretationRights": "无释法权： DAO 物业团队无权解释或仲裁规则争议，只能严格按照社区已通过的成文规则执行程序。",
-    "fundResponsibilities": "资金权责： 物业团队无自主财政权。其与资金相关的职责仅限于：",
+    "noDecisionRightsTitle": "无决策权：",
+    "noDecisionRightsContent": " DAO 物业团队不拥有提案的审核通过权，也不拥有任何投票决策权。他们是社区决策、治理的\"服务员\"，而非\"审批官\"。",
+    "noInterpretationRightsTitle": "无释法权：",
+    "noInterpretationRightsContent": " DAO 物业团队无权解释或仲裁规则争议，只能严格按照社区已通过的成文规则执行程序。",
+    "fundResponsibilitiesTitle": "资金权责：",
+    "fundResponsibilitiesContent": " 物业团队无自主财政权。其与资金相关的职责仅限于：",
     "budgetAllocation": "在社区投票批准一个项目后，按流程通知主金库多签人，将项目总预算划拨至对应的项目执行钱包。",
     "milestonePayment": "作为项目执行钱包的多签人，在每个里程碑经社区投票确认通过后，与其他多签人一起，履行签名支付的程序性义务。",
-    "votingRights": "投票权利： 作为社区一员，物业成员保留依据其所持有的投票权重，对所有提案行使个人投票的权利。"
+    "votingRightsTitle": "投票权利：",
+    "votingRightsContent": " 作为社区一员，物业成员保留依据其所持有的投票权重，对所有提案行使个人投票的权利。"
   },
   "managementCenter": {
     "newProposals": "新提案",

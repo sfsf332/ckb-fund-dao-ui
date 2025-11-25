@@ -213,12 +213,16 @@
     "informationReach": "Information Reach: Ensure all important governance information effectively reaches community members.",
     "powerBoundaries": "Power Boundaries",
     "powerBoundariesDesc": "Property team members do not have the authority to approve proposals or any voting decision-making power. All their actions aim to ensure fairness, transparency, and efficiency in the governance process, and present the most complete and neutral information to community decision-makers.",
-    "noDecisionRights": "No Decision Rights: DAO Property team does not have the authority to approve proposals or any voting decision-making power. They are 'servants' of community decision-making and governance, not 'approvers'.",
-    "noInterpretationRights": "No Interpretation Rights: DAO Property team has no authority to interpret or arbitrate rule disputes, and can only strictly execute procedures according to written rules passed by the community.",
-    "fundResponsibilities": "Fund Responsibilities: Property team has no autonomous financial authority. Their fund-related responsibilities are limited to:",
+    "noDecisionRightsTitle": "No Decision Rights:",
+    "noDecisionRightsContent": " DAO Property team does not have the authority to approve proposals or any voting decision-making power. They are 'servants' of community decision-making and governance, not 'approvers'.",
+    "noInterpretationRightsTitle": "No Interpretation Rights:",
+    "noInterpretationRightsContent": " DAO Property team has no authority to interpret or arbitrate rule disputes, and can only strictly execute procedures according to written rules passed by the community.",
+    "fundResponsibilitiesTitle": "Fund Responsibilities:",
+    "fundResponsibilitiesContent": " Property team has no autonomous financial authority. Their fund-related responsibilities are limited to:",
     "budgetAllocation": "After community voting approves a project, notify the main treasury multi-signers according to procedures to allocate the total project budget to the corresponding project execution wallet.",
     "milestonePayment": "As multi-signers of project execution wallets, after each milestone is confirmed by community voting, fulfill the procedural obligation of signature payment together with other multi-signers.",
-    "votingRights": "Voting Rights: As community members, property team members retain the right to exercise personal voting on all proposals based on their voting weight."
+    "votingRightsTitle": "Voting Rights:",
+    "votingRightsContent": " As community members, property team members retain the right to exercise personal voting on all proposals based on their voting weight."
   },
   "managementCenter": {
     "newProposals": "New Proposals",

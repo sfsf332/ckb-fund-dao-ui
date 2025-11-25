@@ -7,12 +7,35 @@ import Link from "next/link";
 import { AiOutlineExport } from "react-icons/ai";
 import CopyButton from "@/components/ui/copy/CopyButton";
 import dynamic from "next/dynamic";
-import ProjectWalletsTable from "@/components/ProjectWalletsTable";
+import { useState, useEffect } from "react";
+
+// 截取地址：显示前5后5
+function truncateAddress(address: string, head = 7, tail = 7): string {
+  if (!address || address.length <= head + tail) return address;
+  return `${address.slice(0, head)}...${address.slice(-tail)}`;
+}
 
 export default function Treasury() {
   useTranslation();
   const { messages } = useI18n();
   const address = "ckb1qyqwtz3x2z7g8g7q2hdasmm5m4enr0v40s8k0q8x2v";
+  
+  // 检测是否为移动端
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
+  // 根据设备类型显示不同格式的地址
+  const displayAddress = isMobile ? truncateAddress(address) : address;
 
   // 动态加载图表以避免 SSR 问题
   const TotalAssetsChart = dynamic(() => import("../../../components/ui/TotalAssetsChart"), {
@@ -28,7 +51,7 @@ export default function Treasury() {
           <div className="treasury_wallet">
             <div className="treasury_wallet_address">
             <label>{messages.treasuryPage.mainTreasuryAddress}</label>
-            <p>{address}</p>
+            <p>{displayAddress}</p>
             </div>
             
             <CopyButton className="button-copy" text={address} ariaLabel="copy-treasury-address">

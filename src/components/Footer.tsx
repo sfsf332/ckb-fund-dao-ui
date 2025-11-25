@@ -17,10 +17,22 @@ export default function Footer() {
     // 确保只在客户端执行
     if (typeof window === 'undefined') return;
 
-    // 检测设备类型或窗口宽度
-    const isMobileDeviceType = isMobile();
-    const isSmallScreen = window.innerWidth <= 1024;
-    setIsMobileDevice(isMobileDeviceType || isSmallScreen);
+    const checkMobile = () => {
+      // 检测设备类型或窗口宽度
+      const isMobileDeviceType = isMobile();
+      const isSmallScreen = window.innerWidth <= 1024;
+      setIsMobileDevice(isMobileDeviceType || isSmallScreen);
+    };
+
+    // 初始检测
+    checkMobile();
+
+    // 监听窗口大小变化
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
   }, []);
   
   return (

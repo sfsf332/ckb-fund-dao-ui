@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import useUserInfoStore from "@/store/userInfo";
 import { useI18n } from "@/contexts/I18nContext";

@@ -646,6 +646,39 @@ interface Messages {
       missingInfo: string;
       close: string;
     };
+    voting: {
+      errors: {
+        prepareFailed: string;
+        prepareFailedWithCode: string;
+        prepareFailedInvalidFormat: string;
+        submitFailedEmptyResponse: string;
+        submitFailedRetry: string;
+        submitFailedInvalidFormat: string;
+        missingProof: string;
+        missingTxHash: string;
+        voteTypeArgsLengthError: string;
+        witnessFormatError: string;
+        buildTransactionFailed: string;
+        getVoteDetailFailed: string;
+        getVoteStatusFailed: string;
+        queryVoteStatusFailed: string;
+        updateTxHashFailed: string;
+        voteFailed: string;
+        userNotLoggedIn: string;
+      };
+      logs: {
+        prepareSuccess: string;
+        prepareFailed: string;
+        buildTransactionFailed: string;
+        txHash: string;
+        milestoneVotePrepareSuccess: string;
+        milestoneVotePrepareFailed: string;
+      };
+      options: {
+        approve: string;
+        reject: string;
+      };
+    };
   };
   chart: {
     totalAssetsChart: {
@@ -771,8 +804,8 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 const messages: Record<Locale, Messages> = {
-  en: enMessages,
-  zh: zhMessages,
+  en: enMessages as unknown as Messages,
+  zh: zhMessages as unknown as Messages,
 };
 
 interface I18nProviderProps {

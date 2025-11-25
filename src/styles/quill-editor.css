@@ -13,17 +13,14 @@
   display: flex;
   flex-direction: column;
   background: transparent;
-  border-radius: 0;
   overflow: visible;
-  border: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  box-sizing: border-box;
 }
 
 .quill-wrapper .ql-container {
-  order: 1; /* 编辑器内容在上方 */
-  background: transparent;
-  border: none;
   font-family: inherit;
-  outline: none;
 }
 
 .quill-wrapper .ql-toolbar {
@@ -32,44 +29,24 @@
 
 /* Quill 编辑器容器样式 */
 .ql-container {
-  border: 1px solid #4C525C !important;
-  color: #fff !important;
-  font-size: 14px !important;
-  min-height: 200px !important;
+  border: 1px solid transparent;
+  color: #fff;
+  font-size: 14px;
+  min-height: 200px;
 }
 
-.ql-container.ql-snow {
-  width: 100%;
-}
 
-.ql-container.ql-snow:focus-within {
-  border: 1px solid #4C525C !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
 
 /* 覆盖ReactQuill默认样式 */
 .ql-snow {
-  border: none !important;
+  border: 1px solid transparent !important;
 }
 
 .ql-snow .ql-toolbar {
   border: none !important;
-  border-bottom: 1px solid #4C525C !important;
 }
 
-.ql-snow .ql-container {
-  border: none !important;
-}
 
-/* Quill 编辑器内容区域 */
-.ql-editor {
-  color: #fff !important;
-  font-family: inherit !important;
-  line-height: 1.6 !important;
-  padding: 16px !important;
-  background: transparent;
-}
 
 .ql-editor.ql-blank::before {
   color: #6b7280 !important;
@@ -81,6 +58,10 @@
   width: 100%;
   height: 100%;
   z-index: 100;
+  background: #20232B;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  box-sizing: border-box;
 }
 
 /* Quill 工具栏样式 */
@@ -208,12 +189,13 @@
 }
 
 .ql-editor strong {
-  font-weight: 600;
-  color: #ffffff;
+  font-weight: 600 !important;
+  color: #fff !important;
 }
 
 .ql-editor em {
-  font-style: italic;
+  font-style: italic !important;
+  color: #fff !important;
 }
 
 .ql-editor u {
@@ -246,10 +228,17 @@
 }
 
 .ql-editor img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 6px;
-  margin: 8px 0;
+  max-width: 100% !important;
+  height: auto !important;
+  border-radius: 6px !important;
+  margin: 8px 0 !important;
+  cursor: pointer !important;
+  transition: opacity 0.2s ease !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
+.ql-editor img:hover {
+  opacity: 0.9 !important;
 }
 
 .ql-editor blockquote {
@@ -264,7 +253,7 @@
 }
 
 .ql-editor blockquote::before {
-  content: "引用内容";
+  content: "quote";
   position: absolute;
   top: -8px;
   left: 12px;
@@ -293,7 +282,7 @@
 
 /* 编辑器焦点状态 */
 .quill-wrapper:focus-within {
-  box-shadow: 0 0 0 2px rgba(0, 204, 155, 0.2);
+  border-color: #00CC9B;
 }
 
 /* 编辑器禁用状态 */
@@ -307,8 +296,35 @@
   pointer-events: none;
 }
 
-/* 评论编辑器特定样式 */
+/* 评论编辑器容器 */
+.comment-reply-editor .editor-container {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  border-radius: 10px;
+}
+
+/* 评论编辑器包装器样式 */
+.comment-reply-editor .quill-wrapper {
+  background: #262A33;
+  border-radius: 8px;
+  border: 1px solid #4C525C;
+  overflow: hidden;
+}
+
+.comment-reply-editor .quill-wrapper .ql-toolbar {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #4C525C;
+  background: #262A33;
+}
+
 .comment-reply-editor .quill-wrapper .ql-container {
+  background: #262A33;
+  border: none;
+  font-family: inherit;
   border: 0;
   height: auto;
   min-height: 120px;
@@ -316,17 +332,19 @@
 }
 
 .comment-reply-editor .quill-wrapper .ql-editor {
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 12px;
+  min-height: 80px;
+  background: #262A33;
   padding: 0;
   height: 100%;
 }
 
-/* 评论编辑器容器 */
-.comment-reply-editor .editor-container {
-  position: relative;
-  width: 100%;
-  margin: 0;
-  border: 1px solid #4C525C;
-  border-radius: 10px;
+.comment-reply-editor .quill-wrapper .ql-editor.ql-blank::before {
+  color: #6b7280;
+  font-style: normal;
 }
 
 .comment-reply-editor .quill-wrapper .ql-toolbar .ql-stroke {
@@ -407,5 +425,16 @@
 .comment-reply-editor .quill-wrapper .ql-editor h1:first-child,
 .comment-reply-editor .quill-wrapper .ql-editor h2:first-child {
   margin-top: 0;
+}
+
+/* Quill 编辑器链接样式 */
+.ql-editor a {
+  color: #00CC9B;
+  text-decoration: none;
+}
+
+.ql-editor a:hover {
+  color: #00CC9B !important;
+  text-decoration: none !important;
 }
 

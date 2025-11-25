@@ -7,7 +7,7 @@ import { useTranslation } from '@/utils/i18n';
 import storage from '@/lib/storage';
 import { encryptData } from '@/lib/encrypt';
 import { toast } from 'react-hot-toast';
-import './ExportDIDInfoModal.css';
+import '@/styles/ExportDIDInfoModal.css';
 
 const regex = /^[A-Za-z0-9]{8}$/;
 

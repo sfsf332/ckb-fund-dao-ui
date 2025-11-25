@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import Image from "next/image";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
+import { AiOutlineExport } from "react-icons/ai";
+
 import { SignatureModal, SuccessModal } from "../ui/modal";
 import { useWalletAddress } from "../../hooks/useWalletAddress";
 import { useWalletBalance } from "../../hooks/useWalletBalance";
@@ -166,10 +167,8 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
             .filter((addr: string) => typeof addr === 'string' && addr.length > 0);
         }
         
-        console.log('绑定列表数据:', { response, walletAddresses });
         setNeuronWallets(walletAddresses);
       } catch (error) {
-        console.error("获取绑定列表失败:", error);
         setNeuronWallets([]);
       } finally {
         setIsLoadingBindList(false);
@@ -327,14 +326,10 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
           rel="noopener noreferrer"
           className="action-button stake-button"
         >
-          <Image
-            src="/nervos-logo-s.svg"
-            alt="Nervos"
-            width={16}
-            height={16}
-            className="button-icon"
-          />
+        
           {t("wallet.stakeCKB")}
+          <AiOutlineExport />
+           
         </a>
 
         <div className="neuron-dropdown-container" ref={dropdownRef}>
@@ -342,7 +337,7 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
             className="action-button bind-button"
             onClick={handleBindNeuron}
           >
-            <MdOutlineAccountBalanceWallet />
+            <MdOutlineAccountBalanceWallet size={18} />
             {t("wallet.bindNeuronWallet")}
           </button>
 

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { MdClose } from 'react-icons/md';
-import './Modal.css';
+import '@/styles/Modal.css';
 
 export interface ModalButton {
   text: string;

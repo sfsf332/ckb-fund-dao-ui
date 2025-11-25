@@ -8,7 +8,7 @@ import useUserInfoStore from '@/store/userInfo';
 import { TokenStorageType } from '@/lib/storage';
 import { decryptData } from '@/lib/encrypt';
 import { MdClose, MdPhotoCamera, MdImage, MdCheckCircle } from 'react-icons/md';
-import './ScanQRCodeModal.css';
+import '@/styles/ScanQRCodeModal.css';
 
 interface ScanQRCodeModalProps {
   isOpen: boolean;

@@ -3,7 +3,7 @@
 import React from "react";
 import { useI18n } from "@/contexts/I18nContext";
 
-import "./comment.css";
+import "@/styles/comment.css";
 import "@/styles/quill-editor.css";
 import CommentItem from "./CommentItem";
 import CommentQuote from "./CommentQuote";

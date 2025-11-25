@@ -1359,45 +1359,6 @@ a{
   margin: 0;
 }
 
-/* 质押按钮 - 建议迁移到 .btn.btn-pledge */
-.stake_button {
-  display: flex;
-  align-items: center;
-  background: #1a1d23;
-  border: 1px solid #00CC9B;
-  border-radius: 6px;
-  width: 100%;
-  color: #00CC9B;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  height: 32px;
-  line-height: 32px;
-  margin-bottom: 24px;
-  text-align: center;
-  justify-content: center;
-  padding: 0 16px;
-}
-
-.stake_button img {
-  margin-right: 8px;
-}
-
-.stake_button:hover:not(:disabled) {
-  background: #1a1d23;
-  color: #00E6B3;
-  border-color: #00E6B3;
-}
-
-.stake_button:disabled {
-  background: #1a1d23;
-  color: #006B5A;
-  border-color: #006B5A;
-  cursor: not-allowed;
-  opacity: 1;
-}
-
 
 /* 待处理部分 */
 .pending_section {

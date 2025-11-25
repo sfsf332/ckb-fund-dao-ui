@@ -3,7 +3,7 @@
 import React from "react";
 // import { MdOutlineDelete } from "react-icons/md";
 
-import "./comment.css";
+import "@/styles/comment.css";
 import { CommentReplyProps } from "@/types/comment";
 import Avatar from "@/components/Avatar";
 import { getUserDisplayNameFromInfo } from "@/utils/userDisplayUtils";

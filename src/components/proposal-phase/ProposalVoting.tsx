@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { ProposalVotingProps, VoteOption, VotingStatus } from '../../types/voting';
 import { formatNumber } from '../../utils/proposalUtils';
 import { useI18n } from '@/contexts/I18nContext';
-import './voting.css';
+import '@/styles/voting.css';
 import { 
 
   IoCheckmarkCircleOutline

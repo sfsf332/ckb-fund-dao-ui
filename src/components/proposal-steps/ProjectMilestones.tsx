@@ -188,7 +188,6 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
                               }
                               style={{
                                 height: "200px",
-                                marginBottom: "20px",
                               }}
                             />
                           </div>

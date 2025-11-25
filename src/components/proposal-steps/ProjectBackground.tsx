@@ -45,7 +45,7 @@ const ProjectBackground: React.FC<ProjectBackgroundProps> = ({
                 placeholder={messages.proposalSteps.projectBackground.placeholder}
                 style={{
                   height: "300px",
-                  marginBottom: "10px",
+                 
                 }}
               />
             </div>

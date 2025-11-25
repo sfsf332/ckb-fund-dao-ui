@@ -325,7 +325,7 @@
       "refresh": "Refresh"
     },
     "exportDIDInfo": {
-      "title": "Web5 DID Information",
+      "title": "Web5 DID Info",
       "passwordTitle1": "To ensure security",
       "passwordTitle2": "Please set your password before exporting",
       "passwordPlaceholder": "Support 8-digit password composed of numbers or letters",

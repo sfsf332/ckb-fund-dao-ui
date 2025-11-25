@@ -9,7 +9,7 @@ import { MdCloudUpload, MdCheckCircle, MdError } from "react-icons/md";
 import { decryptData } from "@/lib/encrypt";
 import { Html5Qrcode } from "html5-qrcode";
 import { ccc } from "@ckb-ccc/connector-react";
-import "./ImportDidModal.css";
+import "@/styles/ImportDidModal.css";
 
 enum ImportStep {
   UPLOAD = "upload",

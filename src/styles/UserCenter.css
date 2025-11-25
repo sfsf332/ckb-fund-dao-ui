@@ -576,6 +576,8 @@
   justify-content: center;
   gap: 8px;
   height: 38px;
+  overflow: hidden;
+  box-sizing:border-box;
   font-size: 14px;
   font-weight: 500;
   transition: all 0.2s;

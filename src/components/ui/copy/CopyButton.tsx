@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import './copy.css';
+import '@/styles/copy.css';
 import { FaCopy } from 'react-icons/fa';
 import { handleCopy } from '@/utils/common';
 import { useTranslation } from '@/utils/i18n';

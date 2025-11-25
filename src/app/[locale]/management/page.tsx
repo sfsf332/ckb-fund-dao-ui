@@ -3,7 +3,6 @@
 import Image from "next/image";
 import "react-tooltip/dist/react-tooltip.css";
 import Link from "next/link";
-import { getAvatarByDid } from "@/utils/avatarUtils";
 import { useTranslation } from "@/utils/i18n";
 
 export default function Management() {
@@ -22,7 +21,8 @@ export default function Management() {
           </p>
           <div className="team_list">
             <div className="team_item">
-            <Image src="/avatar/manager-0.svg" alt="avatar" width={40} height={40} />              <div className="name">
+              <Image src="/avatar/manager-0.svg" alt="avatar" width={40} height={40} />
+              <div className="name">
                 <h3>Alice</h3>
                 <h4>{t("managementPage.daoManager")}</h4>
                 <p>did:ckb:ckt1qvqr...7q2h</p>
@@ -49,7 +49,8 @@ export default function Management() {
               </div>
             </div>
             <div className="team_item">
-            <Image src="/avatar/manager-2.svg" alt="avatar" width={40} height={40} />              <div className="name">
+              <Image src="/avatar/manager-2.svg" alt="avatar" width={40} height={40} />
+              <div className="name">
                 <h3>Carol</h3>
                 <h4>{t("managementPage.daoManager")}</h4>
                 <p>did:ckb:ckt1qvqr...7q2h</p>

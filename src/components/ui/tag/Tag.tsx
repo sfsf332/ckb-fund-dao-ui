@@ -2,7 +2,7 @@
 "use client";
 
 import React from "react";
-import "./Tag.css";
+import "@/styles/Tag.css";
 import { ProposalStatus, getStatusTagClass } from "@/utils/proposalUtils";
 import { useTranslation } from "@/utils/i18n";
 

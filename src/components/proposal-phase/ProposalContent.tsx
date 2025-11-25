@@ -101,8 +101,7 @@ export default function ProposalContent({
   ];
 
   return (
-    <div className="proposal-content-left">
-      <div className="proposal-main-content">
+      <>
         {/* 提案头部信息 */}
         <div className="proposal-header-card">
           <div className="proposal-title-section">
@@ -290,8 +289,8 @@ export default function ProposalContent({
             <FaShare /> {messages.proposalDetail.share}
           </a>
         </div>
-      </div>
-    </div>
+      </>
+    
   );
 }
 

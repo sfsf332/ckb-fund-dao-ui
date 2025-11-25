@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { MilestoneVotingProps, MilestoneVoteOption, MilestoneVotingStatus } from '../../types/milestoneVoting';
 import { useI18n } from '@/contexts/I18nContext';
-import './milestoneVoting.css';
+import '@/styles/milestoneVoting.css';
 
 export default function MilestoneVoting({ 
   votingInfo, 

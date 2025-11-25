@@ -333,42 +333,6 @@
   margin-bottom: 12px;
 }
 
-.comment-reply-editor .quill-wrapper {
-  background: #262A33;
-  border-radius: 8px;
-  border: 1px solid #4C525C;
-  overflow: hidden;
-}
-
-.comment-reply-editor .quill-wrapper .ql-toolbar {
-  padding: 8px 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid #4C525C;
-  background: #262A33;
-}
-
-.comment-reply-editor .quill-wrapper .ql-container {
-  background: #262A33;
-  border: none;
-  font-family: inherit;
-}
-
-.comment-reply-editor .quill-wrapper .ql-editor {
-  color: #ffffff;
-  font-size: 14px;
-  line-height: 1.6;
-  padding: 12px;
-  min-height: 80px;
-  background: #262A33;
-}
-
-.comment-reply-editor .quill-wrapper .ql-editor.ql-blank::before {
-  color: #6b7280;
-  font-style: normal;
-}
-
 .comment-reply-textarea {
   width: 100%;
   min-height: 80px;

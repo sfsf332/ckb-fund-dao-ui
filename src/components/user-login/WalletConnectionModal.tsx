@@ -7,7 +7,7 @@ import useUserInfoStore from "@/store/userInfo";
 import { MdCloudUpload, MdError } from "react-icons/md";
 import { ccc } from "@ckb-ccc/connector-react";
 import storage from "@/lib/storage";
-import "./ImportDidModal.css";
+import "@/styles/ImportDidModal.css";
 
 export default function WalletConnectionModal() {
   const { t } = useTranslation();

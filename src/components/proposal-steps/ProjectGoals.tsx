@@ -44,8 +44,7 @@ const ProjectGoals: React.FC<ProjectGoalsProps> = ({
                 formats={quillFormats}
                 placeholder={messages.proposalSteps.projectGoals.placeholder}
                 style={{
-                  height: "300px",
-                  marginBottom: "10px",
+                  height: "300px"
                 }}
               />
             </div>

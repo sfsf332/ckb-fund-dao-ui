@@ -3,7 +3,7 @@
 import { TimelineEventStatus, ProposalTimelineProps } from '../../types/timeline';
 import { formatDate } from '../../utils/proposalUtils';
 import { useI18n } from '@/contexts/I18nContext';
-import './timeline.css';
+import '@/styles/timeline.css';
 
 export default function ProposalTimeline({ events, className = '' }: ProposalTimelineProps) {
   const { messages } = useI18n();

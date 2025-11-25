@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { MdCheck } from "react-icons/md";
+import { MdCheck, MdEdit } from "react-icons/md";
 import { FaDiscord,FaTelegramPlane   } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import useUserInfoStore from "@/store/userInfo";
@@ -109,13 +109,15 @@ export default function UserProfileCard({ className = '' }: UserProfileCardProps
     <div ref={cardRef} className={`user-profile-card ${className} user-profile-card-disabled`}>
       <div className="disabled-overlay"></div>
       <div className="user-info">
-        
+        <div className="user-avatar">
           <Avatar
             did={userInfo?.did}
-            size={60}
+            size={64}
           />
-       
-        
+          <div className="avatar-edit-icon">
+            <MdEdit />
+          </div>
+        </div>
         <div className="user-name-section">
           {isEditing ? (
             <div className="user-name-edit-container">

@@ -44,8 +44,7 @@ const TeamIntroduction: React.FC<TeamIntroductionProps> = ({
                 formats={quillFormats}
                 placeholder={messages.proposalSteps.teamIntroduction.placeholder}
                 style={{
-                  height: "300px",
-                  marginBottom: "10px",
+                  height: "300px"
                 }}
               />
             </div>

@@ -13,7 +13,7 @@ import useUserInfoStore from "@/store/userInfo";
 import Avatar from "./Avatar";
 import { IoMenu, IoClose } from "react-icons/io5";
 import isMobile from "is-mobile";
-import "./user-login/LoginModal.css";
+import "@/styles/LoginModal.css";
 import { getUserDisplayNameFromStore } from "@/utils/userDisplayUtils";
 
 export default function Header() {
@@ -30,10 +30,22 @@ export default function Header() {
     // 确保只在客户端执行
     if (typeof window === 'undefined') return;
 
-    // 检测设备类型或窗口宽度
-    const isMobileDeviceType = isMobile();
-    const isSmallScreen = window.innerWidth <= 1024;
-    setIsMobileDevice(isMobileDeviceType || isSmallScreen);
+    const checkMobile = () => {
+      // 检测设备类型或窗口宽度
+      const isMobileDeviceType = isMobile();
+      const isSmallScreen = window.innerWidth <= 1024;
+      setIsMobileDevice(isMobileDeviceType || isSmallScreen);
+    };
+
+    // 初始检测
+    checkMobile();
+
+    // 监听窗口大小变化
+    window.addEventListener("resize", checkMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+    };
   }, []);
 
   // 点击菜单项时关闭移动端菜单

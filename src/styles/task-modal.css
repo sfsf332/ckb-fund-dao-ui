@@ -220,36 +220,6 @@
   pointer-events: none;
 }
 
-
-.ql-editor a:hover {
-  color: #00b894 !important;
-  text-decoration: none !important;
-}
-
-.ql-editor strong {
-  font-weight: 600 !important;
-  color: #fff !important;
-}
-
-.ql-editor em {
-  font-style: italic !important;
-  color: #fff !important;
-}
-
-.ql-editor img {
-  max-width: 100% !important;
-  height: auto !important;
-  border-radius: 6px !important;
-  margin: 8px 0 !important;
-  cursor: pointer !important;
-  transition: opacity 0.2s ease !important;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3) !important;
-}
-
-.ql-editor img:hover {
-  opacity: 0.9 !important;
-}
-
 /* Modal底部按钮 */
 .modal-footer {
   padding: 16px 20px;

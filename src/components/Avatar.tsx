@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { getAvatarByDid, getDefaultAvatar } from '@/utils/avatarUtils';
-import './Avatar.css';
+import '@/styles/Avatar.css';
 
 interface AvatarProps {
   size?: number;

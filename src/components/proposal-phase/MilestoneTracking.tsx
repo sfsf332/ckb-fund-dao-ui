@@ -6,7 +6,7 @@ import { MilestoneVoteOption } from '../../types/milestoneVoting';
 import { useI18n } from '@/contexts/I18nContext';
 import useUserInfoStore from '@/store/userInfo';
 import { prepareVote } from '@/server/proposal';
-import './milestone.css';
+import '@/styles/milestone.css';
 
 export default function MilestoneTracking({ 
   milestones, 

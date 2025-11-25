@@ -1,10 +1,11 @@
 import Image from "next/image";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import useUserInfoStore from "@/store/userInfo";
-import Tag from "@/components/ui/tag/Tag";
 import { useI18n } from "@/contexts/I18nContext";
 import { useTranslation } from "@/utils/i18n";
 import { useVoteWeight } from "@/hooks/useVoteWeight";
+import { AiOutlineExport } from "react-icons/ai";
+import "@/styles/UserCenter.css";
 
 export default function UserGovernance() {
   const { userInfo } = useUserInfoStore();
@@ -27,10 +28,22 @@ export default function UserGovernance() {
           {isLoadingVoteWeight ? t("wallet.loading") : formatVoteWeight(voteWeight)} CKB
         </h5>
       </div>
-      <button className="stake_button">
-        <Image src="/nervos-logo-s.svg" alt="nervos" width={14} height={14} />
+      <a 
+          href="https://www.nervdao.com/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="action-button stake-button"
+        >
+        
+          {t("wallet.stakeCKB")}
+          <AiOutlineExport />
+           
+        </a>
+      {/* <button className="stake_button">
         {t("wallet.stakeCKB")}
-      </button>
+        &nbsp;&nbsp;<AiOutlineExport />
+
+      </button> */}
       {/* <div className="pending_section">
         <h4>{messages.userGovernance.pending}</h4>
         <div className="pending_item">

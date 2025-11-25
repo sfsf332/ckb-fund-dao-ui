@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from 'next/navigation';
 import { useTranslation } from "../../../../utils/i18n";
 import { useI18n } from "@/contexts/I18nContext";
-import "../proposal.css";
+import "@/styles/proposal-create.css";
 import "@/styles/quill-editor.css";
 import { ProposalContent, ProposalComments, ProposalSidebar } from "@/components/proposal-phase";
 import { useProposalDetail } from "@/hooks/useProposalDetail";
@@ -143,7 +143,7 @@ export default function ProposalDetail() {
 
           <div className="proposal-content-wrapper">
             {/* 左侧主要内容 */}
-            <div>
+            <div className="proposal-main-content">
               <ProposalContent
                 proposal={proposal}
                 commentsCount={apiComments?.length || 0}

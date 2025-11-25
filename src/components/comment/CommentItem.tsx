@@ -10,7 +10,7 @@ import { RingLoader } from "react-spinners";
 import { useI18n } from "@/contexts/I18nContext";
 // import dynamic from "next/dynamic";
 
-import "./comment.css";
+import "@/styles/comment.css";
 import { CommentItemProps } from "@/types/comment";
 import CommentReply from "./CommentReply";
 import Avatar from "@/components/Avatar";

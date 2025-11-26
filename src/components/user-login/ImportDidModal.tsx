@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import Modal from "@/components/ui/modal/Modal";
 import { useTranslation } from "@/utils/i18n";
 import useUserInfoStore from "@/store/userInfo";
@@ -180,7 +181,7 @@ export default function ImportDidModal({
       };
 
       await importUserDid(tokenData);
-      
+      debugger;
       // 进入连接钱包步骤
       setCurrentStep(ImportStep.CONNECT_WALLET);
     } catch (err: unknown) {
@@ -362,11 +363,7 @@ export default function ImportDidModal({
                 style={{ display: "none" }}
               />
               <div className="import-did-icon-large">
-                <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M16 8C13.7909 8 12 9.79086 12 12V52C12 54.2091 13.7909 56 16 56H48C50.2091 56 52 54.2091 52 52V20L40 8H16Z" fill="#00CC9B" fillOpacity="0.2"/>
-                  <path d="M40 8V20H52" stroke="#00CC9B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M32 32V44M24 36H40" stroke="#00CC9B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+                <Image src="/icon/upload.svg" alt="upload" width={60} height={60} />
               </div>
               <p className="import-did-instruction">
                 {t("importDid.clickToSelect")}
@@ -388,7 +385,7 @@ export default function ImportDidModal({
               <div className="import-did-password-input-container">
                 <input
                   type="password"
-                  className="import-did-password-input"
+                  className={`import-did-password-input ${error ? 'import-did-password-input-error' : ''}`}
                   placeholder={t("importDid.passwordPlaceholder")}
                   value={password}
                   onChange={handlePasswordChange}
@@ -425,7 +422,7 @@ export default function ImportDidModal({
           <div className="import-did-step">
             <div className="import-did-verifying">
               <div className="import-did-icon-large">
-                <MdCloudUpload />
+                <Image src="/icon/import.svg" alt="import" width={100} height={100} />
               </div>
               <p className="import-did-verifying-text">
                 {t("importDid.verifying")}
@@ -445,7 +442,7 @@ export default function ImportDidModal({
                 {t("importDid.connectWalletHint")}
               </p>
               {error && <div className="import-did-error">{error}</div>}
-              <div className="import-did-buttons" style={{ marginTop: '24px' }}>
+              <div className="import-did-buttons">
                 {!isConnected ? (
                   <button
                     className="import-did-button import-did-button-primary"
@@ -489,7 +486,7 @@ export default function ImportDidModal({
       >
         <div className="import-did-success-content">
           <div className="import-did-success-icon">
-            <MdCheckCircle />
+            <Image src="/icon/success.svg" alt="success" width={100} height={100} />
           </div>
           <p className="import-did-success-title">
             {t("importDid.verificationSuccess")}

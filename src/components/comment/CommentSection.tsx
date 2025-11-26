@@ -46,7 +46,7 @@ export default function CommentSection({
      <div className="comment-section">
         <div className="comment-header">
           <h3 className="comment-title">
-            {loading ? messages.comment.loading : error ? `${messages.comment.loadFailed} ${error}` : `${comments.length}${messages.comment.commentsCount}`}
+            {loading ? messages.comment.loading : error ? `${messages.comment.loadFailed} ${error}` : `${messages.comment.commentsCount}(${comments.length})`}
           </h3>
         </div>
         <div className="comment-content">

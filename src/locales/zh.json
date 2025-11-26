@@ -443,7 +443,7 @@
     "milestone": "里程碑"
   },
   "loginStep1": {
-    "createWeb5Account": "创建您的个人Web5 DID账号,获得:",
+    "createWeb5Account": "创建您的个人Web5 DID账号，获得：",
     "benefit1": "存储于CKB链的数据档案库",
     "benefit2": "发布提案和参与回帖讨论的权限",
     "benefit3": "专属域名(如alice.ckb.xyz)",

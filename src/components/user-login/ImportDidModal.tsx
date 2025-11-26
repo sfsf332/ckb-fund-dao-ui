@@ -6,7 +6,7 @@ import Modal from "@/components/ui/modal/Modal";
 import { useTranslation } from "@/utils/i18n";
 import useUserInfoStore from "@/store/userInfo";
 import { TokenStorageType } from "@/lib/storage";
-import { MdCloudUpload, MdCheckCircle, MdError } from "react-icons/md";
+import { MdCloudUpload, MdError } from "react-icons/md";
 import { decryptData } from "@/lib/encrypt";
 import { Html5Qrcode } from "html5-qrcode";
 import { ccc } from "@ckb-ccc/connector-react";
@@ -121,7 +121,7 @@ export default function ImportDidModal({
           setCurrentStep(ImportStep.ENTER_PASSWORD);
         } catch (scanErr: unknown) {
           console.error('扫描二维码失败:', scanErr);
-          setError(t("importDid.qrCodeScanFailed") || "无法识别二维码，请确保图片清晰且包含有效的二维码");
+          setError(t("importDid.qrCodeScanFailed"));
         } finally {
           setIsVerifying(false);
         }
@@ -146,7 +146,7 @@ export default function ImportDidModal({
   const handleVerify = async () => {
     const passwordRegex = /^[A-Za-z0-9]{8}$/;
     if (!passwordRegex.test(password)) {
-      setError(t("importDid.passwordLengthError") || "密码必须为8位数字或字母");
+      setError(t("importDid.passwordLengthError"));
       return;
     }
 
@@ -181,7 +181,7 @@ export default function ImportDidModal({
       };
 
       await importUserDid(tokenData);
-      debugger;
+      
       // 进入连接钱包步骤
       setCurrentStep(ImportStep.CONNECT_WALLET);
     } catch (err: unknown) {
@@ -265,7 +265,7 @@ export default function ImportDidModal({
       await open();
     } catch (err) {
       console.error("连接钱包失败:", err);
-      setError(t("importDid.walletConnectFailed") || "连接钱包失败");
+      setError(t("importDid.walletConnectFailed"));
       setIsConnecting(false);
     }
   };
@@ -296,7 +296,7 @@ export default function ImportDidModal({
           }
         } catch (err) {
           console.error("获取钱包地址失败:", err);
-          setError(t("importDid.getWalletAddressFailed") || "获取钱包地址失败");
+          setError(t("importDid.getWalletAddressFailed"));
           setIsConnecting(false);
         }
       }
@@ -477,7 +477,7 @@ export default function ImportDidModal({
         showCloseButton={false}
         buttons={[
           {
-            text: t("importDid.successConfirm") || "确认",
+            text: t("importDid.successConfirm"),
             onClick: handleSuccessConfirm,
             variant: 'primary' as const,
           },
@@ -505,7 +505,7 @@ export default function ImportDidModal({
         showCloseButton={false}
         buttons={[
           {
-            text: t("importDid.walletMismatchConfirm") || "确认",
+            text: t("importDid.walletMismatchConfirm"),
             onClick: handleWalletMismatchConfirm,
             variant: 'primary' as const,
           },

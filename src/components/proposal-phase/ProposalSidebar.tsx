@@ -75,6 +75,9 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
   const [showVoteSuccessModal, setShowVoteSuccessModal] = useState(false);
   const [showVoteErrorModal, setShowVoteErrorModal] = useState(false);
   const [voteErrorMessage, setVoteErrorMessage] = useState<string>('');
+  
+  // 投票进行中状态，用于锁定操作区域
+  const [isVoting, setIsVoting] = useState(false);
 
   // 使用 useMemo 稳定 voteMetaId 的值，避免因 proposal 对象引用变化导致的重复调用
   const voteMetaId = useMemo(() => {
@@ -178,69 +181,27 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
     });
   }, [voteMetaId, messages.voting?.errors?.getVoteDetailFailed]);
 
-  // 使用 ref 跟踪上一次的 voteMetaId 和 did，避免重复调用
-  const lastVoteStatusRef = useRef<{ voteMetaId: number | null; did: string | null }>({
-    voteMetaId: null,
-    did: null,
-  });
-  
   // 单独处理投票状态API请求（仅在 did 或 voteMetaId 变化时请求）
   useEffect(() => {
-    if (!proposal || !proposal.vote_meta?.id) {
-      console.log('缺少 proposal 或 vote_meta.id');
+    if (!voteMetaId) {
       return;
     }
     
     if (!userInfo?.did) {
-      console.log('用户未登录，userInfo?.did 不存在');
       // 用户未登录时，设置为空对象（可以投票，但需要先登录）
       setUserVoteInfo({});
       return;
     }
     
-    const voteMetaId = Number(proposal.vote_meta.id);
-    if (isNaN(voteMetaId)) {
-      console.log('voteMetaId 无效:', proposal.vote_meta.id);
-      return;
-    }
-    
-    // 如果 voteMetaId 和 did 都没有变化，跳过请求
-    if (
-      lastVoteStatusRef.current.voteMetaId === voteMetaId &&
-      lastVoteStatusRef.current.did === userInfo.did
-    ) {
-      console.log('voteMetaId 和 did 都没有变化，跳过请求');
-      return;
-    }
-    
-    console.log('开始请求投票状态，voteMetaId:', voteMetaId, 'did:', userInfo.did);
-    
-    // 更新 ref
-    lastVoteStatusRef.current = {
-      voteMetaId,
-      did: userInfo.did,
-    };
-    
-    let isCancelled = false;
-    
     (getVoteStatus({
       did: userInfo.did,
       vote_meta_id: voteMetaId,
     }) as unknown as Promise<VoteRecord[]>).then((voteStatusList: VoteRecord[]) => {
-      // 如果组件已卸载或参数已变化，忽略结果
-      if (isCancelled) {
-        console.log('请求已取消');
-        return;
-      }
-      
-      console.log('收到投票状态响应:', voteStatusList);
-      
       // 先根据 vote_meta_id 筛选出匹配的记录，然后取最新的投票记录（按 created 时间排序，最新的在前）
       const latestVoteRecord = voteStatusList && voteStatusList.length > 0 ? voteStatusList[0] : null;
       
       // 如果没有投票记录，设置为空对象（可以投票）
       if (!latestVoteRecord) {
-        console.log('没有投票记录，设置 userVoteInfo 为空对象');
         setUserVoteInfo({});
         return;
       }
@@ -253,26 +214,19 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
       }
       // 注意：统计信息（total_votes、approve_votes、reject_votes）应该从 VoteDetailResponse 获取
       // 这里只更新用户的投票状态
-      const newUserVoteInfo = {
+      // voteState 只在用户自己投票后设置，不从 API 获取的状态中设置
+      const newUserVoteInfo: UserVoteInfo = {
         userVote: userVote,
         userVoteIndex: latestVoteRecord.candidates_index,
-        voteState: latestVoteRecord.state,
+        // 不从 API 获取的状态中设置 voteState，isChainPending 只在用户投票后才会出现
       };
-      console.log('设置 userVoteInfo:', newUserVoteInfo);
       setUserVoteInfo(newUserVoteInfo);
     })
     .catch((error: unknown) => {
-      if (isCancelled) return;
       const errorMsg = messages.voting?.errors?.getVoteStatusFailed || "获取投票状态失败";
       console.error(errorMsg + ":", error);
     });
-    
-    // 清理函数：当参数变化时，标记请求已取消
-    return () => {
-      isCancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [proposal?.vote_meta?.id, userInfo?.did]);
+  }, [voteMetaId, userInfo?.did, messages.voting?.errors?.getVoteStatusFailed]);
 
   // 处理投票
   const handleVoteSubmit = async (option: VoteOption) => {
@@ -287,6 +241,9 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
       openSigner();
       return;
     }
+    
+    // 设置投票进行中状态，锁定操作区域
+    setIsVoting(true);
     
     try {
       const voteMetaId = proposal?.vote_meta?.id || 2;
@@ -307,6 +264,7 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
         const errorMsg = result.error || messages.modal.voteModal.voteFailedMessage;
         setVoteErrorMessage(errorMsg);
         setShowVoteErrorModal(true);
+        setIsVoting(false);
         return;
       }
       
@@ -378,10 +336,11 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
               
               // 注意：统计信息（total_votes、approve_votes、reject_votes）应该从 VoteDetailResponse 获取
               // 这里只更新用户的投票状态
+              // 查询成功后清除 voteState，表示交易已上链
               setUserVoteInfo({
                 userVote: userVoteFromStatus,
                 userVoteIndex: latestVoteRecord?.candidates_index,
-                voteState: latestVoteRecord?.state,
+                // 不设置 voteState，清除上链中状态
               });
             } catch (statusError) {
               const errorMsg = messages.voting?.errors?.queryVoteStatusFailed || "查询投票状态失败";
@@ -395,12 +354,26 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
         
         const candidatesIndex = option === VoteOption.APPROVE ? 1 : 2;
         
-        // 更新用户投票信息
+        // 更新用户投票信息，设置 voteState: 0 表示正在上链中
         setUserVoteInfo({
           userVote: option,
           userVoteIndex: candidatesIndex,
           voteState: 0,
         });
+        
+        // 设置超时清除 voteState，防止永久锁定（30秒后自动清除）
+        // 如果在这之前查询成功，voteState 会被清除
+        setTimeout(() => {
+          setUserVoteInfo(prev => {
+            if (prev && prev.voteState === 0) {
+              // 清除 voteState，保留其他信息
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              const { voteState, ...rest } = prev;
+              return rest;
+            }
+            return prev;
+          });
+        }, 30000);
         
         // 更新投票统计信息
         setVotingInfo(prev => prev ? {
@@ -422,10 +395,12 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
         } : null);
         
         setShowVoteSuccessModal(true);
+        setIsVoting(false);
       } else {
         const errorMsg = txResult.error || messages.modal.voteModal.voteFailedMessage;
         setVoteErrorMessage(errorMsg);
         setShowVoteErrorModal(true);
+        setIsVoting(false);
       }
     } catch (error) {
       const errorLogMsg = messages.voting?.errors?.voteFailed || '投票失败';
@@ -440,6 +415,7 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
       }
       setVoteErrorMessage(errorMsg);
       setShowVoteErrorModal(true);
+      setIsVoting(false);
     }
   };
 
@@ -451,11 +427,12 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
     <>
       <div className="proposal-sidebar">
         {/* 投票组件 - 仅在投票阶段显示 */}
-        {votingInfo && (
+        {votingInfo &&userVoteInfo&& (
           <ProposalVoting 
             votingInfo={votingInfo}
             userVoteInfo={userVoteInfo ?? undefined}
             onVote={handleVoteSubmit}
+            isVoting={isVoting}
           />
         )}
         

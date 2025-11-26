@@ -16,6 +16,7 @@ export default function ProposalVoting({
   userVoteInfo,
   onVote,
   className = "",
+  isVoting = false,
 }: ProposalVotingProps) {
   const { messages } = useI18n();
   const [timeLeft, setTimeLeft] = useState("");
@@ -82,6 +83,8 @@ export default function ProposalVoting({
     if (votingInfo.status === VotingStatus.ENDED) return;
     // 如果投票正在上链中，不允许再次投票
     if (isChainPending) return;
+    // 如果正在投票中，不允许操作
+    if (isVoting) return;
 
     // 如果是重新投票，隐藏投票选项
     if (showRevoteOptions) {
@@ -112,12 +115,37 @@ export default function ProposalVoting({
   const approvalRateMet = approveRate >= votingInfo.conditions.minApprovalRate;
 
   // 检查用户是否已投票（且不在上链中）
-  const hasVoted = userVote !== undefined && !isChainPending;
+  const hasVoted = userVote !== undefined;
+  
   // 如果用户点击了重新投票，则显示投票选项
   const shouldShowVoteButtons = !hasVoted || showRevoteOptions;
 
   return (
-    <div className={`proposal-voting-card ${className}`}>
+    <div className={`proposal-voting-card ${className}`} style={{ position: 'relative' }}>
+      {/* 投票进行中遮罩层 */}
+      {isVoting && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 1000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '8px',
+            pointerEvents: 'all',
+            cursor: 'not-allowed',
+          }}
+        >
+          <div style={{ color: '#fff', fontSize: '16px', fontWeight: '500' }}>
+            {(messages.proposalPhase.proposalVoting as { voting?: string })?.voting || '投票处理中...'}
+          </div>
+        </div>
+      )}
       {/* 标题和倒计时 */}
       <div className="voting-header">
         <h3 className="voting-title">
@@ -177,7 +205,7 @@ export default function ProposalVoting({
       </div>
 
       {/* 已投票状态：投票成功信息和已投票计数 */}
-      {hasVoted && !showRevoteOptions && (
+      {hasVoted && userVote !== undefined && !showRevoteOptions && (
         <div className="voting-success-section">
           <div className="vote-success-message">
             <span className="success-text">
@@ -214,6 +242,7 @@ export default function ProposalVoting({
       )}
       {/* 已投票状态：重新投票按钮 */}
       {hasVoted &&
+        userVote !== undefined &&
         votingInfo.status !== VotingStatus.ENDED &&
         !showRevoteOptions && (
           <div className="voting-revote-section">
@@ -223,6 +252,7 @@ export default function ProposalVoting({
                 // 显示投票选项，允许用户重新投票
                 setShowRevoteOptions(true);
               }}
+              disabled={isVoting}
             >
               {(messages.proposalPhase.proposalVoting as { revote?: string })
                 .revote || "重新投票"}
@@ -236,20 +266,20 @@ export default function ProposalVoting({
           <div className="voting-buttons-row">
             <button
               className={`vote-button approve ${
-                userVote === VoteOption.APPROVE ? "selected" : ""
+                userVote !== undefined && userVote === VoteOption.APPROVE ? "selected" : ""
               }`}
               onClick={() => handleVote(VoteOption.APPROVE)}
-              disabled={isChainPending}
+              disabled={isChainPending || isVoting}
             >
               <img src="/icon/agree.svg" alt="agree" className="vote-icon" />
               {messages.proposalPhase.proposalVoting.approve}
             </button>
             <button
               className={`vote-button reject ${
-                userVote === VoteOption.REJECT ? "selected" : ""
+                userVote !== undefined && userVote === VoteOption.REJECT ? "selected" : ""
               }`}
               onClick={() => handleVote(VoteOption.REJECT)}
-              disabled={isChainPending}
+              disabled={isChainPending || isVoting}
             >
               <img
                 src="/icon/against.svg"
@@ -259,13 +289,15 @@ export default function ProposalVoting({
               {messages.proposalPhase.proposalVoting.reject}
             </button>
           </div>
-          {isChainPending && (
+          {(isChainPending || isVoting) && (
             <div className="chain-pending-message">
-              {(
-                messages.proposalPhase.proposalVoting as {
-                  chainPending?: string;
-                }
-              ).chainPending || "投票结果上链中"}
+              {isVoting 
+                ? (messages.proposalPhase.proposalVoting as { voting?: string })?.voting || "投票处理中..."
+                : (
+                  messages.proposalPhase.proposalVoting as {
+                    chainPending?: string;
+                  }
+                ).chainPending || "投票结果上链中"}
             </div>
           )}
         </div>

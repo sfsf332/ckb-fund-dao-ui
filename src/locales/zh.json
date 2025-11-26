@@ -605,11 +605,13 @@
     "teamIntroduction": "团队介绍",
     "projectBudget": "项目预算",
     "milestones": "里程碑",
+    "milestone": "里程碑",
     "budgetAmount": "预算金额 (CKB):",
     "notFilled": "未填写",
     "currentMilestone": "当前里程碑:",
     "progress": "进度:",
     "noMilestoneInfo": "暂无里程碑信息",
+    "deliveryTime": "交付时间",
     "liking": "点赞中...",
     "share": "分享",
     "proposalTypes": {
@@ -669,6 +671,7 @@
       "reject": "反对",
       "myVotingPower": "我的投票权:",
       "chainPending": "投票结果上链中",
+      "voting": "投票处理中...",
       "voteSuccess": "投票成功！",
       "revote": "重新投票",
       "votedApprove": "已投赞成",
@@ -964,7 +967,18 @@
       "submitProposalFailed": "提交提案失败:",
       "saveDraftFailed": "保存草稿失败:",
       "loadDraftFailed": "加载草稿失败:",
-      "deleteDraftFailed": "删除草稿失败:"
+      "deleteDraftFailed": "删除草稿失败:",
+      "proposalTypeRequired": "请选择提案类型",
+      "titleRequired": "请输入提案标题",
+      "releaseDateRequired": "请选择发布日期",
+      "backgroundRequired": "请填写项目背景",
+      "goalsRequired": "请填写项目目标",
+      "teamRequired": "请填写团队介绍",
+      "budgetRequired": "请输入项目预算",
+      "milestonesRequired": "请至少添加一个里程碑",
+      "milestoneTitleRequired": "请填写里程碑标题",
+      "milestoneDateRequired": "请选择里程碑预计完成日期",
+      "milestoneDescriptionRequired": "请填写里程碑详细描述"
     }
   }
 }

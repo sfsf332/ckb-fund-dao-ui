@@ -177,7 +177,7 @@
 }
 
 .step-content {
-  padding: 24px;
+  padding: 12px;
 }
 
 /* ============================================
@@ -1071,6 +1071,67 @@
   font-size: 13px;
 }
 
+.milestone-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.milestone-list-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #8A949E;
+  font-size: 14px;
+}
+
+.milestone-card {
+  background-color:#7597B91A;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.milestone-card-title {
+  color: #00CC9B;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  line-height: 1.4;
+}
+
+.milestone-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.milestone-info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-size: 14px;
+}
+
+.milestone-info-label {
+  color: #8A949E;
+  font-weight: 500;
+}
+
+.milestone-info-value {
+  color: #fff;
+}
+
+.milestone-card-description {
+  margin-top: 16px;
+}
+
+.milestone-card-description .proposal-html-content {
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
 .preview-modal-footer {
   padding: 20px 24px;
   border-top: 1px solid #4C525C;
@@ -1542,7 +1603,7 @@ html {
   }
   
   .step-content {
-    padding: 20px;
+    padding: 10px 0;
   }
   
   .proposal-field {

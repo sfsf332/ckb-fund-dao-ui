@@ -566,11 +566,13 @@
     "teamIntroduction": "Team Introduction",
     "projectBudget": "Project Budget",
     "milestones": "Milestones",
+    "milestone": "Milestone",
     "budgetAmount": "Budget Amount (CKB):",
     "notFilled": "Not Filled",
     "currentMilestone": "Current Milestone:",
     "progress": "Progress:",
     "noMilestoneInfo": "No Milestone Information",
+    "deliveryTime": "Delivery Time",
     "liking": "Liking...",
     "share": "Share",
     "proposalTypes": {
@@ -630,6 +632,7 @@
       "reject": "Reject",
       "myVotingPower": "My Voting Power:",
       "chainPending": "Vote result is being confirmed on-chain",
+      "voting": "Processing vote...",
       "voteSuccess": "Vote successful!",
       "revote": "Re-vote",
       "votedApprove": "Voted Approve",
@@ -925,7 +928,18 @@
       "submitProposalFailed": "Failed to submit proposal:",
       "saveDraftFailed": "Failed to save draft:",
       "loadDraftFailed": "Failed to load draft:",
-      "deleteDraftFailed": "Failed to delete draft:"
+      "deleteDraftFailed": "Failed to delete draft:",
+      "proposalTypeRequired": "Please select proposal type",
+      "titleRequired": "Please enter proposal title",
+      "releaseDateRequired": "Please select release date",
+      "backgroundRequired": "Please fill in project background",
+      "goalsRequired": "Please fill in project goals",
+      "teamRequired": "Please fill in team introduction",
+      "budgetRequired": "Please enter project budget",
+      "milestonesRequired": "Please add at least one milestone",
+      "milestoneTitleRequired": "Please fill in milestone title",
+      "milestoneDateRequired": "Please select milestone expected completion date",
+      "milestoneDescriptionRequired": "Please fill in milestone detailed description"
     }
   }
 }

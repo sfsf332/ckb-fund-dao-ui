@@ -91,14 +91,14 @@ export default function CreateProposal() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const clearDraft = useCallback(() => {
-    try {
-      localStorage.removeItem(DRAFT_KEY);
-      setLastSaved(null);
-    } catch (error) {
-      console.error(t("proposalCreate.errors.deleteDraftFailed"), error);
-    }
-  }, [t]);
+  // const clearDraft = useCallback(() => {
+  //   try {
+  //     localStorage.removeItem(DRAFT_KEY);
+  //     setLastSaved(null);
+  //   } catch (error) {
+  //     console.error(t("proposalCreate.errors.deleteDraftFailed"), error);
+  //   }
+  // }, [t]);
 
   // 自动保存功能
   useEffect(() => {
@@ -257,13 +257,91 @@ export default function CreateProposal() {
     }
   };
 
+  // 辅助函数：去除 HTML 标签并检查是否有实际内容
+  const hasTextContent = (html: string): boolean => {
+    if (!html) return false;
+    // 去除 HTML 标签
+    const textContent = html.replace(/<[^>]*>/g, '').trim();
+    return textContent.length > 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // 检查用户是否登录
     if (!userInfo?.did) {
+      toast.error(t("proposalCreate.errors.pleaseLoginFirst"));
       setError(t("proposalCreate.errors.pleaseLoginFirst"));
       return;
+    }
+    
+    // 验证表单字段
+    if (!formData.proposalType || formData.proposalType.trim() === "") {
+      toast.error(t("proposalCreate.errors.proposalTypeRequired"));
+      setError(t("proposalCreate.errors.proposalTypeRequired"));
+      return;
+    }
+
+    if (!formData.title || formData.title.trim() === "") {
+      toast.error(t("proposalCreate.errors.titleRequired"));
+      setError(t("proposalCreate.errors.titleRequired"));
+      return;
+    }
+
+    if (!formData.releaseDate || formData.releaseDate.trim() === "") {
+      toast.error(t("proposalCreate.errors.releaseDateRequired"));
+      setError(t("proposalCreate.errors.releaseDateRequired"));
+      return;
+    }
+
+    if (!hasTextContent(formData.background)) {
+      toast.error(t("proposalCreate.errors.backgroundRequired"));
+      setError(t("proposalCreate.errors.backgroundRequired"));
+      return;
+    }
+
+    if (!hasTextContent(formData.goals)) {
+      toast.error(t("proposalCreate.errors.goalsRequired"));
+      setError(t("proposalCreate.errors.goalsRequired"));
+      return;
+    }
+
+    if (!hasTextContent(formData.team)) {
+      toast.error(t("proposalCreate.errors.teamRequired"));
+      setError(t("proposalCreate.errors.teamRequired"));
+      return;
+    }
+
+    if (!formData.budget || formData.budget.trim() === "") {
+      toast.error(t("proposalCreate.errors.budgetRequired"));
+      setError(t("proposalCreate.errors.budgetRequired"));
+      return;
+    }
+
+    if (!formData.milestones || formData.milestones.length === 0) {
+      toast.error(t("proposalCreate.errors.milestonesRequired"));
+      setError(t("proposalCreate.errors.milestonesRequired"));
+      return;
+    }
+
+    // 验证每个里程碑的必填字段
+    for (let i = 0; i < formData.milestones.length; i++) {
+      const milestone = formData.milestones[i];
+      if (!milestone.title || milestone.title.trim() === "") {
+        toast.error(t("proposalCreate.errors.milestoneTitleRequired"));
+        setError(t("proposalCreate.errors.milestoneTitleRequired"));
+        return;
+      }
+      if (!milestone.date || milestone.date.trim() === "") {
+        toast.error(t("proposalCreate.errors.milestoneDateRequired"));
+        setError(t("proposalCreate.errors.milestoneDateRequired"));
+        return;
+      }
+      if (!hasTextContent(milestone.description)) {
+        toast.error(t("proposalCreate.errors.milestoneDescriptionRequired"));
+        setError(t("proposalCreate.errors.milestoneDescriptionRequired"));
+        return;
+      }
     }
     
     setSubmitting(true);
@@ -300,6 +378,7 @@ export default function CreateProposal() {
       
     } catch (err) {
       
+      toast.error(t("proposalCreate.errors.submitFailed"));
       setError(t("proposalCreate.errors.submitFailed"));
       console.error(t("proposalCreate.errors.submitProposalFailed"), err);
     } finally {

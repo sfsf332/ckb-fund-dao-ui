@@ -14,6 +14,7 @@ import { writesPDSOperation } from "@/app/posts/utils";
 import useUserInfoStore from "@/store/userInfo";
 import { ProposalDetailResponse } from "@/server/proposal";
 import { getUserDisplayNameFromInfo } from "@/utils/userDisplayUtils";
+import MilestoneList from "./MilestoneList";
 
 interface ProposalContentProps {
   proposal: ProposalDetailResponse;
@@ -243,16 +244,17 @@ export default function ProposalContent({
                     case 6: // 里程碑
                       return (
                         <div className="form-fields">
-                          <div className="proposal-milestones">
-                            {proposal.record.data.milestones ? (
-                              <div className="milestone-summary">
+                          {proposal.record.data.milestones && proposal.record.data.milestones.length > 0 ? (
+                            <>
+                              {/* <div className="milestone-summary">
                                 <p>{messages.proposalDetail.currentMilestone} {proposal.state-1000} / {proposal.record.data.milestones.length}</p>
-                                <p>{messages.proposalDetail.progress} {(proposal.state-1000)/proposal.record.data.milestones.length*100}%</p>
-                              </div>
-                            ) : (
-                              <p>{messages.proposalDetail.noMilestoneInfo}</p>
-                            )}
-                          </div>
+                                <p>{messages.proposalDetail.progress} {Math.round((proposal.state-1000)/proposal.record.data.milestones.length*100)}%</p>
+                              </div> */}
+                              <MilestoneList milestones={proposal.record.data.milestones} />
+                            </>
+                          ) : (
+                            <p>{messages.proposalDetail.noMilestoneInfo}</p>
+                          )}
                         </div>
                       );
 

@@ -473,11 +473,13 @@ interface Messages {
     teamIntroduction: string;
     projectBudget: string;
     milestones: string;
+    milestone: string;
     budgetAmount: string;
     notFilled: string;
     currentMilestone: string;
     progress: string;
     noMilestoneInfo: string;
+    deliveryTime: string;
     liking: string;
     share: string;
     proposalTypes: {

@@ -45,4 +45,5 @@ export interface ProposalVotingProps {
   userVoteInfo?: UserVoteInfo;
   onVote: (option: VoteOption) => void;
   className?: string;
+  isVoting?: boolean; // 投票进行中状态，用于锁定操作区域
 }

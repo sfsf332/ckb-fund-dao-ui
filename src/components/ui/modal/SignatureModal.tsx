@@ -63,14 +63,13 @@ export default function SignatureModal({
               <GoCopy />
             </CopyButton>
           </div>
-          <p className="message-instruction">
+          {/* <p className="message-instruction">
             {messages.modal.signatureModal.messageInstruction}
-          </p>
+          </p> */}
         </div>
         
         <div className="signature-section">
-          <input
-            type="text"
+          <textarea
             value={signature}
             onChange={(e) => setSignature(e.target.value)}
             className="signature-input"

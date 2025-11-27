@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { AiOutlineExport } from "react-icons/ai";
+import toast from "react-hot-toast";
 
 import { SignatureModal, SuccessModal } from "../ui/modal";
 import { useWalletAddress } from "../../hooks/useWalletAddress";
@@ -15,6 +16,7 @@ import { useTranslation } from "@/utils/i18n";
 import { useVoteWeight } from "@/hooks/useVoteWeight";
 import { getBindList } from "@/server/proposal";
 import useUserInfoStore from "@/store/userInfo";
+import { validateJsonSignature } from "@/utils/common";
 
 interface WalletDaoCardProps {
   className?: string;
@@ -189,12 +191,12 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
 
   const handleSignatureBind = async(signature: string) => {
     if (!signer) {
-      console.error(t("wallet.signerNotConnected"));
+      toast.error(t("wallet.signerNotConnected"));
       return;
     }
 
     if (!bindInfo) {
-      console.error(t("wallet.bindInfoNotGenerated"));
+      toast.error(t("wallet.bindInfoNotGenerated"));
       return;
     }
 
@@ -207,36 +209,40 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
     
     // 统一使用 trim() 处理，避免空格影响判断
     const trimmedSignature = signature.trim();
-    
-    // 如果 signature 以 { 开头，说明是 JSON 字符串，直接编码
+   
+    // 如果 signature 以 { 开头，说明是 JSON 字符串，先验证格式
     if (trimmedSignature.startsWith('{')) {
-      console.log("for non-neuron: JSON 字符串");
+      const validation = validateJsonSignature(trimmedSignature);
+      if (!validation.valid) {
+        toast.error(validation.error || t("wallet.signatureConversionFailed"));
+        return;
+      }
+      
       const encoder = new TextEncoder();
       const sigBytes = encoder.encode(signature); // 使用原始 signature，保留可能的格式
       sigHex = hexFrom(sigBytes);
       console.log("sig: ", sigHex);
+      
     } 
-    // 如果 signature 长度是 65（字节），说明是 neuron 签名
+    // 如果 signature 以 0x 开头且长度是 132，说明是 neuron 签名
     // 使用 trim() 后的长度检查，确保一致性
-    else if (trimmedSignature.length === 65) {
-      console.log("for neuron: 65字节签名");
+  
+    else if (trimmedSignature.startsWith('0x') && trimmedSignature.length === 132) {
+      console.log("for neuron: 0x开头的132字符签名");
       // 将签名转换为十六进制（兼容base64和0x格式）
+      console.log("trimmedSignature: ", trimmedSignature);
       const signatureHex = convertSignatureToHex(trimmedSignature);
       if (!signatureHex) {
-        console.error(t("wallet.signatureConversionFailed"));
+        toast.error(t("wallet.signatureConversionFailed"));
         return;
       }
       sigHex = signatureHex;
       console.log("sig: ", sigHex);
     }
-    // 如果 signature 不是以 { 开头，且长度不等于 65，说明是 JSON 对象字符串
+    // 如果 signature 不是以 { 开头，且不是 0x 开头的 132 字符，尝试解析为 JSON
     else {
-      console.log("for non-neuron: JSON 对象字符串");
-      const encoder = new TextEncoder();
-      // signature 已经是字符串，直接编码，不需要 JSON.stringify（避免添加额外引号）
-      const sigBytes = encoder.encode(signature);
-      sigHex = hexFrom(sigBytes);
-      console.log("sig: ", sigHex);
+      toast.error(t("wallet.signatureConversionFailed"));
+      return;
     }
 
     const bindInfoWithSig = BindInfoWithSig.from({

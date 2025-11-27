@@ -53,3 +53,49 @@ export const formatHandleDisplay = (handle: string | undefined | null): string =
   
   return handlePart;
 };
+
+/**
+ * 验证 JSON 签名格式：必须且只能有 signature、identity 和 signType 这三个 key
+ * @param {string} jsonString - 要验证的 JSON 字符串
+ * @returns {{ valid: boolean; error?: string }} 验证结果，包含是否有效和错误信息
+ */
+export const validateJsonSignature = (jsonString: string): { valid: boolean; error?: string } => {
+  try {
+    const json = JSON.parse(jsonString);
+    const keys = Object.keys(json);
+    const requiredKeys = ['signature', 'identity', 'signType'];
+    
+    // 检查是否有额外的 key
+    const extraKeys = keys.filter(key => !requiredKeys.includes(key));
+    if (extraKeys.length > 0) {
+      return {
+        valid: false,
+        error: `JSON 包含不允许的 key: ${extraKeys.join(', ')}`
+      };
+    }
+    
+    // 检查是否缺少必需的 key
+    const missingKeys = requiredKeys.filter(key => !keys.includes(key));
+    if (missingKeys.length > 0) {
+      return {
+        valid: false,
+        error: `JSON 缺少必需的 key: ${missingKeys.join(', ')}`
+      };
+    }
+    
+    // 检查 key 的数量是否正好是 3
+    if (keys.length !== 3) {
+      return {
+        valid: false,
+        error: `JSON 必须且只能有 3 个 key，当前有 ${keys.length} 个`
+      };
+    }
+    
+    return { valid: true };
+  } catch (error) {
+    return {
+      valid: false,
+      error: `JSON 解析失败: ${error instanceof Error ? error.message : '未知错误'}`
+    };
+  }
+};

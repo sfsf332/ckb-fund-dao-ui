@@ -23,7 +23,7 @@ export default function LoginStep4({ accountName }: LoginStep4Props) {
   };
   return (
     <div className="login-info-section">
-      <h3 className="login-info-title">{t("loginStep4.accountCreatedSuccess")}</h3>
+      <h3 className="login-info-title" style={{ textAlign: 'center' }}>{t("loginStep4.accountCreatedSuccess")}</h3>
       <p className="success-description">
         {t("loginStep4.successDescription")}
       </p>

@@ -205,19 +205,23 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
     // 判断签名类型并处理
     let sigHex: string;
     
+    // 统一使用 trim() 处理，避免空格影响判断
+    const trimmedSignature = signature.trim();
+    
     // 如果 signature 以 { 开头，说明是 JSON 字符串，直接编码
-    if (signature.trim().startsWith('{')) {
+    if (trimmedSignature.startsWith('{')) {
       console.log("for non-neuron: JSON 字符串");
       const encoder = new TextEncoder();
-      const sigBytes = encoder.encode(signature);
+      const sigBytes = encoder.encode(signature); // 使用原始 signature，保留可能的格式
       sigHex = hexFrom(sigBytes);
       console.log("sig: ", sigHex);
     } 
     // 如果 signature 长度是 65（字节），说明是 neuron 签名
-    else if (signature.length === 65) {
+    // 使用 trim() 后的长度检查，确保一致性
+    else if (trimmedSignature.length === 65) {
       console.log("for neuron: 65字节签名");
       // 将签名转换为十六进制（兼容base64和0x格式）
-      const signatureHex = convertSignatureToHex(signature);
+      const signatureHex = convertSignatureToHex(trimmedSignature);
       if (!signatureHex) {
         console.error(t("wallet.signatureConversionFailed"));
         return;
@@ -229,9 +233,8 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
     else {
       console.log("for non-neuron: JSON 对象字符串");
       const encoder = new TextEncoder();
-      // 先 JSON.stringify，然后编码
-      const sigJson = JSON.stringify(signature);
-      const sigBytes = encoder.encode(sigJson);
+      // signature 已经是字符串，直接编码，不需要 JSON.stringify（避免添加额外引号）
+      const sigBytes = encoder.encode(signature);
       sigHex = hexFrom(sigBytes);
       console.log("sig: ", sigHex);
     }

@@ -7,6 +7,7 @@ import LoginProgress from "./LoginProgress";
 import LoginStep1 from "./LoginStep1";
 import LoginStep2 from "./LoginStep2";
 import LoginStep3 from "./LoginStep3";
+import LoginStep4 from "./LoginStep4";
 import LoginFooter from "./LoginFooter";
 import { useAccountNameValidation } from "@/hooks/useAccountNameValidation";
 import { useCheckCkb } from "@/hooks/checkCkb";
@@ -42,8 +43,8 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const { checkSimpleBalance, isLoading: balanceLoading, extraIsEnough, error: balanceError } = useCheckCkb();
   const { createAccount, loading: createLoading, createStatus, resetCreateStatus } = useCreateAccount({
     createSuccess: () => {
-      // 注册成功后保持在step3，显示完成状态
-      // 完成信息会在LoginStep3中显示
+      // 注册成功后跳转到 step 4 显示成功信息
+      setCurrentStep(4);
     },
   });
 
@@ -158,7 +159,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   }, [createLoading]);
 
   const handleNextStep = () => {
-    if (currentStep < 3) {
+    if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -294,7 +295,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     >
 
         {/* 进度指示器 */}
-        {currentStep !== 1 && (
+        {currentStep !== 1 && currentStep !== 4 && (
           <LoginProgress 
             currentStep={currentStep} 
             isSuccess={createStatus?.status === CREATE_STATUS.SUCCESS}
@@ -336,6 +337,12 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             balanceLoading={balanceLoading}
             extraIsEnough={extraIsEnough}
             balanceError={balanceError}
+          />
+        )}
+
+        {currentStep === 4 && (
+          <LoginStep4
+            accountName={accountName}
           />
         )}
 

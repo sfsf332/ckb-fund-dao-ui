@@ -51,6 +51,7 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const generateBindInfo = useCallback(async () => {
+    console.log(11111111111111)
     const timestamp = Date.now();
     const cccClient = new ccc.ClientPublicTestnet();
     const toAddr =
@@ -144,6 +145,9 @@ export default function WalletDaoCard({ className = "" }: WalletDaoCardProps) {
       });
     }
   }, [walletAddress, isConnected, generateBindInfo]);
+  // 注意：generateBindInfo 使用 useCallback 且依赖 walletAddress，所以函数引用是稳定的
+  // 只有当 walletAddress 改变时，generateBindInfo 才会重新创建，从而触发 effect
+  // 函数执行完成后不会改变函数引用，因此不会导致无限循环
 
   // 获取绑定列表
   useEffect(() => {

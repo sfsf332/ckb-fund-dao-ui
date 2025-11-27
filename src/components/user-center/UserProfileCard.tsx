@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { MdCheck, MdEdit } from "react-icons/md";
 import { FaDiscord,FaTelegramPlane   } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
@@ -14,13 +14,41 @@ interface UserProfileCardProps {
 }
 
 export default function UserProfileCard({ className = '' }: UserProfileCardProps) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const { userInfo, userProfile } = useUserInfoStore();
   
   const [isEditing, setIsEditing] = useState(false);
-  const [joinDate] = useState('2025年1月1日');
   const [expandedConnection, setExpandedConnection] = useState<string | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  
+  // 格式化加入日期
+  const joinDate = useMemo(() => {
+    const createdDate = userProfile?.created;
+    if (!createdDate) return '';
+    
+    try {
+      const date = new Date(createdDate);
+      if (isNaN(date.getTime())) return '';
+      
+      if (locale === 'zh') {
+        // 中文格式：2025年1月1日
+        return date.toLocaleDateString('zh-CN', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
+      } else {
+        // 英文格式：January 1, 2025
+        return date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
+      }
+    } catch {
+      return '';
+    }
+  }, [userProfile?.created, locale]);
   
   const [userName, setUserName] = useState(getUserDisplayNameFromStore(userInfo, userProfile));
   

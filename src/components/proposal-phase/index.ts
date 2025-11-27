@@ -6,6 +6,7 @@ export { default as MilestoneVoting } from './MilestoneVoting';
 export { default as ProposalContent } from './ProposalContent';
 export { default as ProposalComments } from './ProposalComments';
 export { default as ProposalSidebar } from './ProposalSidebar';
+export { default as ProposalVotingConditions } from './ProposalVotingConditions';
 
 // 样式文件导入（common.css 会通过 @import 自动加载）
 import '@/styles/voting.css';

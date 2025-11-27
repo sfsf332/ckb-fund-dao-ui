@@ -9,7 +9,7 @@ import {
 import { formatNumber } from "../../utils/proposalUtils";
 import { useI18n } from "@/contexts/I18nContext";
 import "@/styles/voting.css";
-import { IoCheckmarkCircleOutline } from "react-icons/io5";
+import ProposalVotingConditions from "./ProposalVotingConditions";
 
 export default function ProposalVoting({
   votingInfo,
@@ -17,6 +17,8 @@ export default function ProposalVoting({
   onVote,
   className = "",
   isVoting = false,
+  proposalType,
+  budget,
 }: ProposalVotingProps) {
   const { messages } = useI18n();
   const [timeLeft, setTimeLeft] = useState("");
@@ -108,11 +110,6 @@ export default function ProposalVoting({
     votingInfo.totalVotes > 0
       ? (votingInfo.rejectVotes / votingInfo.totalVotes) * 100
       : 0;
-
-  // 检查通过条件
-  const totalVotesMet =
-    votingInfo.totalVotes >= votingInfo.conditions.minTotalVotes;
-  const approvalRateMet = approveRate >= votingInfo.conditions.minApprovalRate;
 
   // 检查用户是否已投票（且不在上链中）
   const hasVoted = userVote !== undefined;
@@ -314,52 +311,11 @@ export default function ProposalVoting({
       <div className="voting-divider"></div>
 
       {/* 通过条件 */}
-      <div className="voting-conditions">
-        <h4 className="conditions-title">
-          {messages.proposalPhase.proposalVoting.conditions.title}
-        </h4>
-
-        <div className="condition-item">
-          <span>
-            {messages.proposalPhase.proposalVoting.conditions.minTotalVotes}
-          </span>
-          <span className="condition-values">
-            {formatNumber(votingInfo.totalVotes / 100000000)} /{" "}
-            {formatNumber(votingInfo.conditions.minTotalVotes / 100000000)} CKB
-          </span>
-
-          <div
-            className={`condition-status ${totalVotesMet ? "met" : "not-met"}`}
-          >
-            {totalVotesMet ? (
-              <IoCheckmarkCircleOutline size={16} />
-            ) : (
-              <span>×</span>
-            )}
-          </div>
-        </div>
-
-        <div className="condition-item">
-          <span>
-            {messages.proposalPhase.proposalVoting.conditions.approveRate}
-          </span>
-          <span className="condition-values">
-            {approveRate.toFixed(1)}% / {votingInfo.conditions.minApprovalRate}%
-          </span>
-
-          <div
-            className={`condition-status ${
-              approvalRateMet ? "met" : "not-met"
-            }`}
-          >
-            {approvalRateMet ? (
-              <IoCheckmarkCircleOutline size={16} />
-            ) : (
-              <span>×</span>
-            )}
-          </div>
-        </div>
-      </div>
+      <ProposalVotingConditions
+        votingInfo={votingInfo}
+        proposalType={proposalType}
+        budget={budget}
+      />
     </div>
   );
 }

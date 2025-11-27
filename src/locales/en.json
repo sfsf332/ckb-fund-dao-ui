@@ -641,7 +641,9 @@
       "conditions": {
         "title": "Passing Conditions",
         "minTotalVotes": "Minimum Weight",
-        "approveRate": "Approval Rate"
+        "approveRate": "Approval Rate",
+        "fundingRule": "Funding Proposal: 3x the requested funding amount",
+        "governanceRule": "Governance Rule Proposal: Fixed 185 million CKB"
       },
       "timeLeft": {
         "days": "days",

@@ -75,12 +75,41 @@ function formatTranslation(text: string, values?: Record<string, string | number
   return result;
 }
 
+// 计算最低投票权重总数（shannon单位）
+// 根据提案类型：
+// - 对于「资金申请」类提案，最低投票权重总数为：申请资金数量的3倍
+// - 对于「元规则」类提案，则为固定的 1.85亿CKB
+const calculateMinTotalVotes = (proposal: Proposal): number => {
+  const proposalType = typeof proposal.type === 'string' ? proposal.type : proposal.category;
+  
+  // 元规则类提案：固定的 1.85亿CKB
+  if (proposalType === 'governance') {
+    // 1.85亿CKB = 185000000 CKB = 185000000 * 100000000 shannon
+    return 185000000 ;
+  }
+  
+  // 资金申请类提案：申请资金数量的3倍
+  if (proposalType === 'funding' && proposal.budget) {
+    const budgetAmount = typeof proposal.budget === 'string' ? parseFloat(proposal.budget) : proposal.budget;
+    if (!isNaN(budgetAmount) && budgetAmount > 0) {
+      // 转换为shannon单位后乘以3
+      return budgetAmount  * 3;
+    }
+  }
+  
+  // 默认值：1500万CKB = 15000000 * 100000000 shannon
+  return 15000000 ;
+};
+
 // 生成投票信息（使用真实数据）
 export const generateVotingInfo = (
   proposal: Proposal,
   voteMeta?: VoteMetaItem | null,
   userVotingPower: number = 0
 ): VotingInfo => {
+  // 计算最低投票权重总数
+  const minTotalVotes = calculateMinTotalVotes(proposal);
+  
   // 如果有投票元数据，使用真实数据
   if (voteMeta) {
     // 确定投票状态（只根据时间和提案状态判断，不依赖 userVote）
@@ -110,7 +139,7 @@ export const generateVotingInfo = (
       userVotingPower,
       status,
       conditions: {
-        minTotalVotes: 15000000, // 最低1500万票
+        minTotalVotes, // 根据提案类型动态计算
         minApprovalRate: 51,     // 最低51%赞成率
         currentTotalVotes: totalVotes,
         currentApprovalRate: approvalRate
@@ -150,7 +179,7 @@ export const generateVotingInfo = (
     userVotingPower,
     status,
     conditions: {
-      minTotalVotes: 15000000, // 最低1500万票
+      minTotalVotes, // 根据提案类型动态计算
       minApprovalRate: 51,     // 最低51%赞成率
       currentTotalVotes: totalVotes,
       currentApprovalRate: approvalRate

@@ -679,8 +679,10 @@
       "refreshDelay": "投票结果的刷新存在一定延迟,请耐心等待。",
       "conditions": {
         "title": "通过条件",
-        "minTotalVotes": "最低投票权重总数",
-        "approveRate": "赞成票数占比"
+        "minTotalVotes": "最低投票权重",
+        "approveRate": "赞成票数占比",
+        "fundingRule": "资金申请类提案：申请资金数量的3倍",
+        "governanceRule": "元规则类提案：固定的 1.85亿CKB"
       },
       "timeLeft": {
         "days": "天",

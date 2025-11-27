@@ -433,6 +433,8 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
             userVoteInfo={userVoteInfo ?? undefined}
             onVote={handleVoteSubmit}
             isVoting={isVoting}
+            proposalType={proposal.record.data.proposalType}
+            budget={proposal.record.data.budget}
           />
         )}
         

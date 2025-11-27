@@ -11,7 +11,7 @@ import "@/styles/ImportDidModal.css";
 
 export default function WalletConnectionModal() {
   const { t } = useTranslation();
-  const { userInfo, initialized } = useUserInfoStore();
+  const { userInfo, initialized, logout } = useUserInfoStore();
   const { open, wallet, signerInfo, disconnect } = ccc.useCcc();
   const isConnected = Boolean(wallet) && Boolean(signerInfo);
   
@@ -117,6 +117,28 @@ export default function WalletConnectionModal() {
     setIsConnecting(false);
   };
 
+  // 处理登出
+  const handleLogout = async () => {
+    try {
+      // 断开钱包连接
+      if (isConnected) {
+        try {
+          await disconnect();
+        } catch (err) {
+          console.error("断开连接失败:", err);
+        }
+      }
+      // 调用 store 的 logout 方法（清除 store 状态）
+      logout();
+      // 清除所有 localStorage
+      storage.clear();
+      // 刷新页面
+      window.location.reload();
+    } catch (err) {
+      console.error("登出失败:", err);
+    }
+  };
+
   // 如果不需要显示弹窗，返回 null
   if (!showModal && !showWalletMismatchModal) {
     return null;
@@ -153,12 +175,13 @@ export default function WalletConnectionModal() {
                 </div>
               )}
               {error && <div className="import-did-error" style={{ marginTop: '12px' }}>{error}</div>}
-              <div className="import-did-buttons" style={{ marginTop: '24px' }}>
+              <div className="import-did-buttons" style={{ marginTop: '24px', flexDirection: 'column', width: '100%' }}>
                 {!isConnected ? (
                   <button
                     className="import-did-button import-did-button-primary"
                     onClick={handleConnectWallet}
                     disabled={isConnecting}
+                    style={{ width: '100%' }}
                   >
                     {isConnecting ? t("importDid.connecting") : t("importDid.connectWalletButton")}
                   </button>
@@ -172,6 +195,19 @@ export default function WalletConnectionModal() {
                     </p>
                   </div>
                 )}
+                <button
+                  className="import-did-button"
+                  onClick={handleLogout}
+                  style={{ 
+                    width: '100%',
+                    marginTop: '12px', 
+                    backgroundColor: 'transparent', 
+                    color: '#666',
+                    border: '1px solid #ddd'
+                  }}
+                >
+                  {t("logout")}
+                </button>
               </div>
             </div>
           </div>

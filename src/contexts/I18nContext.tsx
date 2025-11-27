@@ -542,6 +542,8 @@ interface Messages {
         title: string;
         minTotalVotes: string; // 最低投票权重总数（显示文本）
         approveRate: string;
+        fundingRule?: string; // 资金申请类提案规则描述
+        governanceRule?: string; // 元规则类提案规则描述
       };
       timeLeft: {
         days: string;

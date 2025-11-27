@@ -46,4 +46,6 @@ export interface ProposalVotingProps {
   onVote: (option: VoteOption) => void;
   className?: string;
   isVoting?: boolean; // 投票进行中状态，用于锁定操作区域
+  proposalType?: string; // 提案类型，如 "funding" 或 "governance"
+  budget?: string | number; // 预算金额（CKB），资金申请类提案需要
 }

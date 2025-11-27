@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "react-tooltip/dist/react-tooltip.css";
 import { Toaster } from "react-hot-toast";
@@ -20,6 +20,13 @@ export const metadata: Metadata = {
     shortcut: "/nervos-logo.svg",
     apple: "/nervos-logo.svg",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({

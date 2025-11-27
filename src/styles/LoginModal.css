@@ -358,44 +358,7 @@ rotate: 90deg;
   opacity: 0.6;
 }
 
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .login-modal {
-    margin: 16px;
-    padding: 24px;
-    max-width: none;
-  }
-  
-  .login-content {
-    flex-direction: column;
-    gap: 16px;
-  }
-  
-  .login-graphic-section {
-    flex: none;
-    width: 100%;
-    min-height: 120px;
-  }
-  
-  .login-footer {
-    flex-direction: column;
-    gap: 16px;
-    align-items: stretch;
-  }
-  
-  .login-button-container {
-    justify-content: center;
-  }
-  
-  .login-progress {
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-  
-  .login-step-separator {
-    display: none;
-  }
-}
+
 
 /* 动画效果 */
 @keyframes fadeIn {
@@ -550,6 +513,7 @@ rotate: 90deg;
   font-size: 14px;
   line-height: 1.6;
   margin: 16px 0 24px 0;
+  text-align: left;
 }
 
 .drag-drop-container {
@@ -938,7 +902,7 @@ rotate: 90deg;
 .web5-did-dropdown {
   position: absolute;
   top:-60px;
-  left: 0;
+  right: 0;
   background: #262A33;
   border-radius: 6px;
   min-width: 200px;
@@ -1052,4 +1016,131 @@ rotate: 90deg;
 
 .success-planet {
   animation: successGlow 2s ease-in-out infinite;
+}
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .modal-overlay{
+    padding: 0;
+  }
+  .login-modal {
+    margin: 0;
+    padding: 5px;
+    max-width: none;
+    width: 100%;
+  }
+  
+  .login-content {
+    flex-direction: column;
+    gap: 16px;
+    padding: 10px;
+  }
+  .login-info-title{
+    margin-bottom: 8px;
+  }
+  .login-benefits li {
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  
+  .login-graphic-section {
+    flex: none;
+    width: 100%;
+    min-height: 120px;
+    order: -1;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .login-footer {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+  
+  .login-button-container {
+    justify-content: center;
+  }
+  
+  .login-progress {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  .login-step-separator {
+    display: none;
+  }
+  
+  .login-step-circle {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+  }
+  
+  .login-step-title {
+    padding: 0 2px;
+  }
+  .name-input-container{
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .name-input{
+    width: 100%;
+    box-sizing: border-box;
+
+  }
+  
+  .drag-drop-container {
+    gap: 8px;
+    margin: 8px 0;
+    min-height: 80px;
+  }
+  
+  .drag-source {
+    flex: 0 0 50%;
+  }
+  
+  .drag-target {
+    flex: 0 0 50%;
+  }
+  
+  .planet-account {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .nervos-galaxy {
+    width: 120px;
+    height: 83px;
+  }
+  
+  .galaxy-core {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .galaxy-core img,
+  .galaxy-core object {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 120px;
+    max-height: 80px;
+  }
+  
+  /* 移动端状态信息样式 */
+  .insufficient-funds-warning {
+    text-align: center;
+  }
+  
+  .create-account-loading {
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+  }
+  
+  .create-account-error {
+  }
+  .login-description{margin:10px 0;}
+  .login-progress{
+    margin-bottom: 10px;
+  }
 }

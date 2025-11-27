@@ -46,12 +46,86 @@ export default function LoginStep3({
   const { t } = useTranslation();
   const { walletAddress, isLoadingAddress, formatAddress } = useWalletAddress();
   const svgContainerRef = useRef<HTMLDivElement>(null);
+  const dragTargetRef = useRef<HTMLDivElement>(null);
+  const touchStartPosRef = useRef<{ x: number; y: number } | null>(null);
   
   // 复制地址到剪贴板（统一行为+toast）
   const handleCopyAddress = () => {
     if (walletAddress) {
       handleCopy(walletAddress, t("copy.addressSuccess"));
     }
+  };
+
+  // 移动端触摸事件处理
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    touchStartPosRef.current = { x: touch.clientX, y: touch.clientY };
+    // 创建模拟的 dragStart 事件
+    const syntheticEvent = {
+      ...e,
+      dataTransfer: {
+        effectAllowed: "move",
+        dropEffect: "move",
+      },
+    } as unknown as React.DragEvent;
+    onDragStart(syntheticEvent);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    e.preventDefault(); // 防止页面滚动
+    if (!touchStartPosRef.current) return;
+    
+    const touch = e.touches[0];
+    const deltaX = Math.abs(touch.clientX - touchStartPosRef.current.x);
+    const deltaY = Math.abs(touch.clientY - touchStartPosRef.current.y);
+    
+    // 如果移动距离足够大，认为是拖拽操作
+    if (deltaX > 5 || deltaY > 5) {
+      // 创建模拟的 dragOver 事件
+      const syntheticEvent = {
+        ...e,
+        preventDefault: () => {},
+        dataTransfer: {
+          effectAllowed: "move",
+          dropEffect: "move",
+        },
+      } as unknown as React.DragEvent;
+      onDragOver(syntheticEvent);
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStartPosRef.current) return;
+    
+    const touch = e.changedTouches[0];
+    const endX = touch.clientX;
+    const endY = touch.clientY;
+    
+    // 检查触摸结束位置是否在目标区域内
+    if (dragTargetRef.current) {
+      const targetRect = dragTargetRef.current.getBoundingClientRect();
+      const isInTarget = 
+        endX >= targetRect.left &&
+        endX <= targetRect.right &&
+        endY >= targetRect.top &&
+        endY <= targetRect.bottom;
+      
+      if (isInTarget) {
+        // 创建模拟的 drop 事件
+        const syntheticEvent = {
+          ...e,
+          preventDefault: () => {},
+          dataTransfer: {
+            effectAllowed: "move",
+            dropEffect: "move",
+          },
+        } as unknown as React.DragEvent;
+        onDrop(syntheticEvent);
+      }
+    }
+    
+    onDragEnd();
+    touchStartPosRef.current = null;
   };
 
   // 当 createLoading 为 true 时，确保 SVG 动画能够播放
@@ -145,6 +219,9 @@ export default function LoginStep3({
             draggable
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
             <Image
               src="/nervos-planet.png"
@@ -192,51 +269,10 @@ export default function LoginStep3({
               )}
             </div>
           )}
-          {showInsufficientFunds && (
-            <div className="insufficient-funds-warning">
-              {t("loginStep3.insufficientFundsWarning")}
-              {onRecheckBalance && (
-                <button 
-                  className="recheck-balance-btn" 
-                  onClick={onRecheckBalance}
-                  style={{ 
-                    marginTop: '8px', 
-                    padding: '4px 8px', 
-                    fontSize: '12px',
-                    backgroundColor: '#007bff',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {t("loginStep3.recheckBalance")}
-                </button>
-              )}
-            </div>
-          )}
-
-          {/* 创建账户状态显示 */}
-          {createLoading && (
-            <div className="create-account-loading">
-              <div>{t("loginStep3.creatingAccount")}</div>
-              <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
-                {t("loginStep3.pleaseWait")}
-              </div>
-            </div>
-          )}
-
-          {createStatus?.status === CREATE_STATUS.FAILURE && (
-            <div className="create-account-error">
-              <div>{t("loginStep3.accountCreationFailed")}</div>
-              <div className="error-reason">
-                {createStatus.reason}
-              </div>
-            </div>
-          )}
         </div>
         <div className="drag-target">
           <div
+            ref={dragTargetRef}
             className={`nervos-galaxy ${isDropped ? "dropped" : ""}`}
             onDragOver={onDragOver}
             onDrop={onDrop}
@@ -263,6 +299,50 @@ export default function LoginStep3({
           </div>
         </div>
       </div>
+      
+      {/* 状态信息 - 移动端显示在 drag-drop-container 下方 */}
+      {showInsufficientFunds && (
+        <div className="insufficient-funds-warning">
+          {t("loginStep3.insufficientFundsWarning")}
+          {onRecheckBalance && (
+            <button 
+              className="recheck-balance-btn" 
+              onClick={onRecheckBalance}
+              style={{ 
+                marginTop: '8px', 
+                padding: '4px 8px', 
+                fontSize: '12px',
+                backgroundColor: '#007bff',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              {t("loginStep3.recheckBalance")}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* 创建账户状态显示 */}
+      {createLoading && (
+        <div className="create-account-loading">
+          <div>{t("loginStep3.creatingAccount")}</div>
+          <div style={{ fontSize: '12px', color: 'red', marginTop: '4px' }}>
+            {t("loginStep3.pleaseWait")}
+          </div>
+        </div>
+      )}
+
+      {createStatus?.status === CREATE_STATUS.FAILURE && (
+        <div className="create-account-error">
+          <div>{t("loginStep3.accountCreationFailed")}</div>
+          <div className="error-reason">
+            {createStatus.reason}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -414,8 +414,8 @@
     "disconnect": "Disconnect",
     "whatIsWeb5": "What is Web5?",
     "web5Explanation": "Explanation of Web5",
-    "connectWalletCreate": "Connect Wallet Create",
-    "existingWeb5Did": "Existing Web5 DID",
+    "connectWalletCreate": "Connect Wallet",
+    "existingWeb5Did": "Existing DID",
     "importKeyLogin": "Import Web5 DID Key Login",
     "scanQrCodeLogin": "Scan Key QR Code Login"
   },

@@ -1980,6 +1980,9 @@ a {
   }
   .header-container {
     padding: 0 12px;
+    overflow-x: hidden;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   .button-normal.user-button {
     padding: 0 6px;
@@ -1988,10 +1991,18 @@ a {
   }
   .header-container .logo {
     min-width: auto;
+    flex-shrink: 1;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  .header-container .logo img {
+    max-width: 100%;
+    height: auto;
   }
 
   .header-actions {
     gap: 4px;
+    flex-shrink: 0;
   }
 
   /* 移动端隐藏创建提案按钮（在侧边栏中显示） */
@@ -2182,6 +2193,37 @@ a {
 
 /* 移动端 (max-width: 768px) */
 @media (max-width: 768px) {
+  /* Header 移动端样式 - 防止溢出 */
+  .header-container {
+    padding: 0 8px;
+    overflow-x: hidden;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+  
+  .header-container .logo {
+    flex-shrink: 1;
+    min-width: 0;
+    max-width: calc(100vw - 120px);
+  }
+  
+  .header-container .logo img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+  
+  .header-actions {
+    flex-shrink: 0;
+    gap: 4px;
+  }
+  
+  .user-button {
+    padding: 8px 8px;
+    min-width: auto;
+    font-size: 12px;
+  }
+  
   /* Footer 移动端样式 */
   .footer-content {
     flex-direction: column;

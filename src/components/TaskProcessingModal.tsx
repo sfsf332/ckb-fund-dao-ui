@@ -251,25 +251,29 @@ export default function TaskProcessingModal({
                 <span className="info-label">{t("proposalInfo.proposalUri")}:</span>
                 <span className="info-value uri-value">{proposal?.uri || t("proposalInfo.unknownUri")}</span>
               </div>
+              <div className="info-item">
+                <span className="info-label">{t("taskModal.taskType")}:</span>
+                <span className="info-value">{getTaskTypeText(taskType)}</span>
+              </div>
             </div>
           </div>
 
           {/* 任务信息 */}
-          <div className="task-info-section">
-            <h3 className="section-title">{t("taskModal.taskInfo")}</h3>
+          <div className="task-info-section" style={{ display: 'none'}}>
+            {/* <h3 className="section-title">{t("taskModal.taskInfo")}</h3> */}
             
             <div className="form-grid">
               {/* 任务类型和截止时间 - 两列布局 */}
-              <div className="form-row">
+              {/* <div className="form-row">
                 <div className="form-item">
                   <label className="form-label">{t("taskModal.taskType")}</label>
                   <div className="readonly-field">{getTaskTypeText(taskType)}</div>
                 </div>
-                <div className="form-item">
+               <div className="form-item">
                   <label className="form-label">{t("taskModal.deadline")}</label>
                   <div className="readonly-field">{proposal?.deadline || t("proposalInfo.pending")}</div>
                 </div>
-              </div>
+              </div> */}
 
               {/* 根据任务类型显示不同的表单字段 */}
               {/* 其他任务类型的 UI 已暂时移除，只保留创建投票相关的功能 */}

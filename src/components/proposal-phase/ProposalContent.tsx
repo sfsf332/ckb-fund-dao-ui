@@ -27,7 +27,7 @@ export default function ProposalContent({
   commentsCount,
   onQuote,
 }: ProposalContentProps) {
-  const { messages } = useI18n();
+  const { messages, locale } = useI18n();
   const { userInfo } = useUserInfoStore();
   
   // 点赞相关状态
@@ -135,7 +135,7 @@ export default function ProposalContent({
             <div className="proposal-meta-tags">
               <span className="meta-tag date-tag">
                 {new Date(proposal.record.created).toLocaleDateString(
-                  "zh-CN",
+                  locale === "zh" ? "zh-CN" : "en-US",
                   {
                     year: "numeric",
                     month: "short",

@@ -133,20 +133,20 @@ export default function ManagementCenter() {
   }, [rawProposals, t]);
 
   // 计算筛选选项的计数
-  const filterCounts = useMemo(() => {
-    const counts = {
-      all: proposals.length,
-      ama: proposals.filter(p => p.taskType === t("taskTypes.organizeAMA")).length,
-      milestone: proposals.filter(p => p.taskType === t("taskTypes.milestoneVerification")).length,
-      allocation: proposals.filter(p => p.taskType === t("taskTypes.milestoneAllocation")).length,
-      completion: proposals.filter(p => p.taskType === t("taskTypes.publishReport")).length,
-    };
+  // const filterCounts = useMemo(() => {
+  //   const counts = {
+  //     all: proposals.length,
+  //     ama: proposals.filter(p => p.taskType === t("taskTypes.organizeAMA")).length,
+  //     milestone: proposals.filter(p => p.taskType === t("taskTypes.milestoneVerification")).length,
+  //     allocation: proposals.filter(p => p.taskType === t("taskTypes.milestoneAllocation")).length,
+  //     completion: proposals.filter(p => p.taskType === t("taskTypes.publishReport")).length,
+  //   };
     
-    return getFilterOptions(t).map(option => ({
-      ...option,
-      count: counts[option.key as keyof typeof counts] || 0
-    }));
-  }, [proposals, t]);
+  //   return getFilterOptions(t).map(option => ({
+  //     ...option,
+  //     count: counts[option.key as keyof typeof counts] || 0
+  //   }));
+  // }, [proposals, t]);
 
   // 根据筛选条件过滤提案
   const filteredProposals = useMemo(() => {
@@ -206,10 +206,10 @@ export default function ManagementCenter() {
   }, [proposals, rawProposals]);
 
 
-  const handleTaskProcess = (proposal: ProposalItem) => {
-    setSelectedProposal(proposal);
-    setShowTaskModal(true);
-  };
+  // const handleTaskProcess = (proposal: ProposalItem) => {
+  //   setSelectedProposal(proposal);
+  //   setShowTaskModal(true);
+  // };
 
   const handleCreateVote = (proposal: ProposalItem) => {
     setSelectedProposal({ ...proposal, taskType: t("taskTypes.createVote") });
@@ -289,8 +289,12 @@ export default function ManagementCenter() {
           </div>
         ) : error ? (
           <div className="error-state">
-            <p>{t("managementCenter.loadFailed")}: {error}</p>
-            <button onClick={() => refetch()}>{t("managementCenter.retry")}</button>
+            <p>
+              {t("managementCenter.loadFailed")}: {error}
+            </p>
+            <button onClick={() => refetch()}>
+              {t("managementCenter.retry")}
+            </button>
           </div>
         ) : (
           <table>
@@ -322,10 +326,7 @@ export default function ManagementCenter() {
                     </td>
                     <td>{proposal.type}</td>
                     <td>
-                      <Tag 
-                        status={proposal.status}
-                        size="sm" 
-                      />
+                      <Tag status={proposal.status} size="sm" />
                     </td>
                     <td>{proposal.taskType}</td>
                     <td>{proposal.deadline}</td>
@@ -338,7 +339,7 @@ export default function ManagementCenter() {
                           {t("taskModal.buttons.process")}
                         </button> */}
                         {proposal.status === ProposalStatus.REVIEW && (
-                          <button 
+                          <button
                             className="vote-action-button"
                             onClick={() => handleCreateVote(proposal)}
                           >

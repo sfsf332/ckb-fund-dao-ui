@@ -20,14 +20,14 @@ const ProjectBudget: React.FC<ProjectBudgetProps> = ({ formData, onInputChange }
       return;
     }
     
-    // 检查是否为有效的正数
-    const numValue = parseFloat(value);
+    // 只允许数字和点号
+    // 使用正则表达式：允许数字和单个点号
+    const validPattern = /^[0-9]*\.?[0-9]*$/;
     
-    // 验证：必须是有效数字且大于0
-    if (!isNaN(numValue) && numValue > 0 && isFinite(numValue)) {
+    if (validPattern.test(value)) {
       onInputChange(e);
     }
-    // 如果输入无效（负数、0、或非数字），则不更新状态
+    // 如果输入包含非数字或非点号字符，则不更新状态
   };
   
   return (

@@ -22,18 +22,42 @@ import toast from "react-hot-toast";
 
 export default function CreateProposal() {
   const { t } = useTranslation();
-  
+
   const router = useRouter();
   const { locale } = useI18n();
   const { userInfo } = useUserInfoStore();
 
   const steps = [
-    { id: 1, name: t("proposalCreate.steps.proposalSettings"), description: t("proposalCreate.stepDescriptions.proposalSettings") },
-    { id: 2, name: t("proposalCreate.steps.projectBackground"), description: t("proposalCreate.stepDescriptions.projectBackground") },
-    { id: 3, name: t("proposalCreate.steps.projectGoals"), description: t("proposalCreate.stepDescriptions.projectGoals") },
-    { id: 4, name: t("proposalCreate.steps.teamIntroduction"), description: t("proposalCreate.stepDescriptions.teamIntroduction") },
-    { id: 5, name: t("proposalCreate.steps.projectBudget"), description: t("proposalCreate.stepDescriptions.projectBudget") },
-    { id: 6, name: t("proposalCreate.steps.milestones"), description: t("proposalCreate.stepDescriptions.milestones") },
+    {
+      id: 1,
+      name: t("proposalCreate.steps.proposalSettings"),
+      description: t("proposalCreate.stepDescriptions.proposalSettings"),
+    },
+    {
+      id: 2,
+      name: t("proposalCreate.steps.projectBackground"),
+      description: t("proposalCreate.stepDescriptions.projectBackground"),
+    },
+    {
+      id: 3,
+      name: t("proposalCreate.steps.projectGoals"),
+      description: t("proposalCreate.stepDescriptions.projectGoals"),
+    },
+    {
+      id: 4,
+      name: t("proposalCreate.steps.teamIntroduction"),
+      description: t("proposalCreate.stepDescriptions.teamIntroduction"),
+    },
+    {
+      id: 5,
+      name: t("proposalCreate.steps.projectBudget"),
+      description: t("proposalCreate.stepDescriptions.projectBudget"),
+    },
+    {
+      id: 6,
+      name: t("proposalCreate.steps.milestones"),
+      description: t("proposalCreate.stepDescriptions.milestones"),
+    },
   ];
   const [isClient, setIsClient] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
@@ -55,23 +79,26 @@ export default function CreateProposal() {
   });
 
   // 草稿保存和加载功能
-  const DRAFT_KEY = 'proposal_draft';
+  const DRAFT_KEY = "proposal_draft";
 
-  const saveDraft = useCallback(async (data: typeof formData) => {
-    try {
-      setIsDraftSaving(true);
-      const draftData = {
-        ...data,
-        savedAt: new Date().toISOString(),
-      };
-      localStorage.setItem(DRAFT_KEY, JSON.stringify(draftData));
-      setLastSaved(new Date());
-    } catch (error) {
-      console.error(t("proposalCreate.errors.saveDraftFailed"), error);
-    } finally {
-      setIsDraftSaving(false);
-    }
-  }, [t]);
+  const saveDraft = useCallback(
+    async (data: typeof formData) => {
+      try {
+        setIsDraftSaving(true);
+        const draftData = {
+          ...data,
+          savedAt: new Date().toISOString(),
+        };
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(draftData));
+        setLastSaved(new Date());
+      } catch (error) {
+        console.error(t("proposalCreate.errors.saveDraftFailed"), error);
+      } finally {
+        setIsDraftSaving(false);
+      }
+    },
+    [t]
+  );
 
   useEffect(() => {
     setIsClient(true);
@@ -106,13 +133,14 @@ export default function CreateProposal() {
 
     const timeoutId = setTimeout(() => {
       // 检查表单是否有内容
-      const hasContent = formData.title || 
-                        formData.background || 
-                        formData.goals || 
-                        formData.team || 
-                        formData.budget || 
-                        formData.milestones.length > 0;
-      
+      const hasContent =
+        formData.title ||
+        formData.background ||
+        formData.goals ||
+        formData.team ||
+        formData.budget ||
+        formData.milestones.length > 0;
+
       if (hasContent) {
         saveDraft(formData);
       }
@@ -124,20 +152,21 @@ export default function CreateProposal() {
   // 页面离开时保存草稿
   useEffect(() => {
     const handleBeforeUnload = () => {
-      const hasContent = formData.title || 
-                        formData.background || 
-                        formData.goals || 
-                        formData.team || 
-                        formData.budget || 
-                        formData.milestones.length > 0;
-      
+      const hasContent =
+        formData.title ||
+        formData.background ||
+        formData.goals ||
+        formData.team ||
+        formData.budget ||
+        formData.milestones.length > 0;
+
       if (hasContent) {
         saveDraft(formData);
       }
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [formData, saveDraft]);
 
   const [submitting, setSubmitting] = useState(false);
@@ -236,16 +265,19 @@ export default function CreateProposal() {
   const handleDateChange = (date: Date | null) => {
     setFormData((prev) => ({
       ...prev,
-      releaseDate: date ? date.toISOString().split('T')[0] : '',
+      releaseDate: date ? date.toISOString().split("T")[0] : "",
     }));
   };
 
-  const handleMilestoneDateChange = (milestoneId: string, date: Date | null) => {
+  const handleMilestoneDateChange = (
+    milestoneId: string,
+    date: Date | null
+  ) => {
     setFormData((prev) => ({
       ...prev,
       milestones: prev.milestones.map((milestone) =>
-        milestone.id === milestoneId 
-          ? { ...milestone, date: date ? date.toISOString().split('T')[0] : '' }
+        milestone.id === milestoneId
+          ? { ...milestone, date: date ? date.toISOString().split("T")[0] : "" }
           : milestone
       ),
     }));
@@ -261,20 +293,20 @@ export default function CreateProposal() {
   const hasTextContent = (html: string): boolean => {
     if (!html) return false;
     // 去除 HTML 标签
-    const textContent = html.replace(/<[^>]*>/g, '').trim();
+    const textContent = html.replace(/<[^>]*>/g, "").trim();
     return textContent.length > 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // 检查用户是否登录
     if (!userInfo?.did) {
       toast.error(t("proposalCreate.errors.pleaseLoginFirst"));
       setError(t("proposalCreate.errors.pleaseLoginFirst"));
       return;
     }
-    
+
     // 验证表单字段
     if (!formData.proposalType || formData.proposalType.trim() === "") {
       toast.error(t("proposalCreate.errors.proposalTypeRequired"));
@@ -343,31 +375,30 @@ export default function CreateProposal() {
         return;
       }
     }
-    
+
     setSubmitting(true);
     setError("");
 
     try {
       console.log("提交提案:", formData);
-      
+
       // 调用 writesPDSOperation 发布提案到 PDS
       const result = await writesPDSOperation({
         record: {
-          $type: 'app.dao.proposal',
-          data:{
-          proposalType: formData.proposalType,
-          title: formData.title,
-          releaseDate: formData.releaseDate,
-          background: formData.background,
-          goals: formData.goals,
-          team: formData.team,
-          budget: formData.budget,
-          milestones: formData.milestones,
-        }
+          $type: "app.dao.proposal",
+          data: {
+            proposalType: formData.proposalType,
+            title: formData.title,
+            releaseDate: formData.releaseDate,
+            background: formData.background,
+            goals: formData.goals,
+            team: formData.team,
+            budget: formData.budget,
+            milestones: formData.milestones,
+          },
         },
-        did: userInfo.did
+        did: userInfo.did,
       });
-      
 
       // 删除草稿
       localStorage.removeItem(DRAFT_KEY);
@@ -375,9 +406,7 @@ export default function CreateProposal() {
       toast.success(t("proposalCreate.messages.submitSuccess"));
       // 跳转到详情页面，传递 cid 参数
       router.push(`/${locale}/proposal/${postUriToHref(result.uri)}`);
-      
     } catch (err) {
-      
       toast.error(t("proposalCreate.errors.submitFailed"));
       setError(t("proposalCreate.errors.submitFailed"));
       console.error(t("proposalCreate.errors.submitProposalFailed"), err);
@@ -385,7 +414,6 @@ export default function CreateProposal() {
       setSubmitting(false);
     }
   };
-
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -483,76 +511,78 @@ export default function CreateProposal() {
                     }
                     onClick={() => setCurrentStep(step.id)}
                   >
-                      {step.name}
+                    {step.name}
                   </div>
                 ))}
               </div>
             </nav>
           </div>
-        <div className="step-container">
-          {/* 当前步骤标题 */}
-          <div className="step-title-container">
-            <h2 className="step-title">
+          <div className="step-container">
+            {/* 当前步骤标题 */}
+            <div className="step-title-container">
+              <h2 className="step-title">
                 {steps[currentStep - 1]?.name}{" "}
                 <IoMdInformationCircleOutline
                   data-tooltip-id="my-tooltip"
                   data-tooltip-content={steps[currentStep - 1]?.description}
                 />
-            </h2>
-          </div>
+              </h2>
+            </div>
 
-          {/* 表单内容 */}
-          <form onSubmit={handleSubmit} className="form-container">
-            {renderStepContent()}
+            {/* 表单内容 */}
+            <form onSubmit={handleSubmit} className="form-container">
+              {renderStepContent()}
 
               {error && <div className="error-message">{error}</div>}
 
-            {/* 导航按钮 */}
-            <div className="button-container">
-              {currentStep === steps.length ? (
-                <div className="button-group">
-                  <button
-                    type="button"
-                       onClick={() => setShowPreview(true)}
-                       className="btn btn-secondary"
-                     >
-                       {t("proposalCreate.buttons.previewProposal")}
-                     </button>
-                    
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="btn btn-primary"
-                  >
-                    {submitting ? t("proposalCreate.buttons.submitting") : t("proposalCreate.buttons.submitProposal")}
-                  </button>
-                </div>
-              ) : (
-                   <div className="button-group">
-                     <button
-                       type="button"
-                       onClick={() => setShowPreview(true)}
-                       className="btn btn-secondary"
-                     >
-                       {t("proposalCreate.buttons.previewProposal")}
-                     </button>
-                <button
-                  type="button"
-                  onClick={nextStep}
-                  className="btn btn-primary"
-                >
-                  {t("proposalCreate.buttons.nextStep")}
-                </button>
-                   </div>
-              )}
-            </div>
-          </form>
+              {/* 导航按钮 */}
+              <div className="button-container">
+                {currentStep === steps.length ? (
+                  <div className="button-group">
+                    <button
+                      type="button"
+                      onClick={() => setShowPreview(true)}
+                      className="btn btn-secondary"
+                    >
+                      {t("proposalCreate.buttons.previewProposal")}
+                    </button>
+
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="btn btn-primary"
+                    >
+                      {submitting
+                        ? t("proposalCreate.buttons.submitting")
+                        : t("proposalCreate.buttons.submitProposal")}
+                    </button>
+                  </div>
+                ) : (
+                  <div className="button-group">
+                    <button
+                      type="button"
+                      onClick={() => setShowPreview(true)}
+                      className="btn btn-secondary"
+                    >
+                      {t("proposalCreate.buttons.previewProposal")}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={nextStep}
+                      className="btn btn-primary"
+                    >
+                      {t("proposalCreate.buttons.nextStep")}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </form>
           </div>
         </div>
       </main>
-      
+
       {/* 预览弹窗 */}
-      <PreviewModal 
+      <PreviewModal
         isOpen={showPreview}
         onClose={() => setShowPreview(false)}
         formData={formData}
@@ -560,5 +590,3 @@ export default function CreateProposal() {
     </div>
   );
 }
-
-

@@ -103,6 +103,10 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
       const userVotingPower = voteWeight * 100000000;
       const voting = generateVotingInfo(adaptedProposal, proposal.vote_meta, userVotingPower);
       setVotingInfo(voting);
+      // 重置 voteMetaId ref，确保 getVoteDetail 会在 votingInfo 初始化后执行
+      if (voteMetaId) {
+        lastVoteMetaIdRef.current = null;
+      }
     }
     
     // 如果是执行阶段，生成里程碑信息
@@ -112,7 +116,7 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
       const milestoneData = generateMilestones(adaptedProposal);
       setMilestones(milestoneData);
     }
-  }, [proposal, voteWeight]);
+  }, [proposal, voteWeight, voteMetaId]);
 
 
   // 使用 ref 跟踪上一次的 voteMetaId 和请求 ID，避免重复调用
@@ -125,6 +129,9 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
     
     // 如果 voteMetaId 没有变化，跳过请求
     if (lastVoteMetaIdRef.current === voteMetaId) return;
+    
+    // 确保 votingInfo 已经初始化，如果没有则等待
+    if (!votingInfo) return;
     
     // 更新 ref 和请求 ID
     lastVoteMetaIdRef.current = voteMetaId;
@@ -144,10 +151,10 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
       // 使用权重（第二个元素）而不是票数（第一个元素）
       if (voteDetail.candidate_votes && Array.isArray(voteDetail.candidate_votes)) {
         if (voteDetail.candidate_votes[1] && Array.isArray(voteDetail.candidate_votes[1])) {
-          approveVotes = voteDetail.candidate_votes[1][1] || 0; // 使用权重
+          approveVotes = voteDetail.candidate_votes[1][1] ?? 0; // 使用权重
         }
         if (voteDetail.candidate_votes[2] && Array.isArray(voteDetail.candidate_votes[2])) {
-          rejectVotes = voteDetail.candidate_votes[2][1] || 0; // 使用权重
+          rejectVotes = voteDetail.candidate_votes[2][1] ?? 0; // 使用权重
         }
       }
       
@@ -160,15 +167,16 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
       setVotingInfo(prev => {
         if (!prev) return prev;
         
+        // 使用明确的更新逻辑，直接使用新值（包括 0），避免使用 || 导致 0 值无法更新
         return {
           ...prev,
-          totalVotes: totalVotes || prev.totalVotes,
-          approveVotes: approveVotes || prev.approveVotes,
-          rejectVotes: rejectVotes || prev.rejectVotes,
+          totalVotes: typeof totalVotes === 'number' ? totalVotes : prev.totalVotes,
+          approveVotes: typeof approveVotes === 'number' ? approveVotes : prev.approveVotes,
+          rejectVotes: typeof rejectVotes === 'number' ? rejectVotes : prev.rejectVotes,
           conditions: {
             ...prev.conditions,
-            currentTotalVotes: totalVotes || prev.conditions.currentTotalVotes,
-            currentApprovalRate: approvalRate || prev.conditions.currentApprovalRate,
+            currentTotalVotes: typeof totalVotes === 'number' ? totalVotes : prev.conditions.currentTotalVotes,
+            currentApprovalRate: typeof approvalRate === 'number' ? approvalRate : prev.conditions.currentApprovalRate,
           },
         };
       });
@@ -179,7 +187,7 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
       const errorMsg = messages.voting?.errors?.getVoteDetailFailed || "获取投票详情失败";
       console.error(errorMsg + ":", error);
     });
-  }, [voteMetaId, messages.voting?.errors?.getVoteDetailFailed]);
+  }, [voteMetaId, votingInfo, messages.voting?.errors?.getVoteDetailFailed]);
 
   // 使用 ref 跟踪上一次的 voteMetaId 和 did，避免重复调用 getVoteStatus
   const lastVoteStatusVoteMetaIdRef = useRef<number | null>(null);

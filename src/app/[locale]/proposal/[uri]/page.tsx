@@ -161,7 +161,9 @@ export default function ProposalDetail() {
               />
             </div>
             {/* 右侧投票和操作区 */}
-            <ProposalSidebar proposal={proposal} />
+            {proposal && (
+              <ProposalSidebar proposal={proposal} />
+            )}
           </div>
         </div>
       </main>

@@ -57,36 +57,34 @@ const ProjectMilestones: React.FC<ProjectMilestonesProps> = ({
         <div className="milestones-tabs-container">
           <div className="milestones-tabs">
             {formData.milestones.map((milestone, index) => (
-              <>
-                <div
-                  key={milestone.id}
-                  className={`milestone-tab ${
-                    index === activeMilestoneIndex ? "active" : ""
-                  }`}
-                  onClick={() => setActiveMilestoneIndex(index)}
-                >
-                  {milestone.title || `Milestone-${index + 1}`}{" "}
-                  {index === activeMilestoneIndex && (
-                    <span
-                      className="milestone-remove-btn"
-                      title={
-                        messages.proposalSteps.projectMilestones.removeMilestone
-                      }
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removeMilestone(milestone.id);
-                      }}
-                    >
-                      <Image
-                        src="/icon/del.svg"
-                        alt="delete"
-                        width={16}
-                        height={16}
-                      />
-                    </span>
-                  )}
-                </div>
-              </>
+              <div
+                key={milestone.id}
+                className={`milestone-tab ${
+                  index === activeMilestoneIndex ? "active" : ""
+                }`}
+                onClick={() => setActiveMilestoneIndex(index)}
+              >
+                {milestone.title || `Milestone-${index + 1}`}{" "}
+                {index === activeMilestoneIndex && (
+                  <span
+                    className="milestone-remove-btn"
+                    title={
+                      messages.proposalSteps.projectMilestones.removeMilestone
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeMilestone(milestone.id);
+                    }}
+                  >
+                    <Image
+                      src="/icon/del.svg"
+                      alt="delete"
+                      width={16}
+                      height={16}
+                    />
+                  </span>
+                )}
+              </div>
             ))}
             <a
               onClick={addMilestone}

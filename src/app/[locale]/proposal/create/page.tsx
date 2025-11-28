@@ -283,7 +283,11 @@ export default function CreateProposal() {
     }));
   };
 
-  const nextStep = () => {
+  const nextStep = (e?: React.MouseEvent<HTMLButtonElement>) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (currentStep < steps.length) {
       setCurrentStep(currentStep + 1);
     }
@@ -299,6 +303,11 @@ export default function CreateProposal() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // 如果不是最后一步，不执行提交
+    if (currentStep !== steps.length) {
+      return;
+    }
 
     // 检查用户是否登录
     if (!userInfo?.did) {
@@ -568,7 +577,7 @@ export default function CreateProposal() {
                     </button>
                     <button
                       type="button"
-                      onClick={nextStep}
+                      onClick={(e) => nextStep(e)}
                       className="btn btn-primary"
                     >
                       {t("proposalCreate.buttons.nextStep")}

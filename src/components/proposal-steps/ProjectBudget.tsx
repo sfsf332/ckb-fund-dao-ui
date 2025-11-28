@@ -20,9 +20,14 @@ const ProjectBudget: React.FC<ProjectBudgetProps> = ({ formData, onInputChange }
       return;
     }
     
-    // 只允许数字和点号
-    // 使用正则表达式：允许数字和单个点号
+    // 只允许数字和点号，明确排除加号、减号、e、E等特殊字符
+    // 使用正则表达式：只允许数字和单个点号
     const validPattern = /^[0-9]*\.?[0-9]*$/;
+    
+    // 额外检查：如果包含加号、减号、e、E等字符，直接拒绝
+    if (value.includes('+') || value.includes('-') || value.includes('e') || value.includes('E')) {
+      return;
+    }
     
     if (validPattern.test(value)) {
       onInputChange(e);

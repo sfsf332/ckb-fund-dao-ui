@@ -39,7 +39,7 @@ export default function LoginStep4({ accountName }: LoginStep4Props) {
           </div>
           <div className="success-details">
             <div className="success-name">
-              {accountName}.ckb.xyz
+              {accountName}.ccfdao.dev
             </div>
             <div className="success-address" onClick={handleCopyAddress} style={{ cursor: 'pointer' }}>
               {isLoadingAddress ? t("loginStep4.gettingAddress") : formatAddress(walletAddress)} 

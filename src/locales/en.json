@@ -547,7 +547,7 @@
   },
   "treasuryPage": {
     "treasuryInfo": "Treasury Information",
-    "mainTreasuryAddress": "Main Treasury Address",
+    "mainTreasuryAddress": "Address",
     "multisigSigners": "Multisig Signers",
     "treasuryAssets": "Treasury Assets",
     "totalAssets": "Total Assets (CKB)",

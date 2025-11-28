@@ -447,9 +447,9 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
           />
         )}
         
-        <ProposalTimeline 
+        {/* <ProposalTimeline 
           events={timelineEvents} 
-        />
+        /> */}
       </div>
       
       {/* 投票成功弹窗 */}

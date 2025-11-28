@@ -18,7 +18,7 @@ function truncateAddress(address: string, head = 7, tail = 7): string {
 export default function Treasury() {
   useTranslation();
   const { messages } = useI18n();
-  const address = "ckb1qyqwtz3x2z7g8g7q2hdasmm5m4enr0v40s8k0q8x2v";
+  const address = "ckb1qpw9q60tppt7l3j7r09qcp7lxnp3vcanvgha8pmvsa3jplykxn32sqf352eynr4y9zl66sdxjcef3a6z9uqhkncsaanyg";
   
   // 检测是否为移动端
   const [isMobile, setIsMobile] = useState(false);
@@ -98,15 +98,15 @@ export default function Treasury() {
           <div className="treasury_assets">
             <div className="small_block">
               <h4>{messages.treasuryPage.totalAssets}</h4>
-              <p>500,000,000</p>
+              <p>276,000,000</p>
             </div>
             <div className="small_block">
               <h4>{messages.treasuryPage.allocatedFunds}</h4>
-              <p>500,000,000</p>
+              <p>31513537.57951078</p>
             </div>
             <div className="small_block">
               <h4>{messages.treasuryPage.availableFunds}</h4>
-              <p>500,000,000</p>
+              <p>244,486,462.42048922</p>
             </div>
           </div>
           <h4>{messages.treasuryPage.totalAssetsStatistics}</h4>

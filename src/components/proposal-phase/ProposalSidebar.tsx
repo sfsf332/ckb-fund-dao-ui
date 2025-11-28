@@ -117,7 +117,7 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
 
   // 使用 ref 跟踪上一次的 voteMetaId 和请求 ID，避免重复调用
   const lastVoteMetaIdRef = useRef<number | null>(null);
-  const requestIdRef = useRef<number>(0);
+  const voteDetailRequestIdRef = useRef<number>(0);
   
   // 单独处理投票详情API请求（仅在 voteMetaId 变化时请求）
   useEffect(() => {
@@ -128,14 +128,14 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
     
     // 更新 ref 和请求 ID
     lastVoteMetaIdRef.current = voteMetaId;
-    const currentRequestId = ++requestIdRef.current;
+    const currentRequestId = ++voteDetailRequestIdRef.current;
     
     (getVoteDetail({
       id: voteMetaId,
     }) as unknown as Promise<VoteDetailResponse>)
     .then((voteDetail) => {
       // 如果这不是最新的请求，忽略结果（防止竞态条件）
-      if (currentRequestId !== requestIdRef.current) return;
+      if (currentRequestId !== voteDetailRequestIdRef.current) return;
       
       let approveVotes = 0;
       let rejectVotes = 0;
@@ -175,11 +175,17 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
     })
     .catch((error: unknown) => {
       // 如果这不是最新的请求，忽略错误
-      if (currentRequestId !== requestIdRef.current) return;
+      if (currentRequestId !== voteDetailRequestIdRef.current) return;
       const errorMsg = messages.voting?.errors?.getVoteDetailFailed || "获取投票详情失败";
       console.error(errorMsg + ":", error);
     });
   }, [voteMetaId, messages.voting?.errors?.getVoteDetailFailed]);
+
+  // 使用 ref 跟踪上一次的 voteMetaId 和 did，避免重复调用 getVoteStatus
+  const lastVoteStatusVoteMetaIdRef = useRef<number | null>(null);
+  const lastVoteStatusDidRef = useRef<string | null>(null);
+  const voteStatusRequestIdRef = useRef<number>(0);
+  const isFetchingVoteStatusRef = useRef<boolean>(false);
 
   // 单独处理投票状态API请求（仅在 did 或 voteMetaId 变化时请求）
   useEffect(() => {
@@ -193,16 +199,37 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
       return;
     }
     
+    // 如果 voteMetaId 和 did 都没有变化，跳过请求
+    if (lastVoteStatusVoteMetaIdRef.current === voteMetaId && 
+        lastVoteStatusDidRef.current === userInfo.did) {
+      return;
+    }
+    
+    // 防止并发请求
+    if (isFetchingVoteStatusRef.current) {
+      return;
+    }
+    
+    // 更新 ref 和请求 ID
+    lastVoteStatusVoteMetaIdRef.current = voteMetaId;
+    lastVoteStatusDidRef.current = userInfo.did;
+    const currentRequestId = ++voteStatusRequestIdRef.current;
+    isFetchingVoteStatusRef.current = true;
+    
     (getVoteStatus({
       did: userInfo.did,
       vote_meta_id: voteMetaId,
     }) as unknown as Promise<VoteRecord[]>).then((voteStatusList: VoteRecord[]) => {
+      // 如果这不是最新的请求，忽略结果（防止竞态条件）
+      if (currentRequestId !== voteStatusRequestIdRef.current) return;
+      
       // 先根据 vote_meta_id 筛选出匹配的记录，然后取最新的投票记录（按 created 时间排序，最新的在前）
       const latestVoteRecord = voteStatusList && voteStatusList.length > 0 ? voteStatusList[0] : null;
       
       // 如果没有投票记录，设置为空对象（可以投票）
       if (!latestVoteRecord) {
         setUserVoteInfo({});
+        isFetchingVoteStatusRef.current = false;
         return;
       }
       
@@ -221,8 +248,12 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
         // 不从 API 获取的状态中设置 voteState，isChainPending 只在用户投票后才会出现
       };
       setUserVoteInfo(newUserVoteInfo);
+      isFetchingVoteStatusRef.current = false;
     })
     .catch((error: unknown) => {
+      // 如果这不是最新的请求，忽略错误
+      if (currentRequestId !== voteStatusRequestIdRef.current) return;
+      isFetchingVoteStatusRef.current = false;
       const errorMsg = messages.voting?.errors?.getVoteStatusFailed || "获取投票状态失败";
       console.error(errorMsg + ":", error);
     });

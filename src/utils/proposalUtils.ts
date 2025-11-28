@@ -93,6 +93,8 @@ export const getStatusTagClass = (status: ProposalStatus) => {
 };
 
 // 格式化日期显示
-export const formatDate = (dateString: string, locale: string = 'en-US') => {
-  return new Date(dateString).toLocaleDateString(locale);
+export const formatDate = (dateString: string, locale: 'en' | 'zh' = 'en') => {
+  // 将 locale 映射到日期格式化语言代码
+  const dateLocale = locale === 'zh' ? 'zh-CN' : 'en-US';
+  return new Date(dateString).toLocaleDateString(dateLocale);
 };

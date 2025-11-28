@@ -10,7 +10,7 @@ export default function MilestoneVoting({
   onVote, 
   className = '' 
 }: MilestoneVotingProps) {
-  const { messages } = useI18n();
+  const { messages, locale } = useI18n();
   const [timeLeft, setTimeLeft] = useState('');
   const [userVote, setUserVote] = useState<MilestoneVoteOption | undefined>(votingInfo.userVote);
 
@@ -53,7 +53,9 @@ export default function MilestoneVoting({
 
   // 格式化数字
   const formatNumber = (num: number) => {
-    return num.toLocaleString('zh-CN');
+    // 将 locale 映射到数字格式化语言代码
+    const numberLocale = locale === 'zh' ? 'zh-CN' : 'en-US';
+    return num.toLocaleString(numberLocale);
   };
 
   // 格式化百分比

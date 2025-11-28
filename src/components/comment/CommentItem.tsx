@@ -47,7 +47,7 @@ export default function CommentItem({
   onEdit, // 暂时屏蔽
   onDelete, // 暂时屏蔽
 }: CommentItemProps) {
-  const { messages } = useI18n();
+  const { messages, locale } = useI18n();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const _unusedEdit = onEdit;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -80,7 +80,9 @@ export default function CommentItem({
       return `${Math.floor(diffInSeconds / 3600)}${messages.comment.timeAgo.hoursAgo}`;
     if (diffInSeconds < 2592000)
       return `${Math.floor(diffInSeconds / 86400)}${messages.comment.timeAgo.daysAgo}`;
-    return date.toLocaleDateString("zh-CN");
+    // 将 locale 映射到日期格式化语言代码
+    const dateLocale = locale === 'zh' ? 'zh-CN' : 'en-US';
+    return date.toLocaleDateString(dateLocale);
   };
 
   // 修改为直接调用 onReply，传递评论内容作为引用

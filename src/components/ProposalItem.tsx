@@ -84,7 +84,7 @@ export default function ProposalItem({ proposal }: ProposalItemProps) {
           <h3>{author.name}</h3>
           <p>{author.did}</p>
         </div>
-        <p>{formatDate(createdAt)}</p>
+        <p>{formatDate(createdAt, locale)}</p>
       </div>
       
       <div className="proposal_detail">

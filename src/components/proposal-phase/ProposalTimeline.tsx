@@ -99,7 +99,7 @@ const generateRandomMockEvents = (): TimelineEvent[] => {
 };
 
 export default function ProposalTimeline({ events, className = '' }: ProposalTimelineProps) {
-  const { messages } = useI18n();
+  const { messages, locale } = useI18n();
   
   // 如果没有传入 events 或 events 为空，使用随机生成的 mock 数据
   const mockEvents = useMemo(() => generateRandomMockEvents(), []);
@@ -141,7 +141,7 @@ export default function ProposalTimeline({ events, className = '' }: ProposalTim
                 {event.title}
               </div>
               <div className="timeline-date">
-                {formatDate(event.date)}
+                {formatDate(event.date, locale)}
               </div>
             </div>
           </div>

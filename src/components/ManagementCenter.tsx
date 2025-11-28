@@ -8,6 +8,7 @@ import { useProposalList } from "@/hooks/useProposalList";
 import { ProposalListItem } from "@/server/proposal";
 import useUserInfoStore from "@/store/userInfo";
 import { useTranslation } from "@/utils/i18n";
+import { useI18n } from "@/contexts/I18nContext";
 
 interface ProposalItem {
   id: string;
@@ -43,14 +44,16 @@ const getTaskTypeByStatus = (status: ProposalStatus, proposalType: string, t: (k
 };
 
 // 根据提案状态确定截止日期
-const getDeadlineByStatus = (status: ProposalStatus, createdAt: string, t: (key: string) => string): string => {
+const getDeadlineByStatus = (status: ProposalStatus, createdAt: string, t: (key: string) => string, locale: 'en' | 'zh' = 'en'): string => {
   const createdDate = new Date(createdAt);
+  // 将 locale 映射到日期格式化语言代码
+  const dateLocale = locale === 'zh' ? 'zh-CN' : 'en-US';
   
   switch (status) {
     case ProposalStatus.REVIEW:
       // 审议期7天
       const reviewDeadline = new Date(createdDate.getTime() + 7 * 24 * 60 * 60 * 1000);
-      return reviewDeadline.toLocaleString('zh-CN', { 
+      return reviewDeadline.toLocaleString(dateLocale, { 
         year: 'numeric', 
         month: '2-digit', 
         day: '2-digit', 
@@ -61,7 +64,7 @@ const getDeadlineByStatus = (status: ProposalStatus, createdAt: string, t: (key:
     case ProposalStatus.VOTE:
       // 投票期3天
       const voteDeadline = new Date(createdDate.getTime() + 10 * 24 * 60 * 60 * 1000);
-      return voteDeadline.toLocaleString('zh-CN', { 
+      return voteDeadline.toLocaleString(dateLocale, { 
         year: 'numeric', 
         month: '2-digit', 
         day: '2-digit', 
@@ -72,7 +75,7 @@ const getDeadlineByStatus = (status: ProposalStatus, createdAt: string, t: (key:
     case ProposalStatus.MILESTONE:
       // 里程碑交付期30天
       const milestoneDeadline = new Date(createdDate.getTime() + 30 * 24 * 60 * 60 * 1000);
-      return milestoneDeadline.toLocaleString('zh-CN', { 
+      return milestoneDeadline.toLocaleString(dateLocale, { 
         year: 'numeric', 
         month: '2-digit', 
         day: '2-digit', 
@@ -86,7 +89,7 @@ const getDeadlineByStatus = (status: ProposalStatus, createdAt: string, t: (key:
 };
 
 // 将API数据转换为ManagementCenter需要的格式
-const adaptProposalData = (proposal: ProposalListItem, t: (key: string) => string): ProposalItem => {
+const adaptProposalData = (proposal: ProposalListItem, t: (key: string) => string, locale: 'en' | 'zh' = 'en'): ProposalItem => {
   const status = proposal.state as ProposalStatus;
   const proposalType = proposal.record.data.proposalType;
   
@@ -96,7 +99,7 @@ const adaptProposalData = (proposal: ProposalListItem, t: (key: string) => strin
     type: proposalType,
     status: status,
     taskType: getTaskTypeByStatus(status, proposalType, t),
-    deadline: getDeadlineByStatus(status, proposal.record.created, t),
+    deadline: getDeadlineByStatus(status, proposal.record.created, t, locale),
     isNew: false, // 可以根据创建时间判断是否为新提案
     uri: proposal.uri,
     budget: parseFloat(proposal.record.data.budget) || 0, // 添加预算字段
@@ -114,6 +117,7 @@ const getFilterOptions = (t: (key: string) => string) => [
 export default function ManagementCenter() {
   const { userInfo } = useUserInfoStore();
   const { t } = useTranslation();
+  const { locale } = useI18n();
   const [activeTab, setActiveTab] = useState("pending");
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -129,8 +133,8 @@ export default function ManagementCenter() {
 
   // 转换数据格式
   const proposals = useMemo(() => {
-    return rawProposals.map(proposal => adaptProposalData(proposal, t));
-  }, [rawProposals, t]);
+    return rawProposals.map(proposal => adaptProposalData(proposal, t, locale));
+  }, [rawProposals, t, locale]);
 
   // 计算筛选选项的计数
   // const filterCounts = useMemo(() => {

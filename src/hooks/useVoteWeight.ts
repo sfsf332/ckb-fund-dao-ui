@@ -10,7 +10,7 @@ import { useWalletAddress } from "./useWalletAddress";
  * 提供获取用户投票权重的功能
  */
 export function useVoteWeight() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const { walletAddress, isConnected } = useWalletAddress();
   const [voteWeight, setVoteWeight] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -87,12 +87,14 @@ export function useVoteWeight() {
 
   // 格式化投票权重显示
   const formatVoteWeight = useCallback((weight: number, showUnit: boolean = true) => {
-    const formatted = weight.toLocaleString('zh-CN', {
+    // 将 locale 映射到数字格式化语言代码
+    const numberLocale = locale === 'zh' ? 'zh-CN' : 'en-US';
+    const formatted = weight.toLocaleString(numberLocale, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
     return showUnit ? `${formatted} ${t("voteWeight.votes")}` : formatted;
-  }, [t]);
+  }, [t, locale]);
 
   // 检查是否有投票权限（权重大于0）
   const hasVotingPower = voteWeight > 0;
@@ -115,7 +117,7 @@ export function useVoteWeight() {
  * 用于获取其他用户的投票权重
  */
 export function useVoteWeightByAddress(ckb_addr: string) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const [voteWeight, setVoteWeight] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -153,12 +155,14 @@ export function useVoteWeightByAddress(ckb_addr: string) {
 
   // 格式化投票权重显示
   const formatVoteWeight = useCallback((weight: number, showUnit: boolean = true) => {
-    const formatted = weight.toLocaleString('zh-CN', {
+    // 将 locale 映射到数字格式化语言代码
+    const numberLocale = locale === 'zh' ? 'zh-CN' : 'en-US';
+    const formatted = weight.toLocaleString(numberLocale, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
     return showUnit ? `${formatted} ${t("voteWeight.votes")}` : formatted;
-  }, [t]);
+  }, [t, locale]);
 
   // 检查是否有投票权限（权重大于0）
   const hasVotingPower = voteWeight > 0;

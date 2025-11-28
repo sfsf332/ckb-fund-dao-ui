@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams } from 'next/navigation';
 import { useTranslation } from "../../../../utils/i18n";
 import { useI18n } from "@/contexts/I18nContext";
@@ -15,7 +15,8 @@ export default function ProposalDetail() {
   useTranslation();
   const { messages } = useI18n();
   const params = useParams();
-  const uri = params?.uri as string;
+  // 使用 useMemo 稳定 uri 值，避免不必要的重新渲染导致重复调用
+  const uri = useMemo(() => params?.uri as string, [params?.uri]);
   
   // 获取提案详情（用于面包屑和标题）
   const { proposal, loading, error } = useProposalDetail(uri);

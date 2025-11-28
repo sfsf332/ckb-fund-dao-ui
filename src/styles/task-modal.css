@@ -59,7 +59,7 @@
 .info-grid {
   padding: 12px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 10px;
 }
 
@@ -72,7 +72,8 @@
 .info-label {
   color: #999;
   font-size: 14px;
-  min-width: 80px;
+  width: 180px;
+  min-width: 180px;
   flex-shrink: 0;
 }
 
@@ -111,20 +112,22 @@
 
 .form-item {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
 }
 
 .form-item.full-width {
   grid-column: 1 / -1;
 }
 
-/* 标签样式 - 垂直布局 */
+/* 标签样式 - 水平布局 */
 .form-label {
   font-size: 13px;
   font-weight: 500;
   color: #fff;
-  margin-bottom: 3px;
+  margin-bottom: 0;
+  white-space: nowrap;
 }
 
 .form-label.required::after {
@@ -134,11 +137,12 @@
 
 .readonly-field {
   color: #8A949E;
-  padding: 6px 0;
+  padding: 0;
   font-size: 13px;
-  min-height: 32px;
+  min-height: auto;
   display: flex;
   align-items: center;
+  flex: 1;
 }
 
 /* 输入容器样式 - 与提案发布页面保持一致 */

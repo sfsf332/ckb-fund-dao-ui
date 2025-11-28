@@ -8,6 +8,8 @@ import useUserInfoStore from "@/store/userInfo";
 import { useTranslation } from "@/utils/i18n";
 import Avatar from "@/components/Avatar";
 import { getUserDisplayNameFromStore } from "@/utils/userDisplayUtils";
+import storage from "@/lib/storage";
+import { useWallet } from "@/provider/WalletProvider";
 
 interface UserProfileCardProps {
   className?: string;
@@ -15,11 +17,14 @@ interface UserProfileCardProps {
 
 export default function UserProfileCard({ className = '' }: UserProfileCardProps) {
   const { t, locale } = useTranslation();
-  const { userInfo, userProfile } = useUserInfoStore();
+  const { userInfo, userProfile, logout } = useUserInfoStore();
+  const { isConnected, disconnect } = useWallet();
   
   const [isEditing, setIsEditing] = useState(false);
   const [expandedConnection, setExpandedConnection] = useState<string | null>(null);
+  const [showLogoutButton, setShowLogoutButton] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  const dateAreaRef = useRef<HTMLParagraphElement>(null);
   
   // 格式化加入日期
   const joinDate = useMemo(() => {
@@ -119,17 +124,56 @@ export default function UserProfileCard({ className = '' }: UserProfileCardProps
     setExpandedConnection(null);
   };
 
-  // 点击外部区域关闭展开菜单
+  // 处理日期区域双击事件
+  const handleDateAreaDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setShowLogoutButton(!showLogoutButton);
+  };
+
+  // 处理登出
+  const handleLogout = async () => {
+    try {
+      // 断开钱包连接
+      if (isConnected) {
+        try {
+          await disconnect();
+        } catch (err) {
+          console.error("断开连接失败:", err);
+        }
+      }
+      // 调用 store 的 logout 方法（清除 store 状态）
+      logout();
+      // 清除所有 localStorage
+      storage.clear();
+      // 刷新页面
+      window.location.reload();
+    } catch (err) {
+      console.error("登出失败:", err);
+    }
+  };
+
+  // 点击外部区域关闭展开菜单和登出按钮
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      // 检查点击是否在卡片外部，或者不在日期容器和登出按钮内
+      if (cardRef.current && !cardRef.current.contains(target)) {
         setExpandedConnection(null);
+        setShowLogoutButton(false);
+      } else if (dateAreaRef.current && !dateAreaRef.current.contains(target)) {
+        // 如果点击在卡片内但不在日期区域内，也关闭登出按钮（除非点击的是登出按钮本身）
+        const logoutButton = (event.target as HTMLElement).closest('.logout-button');
+        if (!logoutButton) {
+          setShowLogoutButton(false);
+        }
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    // 使用 click 事件而不是 mousedown，避免干扰双击事件
+    document.addEventListener('click', handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('click', handleClickOutside);
     };
   }, []);
 
@@ -169,7 +213,59 @@ export default function UserProfileCard({ className = '' }: UserProfileCardProps
               {userName}
             </h2>
           )}
-          <p className="join-date">{t('userProfile.joinedOn', { date: joinDate })}</p>
+          <div 
+            className="join-date-container" 
+            style={{ 
+              position: 'relative', 
+              display: 'inline-block',
+              pointerEvents: 'auto',
+              zIndex: 101,
+            }}
+          >
+            <p 
+              ref={dateAreaRef}
+              className="join-date" 
+              onDoubleClick={handleDateAreaDoubleClick}
+              style={{ 
+                cursor: 'pointer', 
+                userSelect: 'none',
+                pointerEvents: 'auto',
+                position: 'relative',
+                zIndex: 101,
+              }}
+            >
+              {t('userProfile.joinedOn', { date: joinDate })}
+            </p>
+            {showLogoutButton && (
+              <button
+                className="logout-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleLogout();
+                }}
+                onMouseDown={(e) => e.stopPropagation()}
+                style={{
+                  position: 'absolute',
+                  left: '100%',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  marginLeft: '8px',
+                  padding: '4px 12px',
+                  backgroundColor: '#ff4444',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  whiteSpace: 'nowrap',
+                  zIndex: 1002,
+                  pointerEvents: 'auto',
+                }}
+              >
+                {t('logout')}
+              </button>
+            )}
+          </div>
         </div>
         
        

@@ -277,7 +277,7 @@ export default function TaskProcessingModal({
               {isTaskType(taskType, "taskTypes.createVote", t) && (
                 <>
                   {/* 投票开始时间和结束时间 - 两列布局 */}
-                  <div className="form-row">
+                  {/* <div className="form-row">
                     <div className="form-item">
                       <label className="form-label required">{t("taskModal.voteStartTime")}</label>
                       <CustomDatePicker
@@ -302,7 +302,7 @@ export default function TaskProcessingModal({
                         timeFormat="HH:mm"
                       />
                     </div>
-                  </div>
+                  </div> */}
 
                   {voteError && (
                     <div className="error-message">

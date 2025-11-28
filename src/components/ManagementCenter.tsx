@@ -237,7 +237,7 @@ export default function ManagementCenter() {
   return (
     <div className="management-center">
       {/* 顶部标签页 */}
-      <div className="management-tabs">
+      {/* <div className="management-tabs">
         <button
           className={`tab-button ${activeTab === "pending" ? "active" : ""}`}
           onClick={() => setActiveTab("pending")}
@@ -251,11 +251,11 @@ export default function ManagementCenter() {
           {t("managementCenter.newProposals")}
           <span className="badge">{proposals.filter(p => p.isNew).length}</span>
         </button>
-      </div>
+      </div> */}
 
       {/* 筛选按钮 */}
       <div className="filter-section">
-        <div className="filter-buttons">
+        {/* <div className="filter-buttons">
           {filterCounts.map((option) => (
             <button
               key={option.key}
@@ -267,10 +267,10 @@ export default function ManagementCenter() {
               {option.label} ({option.count})
             </button>
           ))}
-        </div>
+        </div> */}
 
         {/* 搜索框 */}
-        <div className="search-section">
+        {/* <div className="search-section">
           <input
             type="search"
             placeholder={t("managementCenter.searchProposals")}
@@ -278,7 +278,7 @@ export default function ManagementCenter() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="management-search-input"
           />
-        </div>
+        </div> */}
       </div>
 
       {/* 提案表格 */}
@@ -331,12 +331,12 @@ export default function ManagementCenter() {
                     <td>{proposal.deadline}</td>
                     <td>
                       <div className="action-buttons">
-                        <button
+                        {/* <button
                           className="task-action-button"
                           onClick={() => handleTaskProcess(proposal)}
                         >
                           {t("taskModal.buttons.process")}
-                        </button>
+                        </button> */}
                         {proposal.status === ProposalStatus.REVIEW && (
                           <button 
                             className="vote-action-button"

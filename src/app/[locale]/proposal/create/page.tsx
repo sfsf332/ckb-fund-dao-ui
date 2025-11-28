@@ -370,7 +370,7 @@ export default function CreateProposal() {
       
 
       // 删除草稿
-      // clearDraft();
+      localStorage.removeItem(DRAFT_KEY);
 
       toast.success(t("proposalCreate.messages.submitSuccess"));
       // 跳转到详情页面，传递 cid 参数
@@ -560,3 +560,5 @@ export default function CreateProposal() {
     </div>
   );
 }
+
+

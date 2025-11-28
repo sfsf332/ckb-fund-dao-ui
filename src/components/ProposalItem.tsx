@@ -75,7 +75,7 @@ export default function ProposalItem({ proposal }: ProposalItemProps) {
       style={{ cursor: 'pointer' }}
     >
       <h4>
-        {title}
+        <span>{title+' '}</span>
         <Tag status={proposal.state} size="sm" />
       </h4>
       <div className="proposal_person">

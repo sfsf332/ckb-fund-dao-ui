@@ -41,7 +41,6 @@ export default function Treasury() {
     proposals,
     loading: proposalsLoading,
     error: proposalsError,
-    refetch,
     loadMore,
     hasMore,
   } = useProposalList({
@@ -53,6 +52,16 @@ export default function Treasury() {
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
+  // 根据选中的状态过滤 proposals
+  const filteredProposals = selectedStatus
+    ? proposals.filter((proposal) => {
+        // 使用顶层的 state 字段
+        const proposalState = proposal.state;
+        const statusValue = parseInt(selectedStatus, 10);
+        return proposalState === statusValue;
+      })
+    : proposals;
+
   useEffect(() => {
     if (!loadMoreRef.current) return;
     const sentinel = loadMoreRef.current;
@@ -60,6 +69,8 @@ export default function Treasury() {
       (entries) => {
         if (entries[0].isIntersecting) {
           if (hasMore && !proposalsLoading) {
+            // 即使有状态过滤，也继续加载更多数据
+            // 但显示时只显示符合选中状态的提案
             loadMore();
           }
         }
@@ -110,14 +121,11 @@ export default function Treasury() {
                   name="proposal-status-filter"
                   id="proposal-status-filter"
                   value={selectedStatus}
-                  onChange={async (e) => {
+                  onChange={(e) => {
                     const value = e.target.value;
                     setSelectedStatus(value);
-                    await refetch({
-                      cursor: null,
-                      limit: 20,
-                      viewer: userInfo?.did || null,
-                    });
+                    // 状态改变时，重置到列表顶部（可选：如果需要重新加载数据）
+                    // 当前实现：只过滤已加载的数据
                   }}
                 >
                   <option value="">{messages.homepage.all}</option>
@@ -146,8 +154,8 @@ export default function Treasury() {
                 >
                   {messages.homepage.loadFailed} {proposalsError}
                 </li>
-              ) : proposals.length > 0 ? (
-                proposals.map((proposal, index) => (
+              ) : filteredProposals.length > 0 ? (
+                filteredProposals.map((proposal, index) => (
                   <ProposalItem key={proposal.cid || proposal.uri || `proposal-${index}`} proposal={proposal} />
                 ))
               ) : proposalsLoading ? (

@@ -51,13 +51,18 @@ export default function Treasury() {
           <div className="treasury_wallet">
             <div className="treasury_wallet_address">
             <label>{messages.treasuryPage.mainTreasuryAddress}</label>
-            <p>{displayAddress}</p>
+            <p title={address}>{displayAddress}</p>
             </div>
             
-            <CopyButton className="button-copy" text={address} ariaLabel="copy-treasury-address">
+            <CopyButton 
+              className="button-copy" 
+              text={address} 
+              ariaLabel="copy-treasury-address"
+              title={address}
+            >
            
             </CopyButton>
-            <Link href="#" aria-label="export-treasury-address">
+            <Link href="https://explorer.nervos.org/address/ckb1qpw9q60tppt7l3j7r09qcp7lxnp3vcanvgha8pmvsa3jplykxn32sqf352eynr4y9zl66sdxjcef3a6z9uqhkncsaanyg" target="_blank" aria-label="export-treasury-address">
               <AiOutlineExport />
             </Link>
           </div>

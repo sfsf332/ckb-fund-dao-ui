@@ -1,8 +1,28 @@
 import { TimelineEvent, TimelineEventType, TimelineEventStatus } from '../types/timeline';
 import { Proposal, ProposalStatus } from './proposalUtils';
 
+interface TimelineMessages {
+  proposalPublished: string;
+  proposalPublishedDesc: string;
+  communityReview: string;
+  communityReviewDesc: string;
+  proposalVoting: string;
+  proposalVotingDesc: string;
+  proposalApproved: string;
+  proposalApprovedDesc: string;
+  proposalRejected: string;
+  proposalRejectedDesc: string;
+  milestoneInProgress: string;
+  milestoneInProgressDesc: string;
+  projectCompleted: string;
+  projectCompletedDesc: string;
+}
+
 // 根据提案状态生成当前阶段的时间线事件
-export const generateTimelineEvents = (proposal: Proposal): TimelineEvent[] => {
+export const generateTimelineEvents = (
+  proposal: Proposal,
+  messages: TimelineMessages
+): TimelineEvent[] => {
   const events: TimelineEvent[] = [];
   const createdAt = new Date(proposal.createdAt);
   
@@ -11,8 +31,8 @@ export const generateTimelineEvents = (proposal: Proposal): TimelineEvent[] => {
     id: `${proposal.id}-published`,
     type: TimelineEventType.PROPOSAL_PUBLISHED,
     status: TimelineEventStatus.COMPLETED,
-    title: '提案发布',
-    description: `提案 "${proposal.title}" 已发布，开始社区审议`,
+    title: messages.proposalPublished,
+    description: messages.proposalPublishedDesc.replace('{title}', proposal.title),
     date: proposal.createdAt,
     isImportant: true
   });
@@ -25,8 +45,8 @@ export const generateTimelineEvents = (proposal: Proposal): TimelineEvent[] => {
         id: `${proposal.id}-review-start`,
         type: TimelineEventType.REVIEW_START,
         status: TimelineEventStatus.IN_PROGRESS,
-        title: '社区审议中',
-        description: '提案正在接受社区审议，包括质询和讨论',
+        title: messages.communityReview,
+        description: messages.communityReviewDesc,
         date: new Date(createdAt.getTime() + 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         isImportant: true
       });
@@ -38,8 +58,8 @@ export const generateTimelineEvents = (proposal: Proposal): TimelineEvent[] => {
         id: `${proposal.id}-vote-start`,
         type: TimelineEventType.VOTE_START,
         status: TimelineEventStatus.IN_PROGRESS,
-        title: '提案投票中',
-        description: '提案正在接受社区投票，请参与投票',
+        title: messages.proposalVoting,
+        description: messages.proposalVotingDesc,
         date: new Date(createdAt.getTime() + 9 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         isImportant: true
       });
@@ -51,8 +71,8 @@ export const generateTimelineEvents = (proposal: Proposal): TimelineEvent[] => {
         id: `${proposal.id}-approved`,
         type: TimelineEventType.PROPOSAL_APPROVED,
         status: TimelineEventStatus.COMPLETED,
-        title: '提案已通过',
-        description: '提案已通过社区投票，正在执行中',
+        title: messages.proposalApproved,
+        description: messages.proposalApprovedDesc,
         date: new Date(createdAt.getTime() + 15 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         isImportant: true
       });
@@ -64,8 +84,8 @@ export const generateTimelineEvents = (proposal: Proposal): TimelineEvent[] => {
         id: `${proposal.id}-rejected`,
         type: TimelineEventType.PROPOSAL_REJECTED,
         status: TimelineEventStatus.COMPLETED,
-        title: '提案已拒绝',
-        description: '提案未通过社区投票，已被拒绝',
+        title: messages.proposalRejected,
+        description: messages.proposalRejectedDesc,
         date: new Date(createdAt.getTime() + 15 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         isImportant: true
       });
@@ -79,8 +99,8 @@ export const generateTimelineEvents = (proposal: Proposal): TimelineEvent[] => {
           id: `${proposal.id}-milestone-${currentMilestone}`,
           type: TimelineEventType.MILESTONE_TRACKING,
           status: TimelineEventStatus.IN_PROGRESS,
-          title: `里程碑 ${currentMilestone} 进行中`,
-          description: `项目里程碑 ${currentMilestone} 正在执行中`,
+          title: messages.milestoneInProgress.replace('{number}', currentMilestone.toString()),
+          description: messages.milestoneInProgressDesc.replace('{number}', currentMilestone.toString()),
           date: new Date(createdAt.getTime() + (20 + (currentMilestone - 1) * 30) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
           isImportant: true
         });
@@ -93,8 +113,8 @@ export const generateTimelineEvents = (proposal: Proposal): TimelineEvent[] => {
         id: `${proposal.id}-completed`,
         type: TimelineEventType.PROJECT_COMPLETED,
         status: TimelineEventStatus.COMPLETED,
-        title: '项目已完成',
-        description: '项目已成功完成所有里程碑',
+        title: messages.projectCompleted,
+        description: messages.projectCompletedDesc,
         date: new Date(createdAt.getTime() + 150 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         isImportant: true
       });

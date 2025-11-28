@@ -575,6 +575,22 @@ interface Messages {
     };
     proposalTimeline: {
       title: string;
+      events: {
+        proposalPublished: string;
+        proposalPublishedDesc: string;
+        communityReview: string;
+        communityReviewDesc: string;
+        proposalVoting: string;
+        proposalVotingDesc: string;
+        proposalApproved: string;
+        proposalApprovedDesc: string;
+        proposalRejected: string;
+        proposalRejectedDesc: string;
+        milestoneInProgress: string;
+        milestoneInProgressDesc: string;
+        projectCompleted: string;
+        projectCompletedDesc: string;
+      };
     };
   };
   proposalSteps: {

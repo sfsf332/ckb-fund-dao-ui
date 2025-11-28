@@ -713,7 +713,23 @@
       }
     },
     "proposalTimeline": {
-      "title": "提案时间线"
+      "title": "提案时间线",
+      "events": {
+        "proposalPublished": "提案发布",
+        "proposalPublishedDesc": "提案 \"{title}\" 已发布，开始社区审议",
+        "communityReview": "社区审议中",
+        "communityReviewDesc": "提案正在接受社区审议，包括质询和讨论",
+        "proposalVoting": "提案投票中",
+        "proposalVotingDesc": "提案正在接受社区投票，请参与投票",
+        "proposalApproved": "提案已通过",
+        "proposalApprovedDesc": "提案已通过社区投票，正在执行中",
+        "proposalRejected": "提案已拒绝",
+        "proposalRejectedDesc": "提案未通过社区投票，已被拒绝",
+        "milestoneInProgress": "里程碑 {number} 进行中",
+        "milestoneInProgressDesc": "项目里程碑 {number} 正在执行中",
+        "projectCompleted": "项目已完成",
+        "projectCompletedDesc": "项目已成功完成所有里程碑"
+      }
     }
   },
   "proposalSteps": {

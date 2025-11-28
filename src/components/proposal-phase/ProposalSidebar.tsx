@@ -86,6 +86,24 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
     return isNaN(id) ? null : id;
   }, [proposal?.vote_meta?.id]);
 
+  // 使用 useMemo 稳定时间线消息对象
+  const timelineMessages = useMemo(() => ({
+    proposalPublished: messages.proposalPhase.proposalTimeline.events.proposalPublished,
+    proposalPublishedDesc: messages.proposalPhase.proposalTimeline.events.proposalPublishedDesc,
+    communityReview: messages.proposalPhase.proposalTimeline.events.communityReview,
+    communityReviewDesc: messages.proposalPhase.proposalTimeline.events.communityReviewDesc,
+    proposalVoting: messages.proposalPhase.proposalTimeline.events.proposalVoting,
+    proposalVotingDesc: messages.proposalPhase.proposalTimeline.events.proposalVotingDesc,
+    proposalApproved: messages.proposalPhase.proposalTimeline.events.proposalApproved,
+    proposalApprovedDesc: messages.proposalPhase.proposalTimeline.events.proposalApprovedDesc,
+    proposalRejected: messages.proposalPhase.proposalTimeline.events.proposalRejected,
+    proposalRejectedDesc: messages.proposalPhase.proposalTimeline.events.proposalRejectedDesc,
+    milestoneInProgress: messages.proposalPhase.proposalTimeline.events.milestoneInProgress,
+    milestoneInProgressDesc: messages.proposalPhase.proposalTimeline.events.milestoneInProgressDesc,
+    projectCompleted: messages.proposalPhase.proposalTimeline.events.projectCompleted,
+    projectCompletedDesc: messages.proposalPhase.proposalTimeline.events.projectCompletedDesc,
+  }), [messages.proposalPhase.proposalTimeline.events]);
+
   // 当提案数据加载完成后，生成相关数据（不包含API请求）
   useEffect(() => {
     if (!proposal) return;
@@ -93,7 +111,7 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
     const adaptedProposal = adaptProposalDetail(proposal);
 
     // 生成时间线事件
-    const events = generateTimelineEvents(adaptedProposal);
+    const events = generateTimelineEvents(adaptedProposal, timelineMessages);
     setTimelineEvents(events);
     
     // 如果是投票阶段，生成投票信息
@@ -116,7 +134,7 @@ export default function ProposalSidebar({ proposal }: ProposalSidebarProps) {
       const milestoneData = generateMilestones(adaptedProposal);
       setMilestones(milestoneData);
     }
-  }, [proposal, voteWeight, voteMetaId]);
+  }, [proposal, voteWeight, voteMetaId, timelineMessages]);
 
 
   // 使用 ref 跟踪上一次的 voteMetaId 和请求 ID，避免重复调用

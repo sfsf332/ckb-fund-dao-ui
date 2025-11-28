@@ -674,7 +674,23 @@
       }
     },
     "proposalTimeline": {
-      "title": "Proposal Timeline"
+      "title": "Proposal Timeline",
+      "events": {
+        "proposalPublished": "Proposal Published",
+        "proposalPublishedDesc": "Proposal \"{title}\" has been published, community review begins",
+        "communityReview": "Community Review",
+        "communityReviewDesc": "Proposal is under community review, including inquiries and discussions",
+        "proposalVoting": "Voting in Progress",
+        "proposalVotingDesc": "Proposal is under community voting, please participate",
+        "proposalApproved": "Proposal Approved",
+        "proposalApprovedDesc": "Proposal has been approved by community vote and is being executed",
+        "proposalRejected": "Proposal Rejected",
+        "proposalRejectedDesc": "Proposal was not approved by community vote and has been rejected",
+        "milestoneInProgress": "Milestone {number} in Progress",
+        "milestoneInProgressDesc": "Project milestone {number} is being executed",
+        "projectCompleted": "Project Completed",
+        "projectCompletedDesc": "Project has successfully completed all milestones"
+      }
     }
   },
   "proposalSteps": {

@@ -115,8 +115,7 @@ export default function Treasury() {
           <section className="proposal_list">
             <nav>
               <h3>{messages.homepage.proposalList}</h3>
-              <div className="nav-controls">
-                {/* <input type="search" placeholder="搜索提案" /> */}
+              {/* <div className="nav-controls">
                 <select
                   name="proposal-status-filter"
                   id="proposal-status-filter"
@@ -144,7 +143,7 @@ export default function Treasury() {
                   </option>
                   <option value={String(ProposalStatus.ENDED)}>{messages.homepage.ended}</option>
                 </select>
-              </div>
+              </div> */}
             </nav>
 
             <ul className="proposal_list_content">

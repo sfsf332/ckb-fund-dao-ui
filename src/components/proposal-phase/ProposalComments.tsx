@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import CommentSection from "@/components/comment/CommentSection";
 import { Comment } from "@/types/comment";
 import { CommentItem } from "@/server/comment";
@@ -70,6 +70,9 @@ export default function ProposalComments({
   const [comments, setComments] = useState<Comment[]>([]);
   const [quotedText, setQuotedText] = useState(externalQuotedText);
   const [replyToCommentId, setReplyToCommentId] = useState<string | null>(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  // 使用 ref 跟踪已处理的评论 ID，避免重复处理导致刷新
+  const processedCommentIdsRef = useRef<Set<string>>(new Set());
 
   // 当外部传入的 quotedText 变化时，更新内部状态
   useEffect(() => {
@@ -80,9 +83,20 @@ export default function ProposalComments({
 
   // 处理 API 返回的评论数据，转换为平铺的列表结构
   useEffect(() => {
-    if (!apiComments || apiComments.length === 0) {
-      setComments([]);
-      return;
+    // 首次加载时，如果 apiComments 为空，清空列表
+    if (isInitialLoad) {
+      if (!apiComments || apiComments.length === 0) {
+        setComments([]);
+        setIsInitialLoad(false);
+        processedCommentIdsRef.current.clear();
+        return;
+      }
+      setIsInitialLoad(false);
+    } else {
+      // 非首次加载时，如果 apiComments 为空，保持现有列表（可能是用户刚添加的评论）
+      if (!apiComments || apiComments.length === 0) {
+        return;
+      }
     }
 
     const adaptedComments = apiComments.map(item => 
@@ -90,24 +104,66 @@ export default function ProposalComments({
     );
 
     setComments(prevComments => {
-      const commentMap = new Map(prevComments.map(c => [c.id, c]));
+      // 创建现有评论的 Map，用于快速查找和保持位置
+      const existingCommentMap = new Map(prevComments.map(c => [c.id, c]));
+      // 创建新评论的 Map，用于查找新评论
+      const newCommentMap = new Map(adaptedComments.map(c => [c.id, c]));
       
-      const mergedComments = adaptedComments.map(newComment => {
-        const existingComment = commentMap.get(newComment.id);
-        if (existingComment) {
-          return {
-            ...existingComment,
-            likes: newComment.likes,
-            isLiked: newComment.isLiked,
-          };
+      // 1. 更新已存在的评论数据（点赞数、点赞状态等），但保持原有位置
+      // 只有当数据真正变化时才更新，避免不必要的重新渲染
+      let hasDataChanged = false;
+      const updatedExistingComments = prevComments.map(existingComment => {
+        const updatedComment = newCommentMap.get(existingComment.id);
+        if (updatedComment) {
+          // 检查数据是否真的变化了
+          const likesChanged = existingComment.likes !== updatedComment.likes;
+          const isLikedChanged = existingComment.isLiked !== updatedComment.isLiked;
+          
+          if (likesChanged || isLikedChanged) {
+            hasDataChanged = true;
+            // 更新数据但保持原有位置
+            return {
+              ...existingComment,
+              likes: updatedComment.likes,
+              isLiked: updatedComment.isLiked,
+              // 保留其他可能被用户修改的状态（如临时添加的评论）
+            };
+          }
         }
-        return newComment;
+        // 数据没有变化，返回原对象（保持引用不变，避免重新渲染）
+        return existingComment;
       });
       
-      return mergedComments.sort((a, b) => {
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-      });
+      // 2. 找出新评论（不在现有列表中的评论）
+      const newComments = adaptedComments.filter(
+        newComment => !existingCommentMap.has(newComment.id) && 
+                      !processedCommentIdsRef.current.has(newComment.id)
+      );
+      
+      // 3. 如果有新评论或数据变化，才更新状态
+      if (newComments.length > 0 || hasDataChanged) {
+        // 将新评论 ID 添加到已处理集合
+        newComments.forEach(comment => {
+          processedCommentIdsRef.current.add(comment.id);
+        });
+        
+        if (newComments.length > 0) {
+          // 新评论按时间降序排序（最新的在前）
+          const sortedNewComments = newComments.sort((a, b) => {
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+          });
+          // 将新评论添加到开头，保持现有评论的顺序
+          return [...sortedNewComments, ...updatedExistingComments];
+        }
+        
+        // 只有数据变化，没有新评论
+        return updatedExistingComments;
+      }
+      
+      // 既没有新评论，也没有数据变化，返回原数组（保持引用不变，避免重新渲染）
+      return prevComments;
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiComments, userInfo?.did]);
 
   // 评论处理函数
@@ -166,6 +222,11 @@ export default function ProposalComments({
           parentId: record.parent,
           to: targetCommentId ? apiComments?.find(c => c.cid === targetCommentId || c.uri === targetCommentId)?.to : undefined,
         };
+        
+        // 将新评论添加到已处理集合，避免 refetch 时重复处理
+        if (newComment.id) {
+          processedCommentIdsRef.current.add(newComment.id);
+        }
         
         setComments(prev => [newComment, ...prev]);
         setQuotedText("");
